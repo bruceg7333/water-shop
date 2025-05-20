@@ -1,0 +1,66 @@
+<view class="container">
+  <view class="login-header">
+    <image class="logo" src="/static/images/icons/logo.png" mode="aspectFit"></image>
+    <text class="title">{{i18n.title || 'SPRINKLE水商城'}}</text>
+    <text class="subtitle">{{i18n.subtitle || '登录账号'}}</text>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <view class="input-icon">👤</view>
+      <input 
+        class="input" 
+        placeholder="{{i18n.username || '请输入用户名'}}" 
+        value="{{username}}" 
+        bindinput="onUsernameInput"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="input-icon">🔒</view>
+      <input 
+        class="input" 
+        placeholder="{{i18n.password || '请输入密码'}}" 
+        password="true" 
+        value="{{password}}" 
+        bindinput="onPasswordInput"
+      />
+    </view>
+
+    <view class="error-message" wx:if="{{errorMsg}}">
+      <text>{{errorMsg}}</text>
+    </view>
+
+    <button 
+      class="login-button" 
+      bindtap="handleLogin" 
+      loading="{{isLoading}}" 
+      disabled="{{isLoading}}"
+    >
+      {{i18n.login || '登录'}}
+    </button>
+
+    <!-- 微信一键登录按钮 -->
+    <button 
+      class="wechat-button" 
+      bindtap="handleWechatLogin"
+      loading="{{isWechatLoading}}"
+    >
+      <view class="wechat-button-inner">
+        <text class="wechat-text">{{i18n.wechatLogin || '微信一键登录'}}</text>
+      </view>
+    </button>
+
+    <view class="login-text-options">
+      <text class="option" bindtap="handleForgotPassword">{{i18n.forgotPassword || '忘记密码'}}</text>
+      <text class="option register" bindtap="navigateToRegister">{{i18n.register || '注册账号'}}</text>
+    </view>
+  </view>
+
+  <view class="login-footer">
+    <text class="login-policy">{{i18n.agreement || '登录即表示您同意'}}</text>
+    <text class="login-policy-link" bindtap="showUserAgreement">{{i18n.userAgreement || '《用户协议》'}}</text>
+    <text class="login-policy">{{i18n.and || '和'}}</text>
+    <text class="login-policy-link" bindtap="showPrivacyPolicy">{{i18n.privacyPolicy || '《隐私政策》'}}</text>
+  </view>
+</view> 

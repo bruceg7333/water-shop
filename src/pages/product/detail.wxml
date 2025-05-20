@@ -1,0 +1,144 @@
+<view class="product-detail">
+  <!-- 商品图片轮播 -->
+  <swiper class="product-swiper" indicator-dots="true" autoplay="true" circular="true">
+    <block wx:if="{{product.images && product.images.length > 0}}">
+      <swiper-item wx:for="{{product.images}}" wx:key="index" bindtap="previewImage" data-index="{{index}}">
+        <image src="{{item}}" mode="aspectFill" />
+      </swiper-item>
+    </block>
+    <block wx:else>
+      <swiper-item bindtap="previewImage" data-index="0">
+        <image src="{{product.image}}" mode="aspectFill" />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 标签页切换 -->
+  <view class="tab-header">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="index" 
+      class="tab-item {{currentTab === index ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-index="{{index}}"
+    >
+      {{item}}{{index === 1 ? ' (' + reviewTotal + ')' : ''}}
+    </view>
+  </view>
+
+  <!-- 商品信息标签页 -->
+  <view class="tab-content" wx:if="{{currentTab === 0}}">
+    <!-- 商品信息 -->
+    <view class="product-info">
+      <view class="name-row">
+        <view class="name">{{product.name}}</view>
+        <view class="favorite {{isFavorite ? 'active' : ''}}" bindtap="toggleFavorite">
+          <image wx:if="{{isFavorite}}" src="/assets/images/icons/favorite-filled.svg" mode="aspectFit" />
+          <image wx:else src="/assets/images/icons/favorite.svg" mode="aspectFit" />
+        </view>
+      </view>
+      <view class="price">
+        <text class="current-price">{{i18n.currencySymbol}}{{product.price}}</text>
+        <text class="original-price" wx:if="{{product.originalPrice}}">{{i18n.currencySymbol}}{{product.originalPrice}}</text>
+      </view>
+      <view class="description">{{product.description}}</view>
+      <view class="sales-info">
+        <text>{{i18n.sales}} {{product.sales || 0}}</text>
+        <text>{{i18n.stock}} {{product.stock || 0}}</text>
+      </view>
+    </view>
+
+    <!-- 商品规格 -->
+    <view class="specifications" wx:if="{{product.specifications && product.specifications.length > 0}}">
+      <view class="title">{{i18n.spec}}</view>
+      <view class="spec-list">
+        <view 
+          wx:for="{{product.specifications}}" 
+          wx:key="index"
+          class="spec-item {{selectedSpec === item ? 'active' : ''}}"
+          bindtap="selectSpec"
+          data-spec="{{item}}"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论标签页 -->
+  <view class="tab-content" wx:if="{{currentTab === 1}}">
+    <view class="reviews-header">
+      <view class="reviews-title">{{i18n.reviewsTitle}}</view>
+      <view class="write-review" bindtap="writeReview">{{i18n.writeReview}}</view>
+    </view>
+    
+    <view class="no-reviews" wx:if="{{reviews.length === 0}}">
+      {{i18n.noReviews}}
+    </view>
+    
+    <view class="review-list" wx:else>
+      <view class="review-item" wx:for="{{reviews}}" wx:key="id">
+        <view class="review-header">
+          <image class="avatar" src="{{item.user.avatar || '/assets/images/avatar/default.png'}}" />
+          <view class="user-info">
+            <view class="user-row">
+              <view class="nickname">{{item.user.nickName || i18n.anonymousUser}}</view>
+              <view class="rating">
+                <text class="rating-label">{{i18n.rating}}: </text>
+                <text class="star filled" wx:for="{{item.rating}}" wx:key="index" wx:for-item="star">{{i18n.starSymbol}}</text>
+                <text class="star" wx:for="{{5 - item.rating}}" wx:key="index" wx:for-item="star">{{i18n.starSymbol}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="review-content">{{item.content}}</view>
+        <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+          <image wx:for="{{item.images}}" wx:for-item="img" wx:key="index" src="{{img}}" mode="aspectFill" />
+        </view>
+        <view class="review-footer">
+          <view class="date">
+            <text>{{i18n.reviewDate}}: </text>{{item.createdAt}}
+          </view>
+          <view class="like {{item.liked ? 'active' : ''}}" bindtap="likeReview" data-review-id="{{item.id}}">
+            <text class="iconfont {{item.liked ? 'icon-like-filled' : 'icon-like'}}"></text>
+            <text>{{i18n.likeButton}} ({{item.likeCount || 0}} {{i18n.likeCount}})</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="load-more" wx:if="{{reviews.length < reviewTotal}}" bindtap="loadMoreReviews">
+        {{i18n.loadMore}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 详情标签页 -->
+  <view class="tab-content" wx:if="{{currentTab === 2}}">
+    <view class="detail-content">
+      <rich-text nodes="{{product.detailContent}}"></rich-text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer">
+    <view class="icon-group">
+      <view class="icon-item">
+        <button open-type="contact" class="contact-button" hover-class="none">
+          <image src="/assets/images/icons/customer-service.svg" mode="aspectFit" />
+        </button>
+        <text>{{i18n.customerService}}</text>
+      </view>
+      <view class="icon-item" bindtap="navigateToCart">
+        <view class="cart-icon">
+          <image src="/assets/images/icons/cart.svg" mode="aspectFit" />
+          <view class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount}}</view>
+        </view>
+        <text>{{i18n.cart}}</text>
+      </view>
+    </view>
+    <view class="action-group">
+      <view class="cart-btn" bindtap="addToCart">{{i18n.addToCart}}</view>
+      <view class="buy-btn" bindtap="buyNow">{{i18n.buyNow}}</view>
+    </view>
+  </view>
+</view> 

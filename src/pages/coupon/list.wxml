@@ -1,0 +1,59 @@
+<view class="coupon">
+  <view class="tabs">
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="index" 
+      class="tab-item {{currentTab === item.value ? 'active' : ''}}"
+      bindtap="switchTab"
+      data-value="{{item.value}}"
+    >
+      {{item.name}}
+    </view>
+  </view>
+  
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading"></view>
+    <text>{{i18n.loading || '加载中...'}}</text>
+  </view>
+  
+  <!-- 加载出错 -->
+  <view wx:elif="{{error}}" class="error-container">
+    <image src="../../../static/images/error.png" mode="aspectFit"></image>
+    <text>{{i18n.error || '加载失败，请稍后重试'}}</text>
+    <view class="btn" bindtap="loadCouponData">{{i18n.retry || '重试'}}</view>
+  </view>
+  
+  <view wx:elif="{{filteredCoupons.length === 0}}" class="empty-container">
+    <image src="../../../static/images/empty-coupon.png" mode="aspectFit"></image>
+    <text>{{i18n.empty}}</text>
+  </view>
+  
+  <view wx:else class="coupon-list">
+    <view 
+      class="coupon-item {{item.status === 'expired' ? 'expired' : ''}} {{item.status === 'used' ? 'used' : ''}}" 
+      wx:for="{{filteredCoupons}}" 
+      wx:key="index"
+    >
+      <view class="left">
+        <view class="price">
+          <text class="symbol">¥</text>
+          <text class="value">{{item.price}}</text>
+        </view>
+        <view class="condition" wx:if="{{item.condition > 0}}">
+          {{item.condition > 0 ? i18n.condition.minConsumption.replace('{amount}', item.condition) : i18n.condition.noLimit}}
+        </view>
+        <view class="condition" wx:else>{{i18n.condition.noLimit}}</view>
+      </view>
+      <view class="right">
+        <view class="name">{{item.name}}</view>
+        <view class="date">{{i18n.validPeriod}} {{item.endDate}}</view>
+        <view class="scope">{{item.scope}}</view>
+        <view class="btn" wx:if="{{item.status === 'available'}}" bindtap="useCoupon" data-coupon="{{item}}">{{i18n.use}}</view>
+        <view class="status-tag" wx:if="{{item.status === 'used'}}">{{i18n.used}}</view>
+        <view class="status-tag" wx:if="{{item.status === 'expired'}}">{{i18n.expired}}</view>
+      </view>
+      <view class="corner"></view>
+    </view>
+  </view>
+</view> 

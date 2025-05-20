@@ -1,0 +1,33 @@
+<view class="result">
+  <view class="result-icon">
+    <icon type="{{success ? 'success' : 'warn'}}" size="70"></icon>
+  </view>
+  <view class="result-title">{{resultTitle}}</view>
+  <view class="result-desc">{{resultDesc}}</view>
+  
+  <!-- 订单信息 -->
+  <view class="order-info" wx:if="{{orderInfo}}">
+    <view class="info-item">
+      <text class="label">{{i18n.orderNoLabel}}</text>
+      <text class="value">{{orderInfo.orderNo}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.orderTimeLabel}}</text>
+      <text class="value">{{orderInfo.createTime}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.paymentMethodLabel}}</text>
+      <text class="value">{{orderInfo.paymentMethod}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.orderAmountLabel}}</text>
+      <text class="value price">{{i18n.currencySymbol}}{{orderInfo.totalAmount}}</text>
+    </view>
+  </view>
+  
+  <!-- 按钮区域 -->
+  <view class="btn-area">
+    <view class="btn primary" bindtap="viewOrder">{{i18n.viewOrder}}</view>
+    <view class="btn default" bindtap="goHome">{{i18n.backToHome}}</view>
+  </view>
+</view> 

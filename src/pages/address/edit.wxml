@@ -1,0 +1,63 @@
+<view class="address-edit">
+  <form bindsubmit="saveAddress">
+    <view class="form-group">
+      <view class="form-item">
+        <view class="label">{{i18n.name || '收货人'}}</view>
+        <input 
+          type="text" 
+          placeholder="{{i18n.nameHolder || '请输入收货人姓名'}}" 
+          value="{{addressData.name}}"
+          bindinput="inputName"
+          placeholder-class="placeholder"
+        />
+      </view>
+      <view class="form-item">
+        <view class="label">{{i18n.phone || '手机号码'}}</view>
+        <input 
+          type="number" 
+          placeholder="{{i18n.phoneHolder || '请输入手机号码'}}" 
+          value="{{addressData.phone}}"
+          bindinput="inputPhone"
+          placeholder-class="placeholder"
+          maxlength="11"
+        />
+      </view>
+      <view class="form-item address-picker">
+        <view class="label">{{i18n.region || '所在地区'}}</view>
+        <picker 
+          mode="region" 
+          bindchange="regionChange" 
+          value="{{[addressData.province, addressData.city, addressData.district]}}"
+        >
+          <view class="picker-value {{!addressData.province ? 'placeholder' : ''}}">
+            {{addressData.province ? addressData.province + ' ' + addressData.city + ' ' + addressData.district : (i18n.regionHolder || '请选择所在地区')}}
+          </view>
+        </picker>
+        <image src="/static/images/icons/arrow-right.png" class="arrow-icon"></image>
+      </view>
+      <view class="form-item">
+        <view class="label">{{i18n.detail || '详细地址'}}</view>
+        <textarea 
+          placeholder="{{i18n.detailHolder || '请输入详细地址'}}" 
+          value="{{addressData.detail}}"
+          bindinput="inputDetail"
+          placeholder-class="placeholder"
+          auto-height
+        ></textarea>
+      </view>
+    </view>
+    
+    <view class="form-group">
+      <view class="form-item switch-item">
+        <view class="label">{{i18n.setDefault || '设为默认地址'}}</view>
+        <switch 
+          checked="{{addressData.isDefault}}" 
+          bindchange="switchChange" 
+          color="#0084ff"
+        />
+      </view>
+    </view>
+    
+    <view class="save-btn" bindtap="saveAddress">{{i18n.save || '保存'}}</view>
+  </form>
+</view> 

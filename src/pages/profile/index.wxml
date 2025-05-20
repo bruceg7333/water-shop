@@ -1,0 +1,74 @@
+<view class="container">
+  <!-- 用户信息区域 -->
+  <view class="user-info-section">
+    <view class="user-header" bindtap="handleUserLogin">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" style="background-color: #e0e0e0;"></image>
+      <view class="user-detail">
+        <text class="nickname">{{userInfo.nickName}}</text>
+        <text class="login-hint" wx:if="{{!userInfo.isLogin}}">{{i18n.loginHint}}</text>
+        <view class="member-level-container" wx:if="{{userInfo.isLogin}}" catchtap="navigateToMemberInfo">
+          <text class="member-level">{{userInfo.memberLevel}}</text>
+          <text class="member-level-icon" wx:if="{{userInfo.memberLevel === i18n.adminLevel}}">👑</text>
+        </view>
+      </view>
+      <view class="logout-btn" wx:if="{{userInfo.isLogin}}" catchtap="handleLogout">{{i18n.logout}}</view>
+    </view>
+    
+    <!-- 会员资产 -->
+    <view class="user-assets" wx:if="{{userInfo.isLogin}}">
+      <view class="asset-item" bindtap="navigateToMenu" data-url="pages/points/index">
+        <text class="asset-value">{{userInfo.points}}</text>
+        <text class="asset-label">{{i18n.points}}</text>
+      </view>
+      <view class="asset-item" bindtap="navigateToMenu" data-url="pages/coupon/list">
+        <text class="asset-value">{{userInfo.couponCount}}</text>
+        <text class="asset-label">{{i18n.coupon}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的订单区域 -->
+  <view class="orders-section">
+    <view class="section-header">
+      <text class="section-title">{{i18n.myOrders}}</text>
+      <view class="view-all" bindtap="navigateToAllOrders">
+        <text>{{i18n.viewAllOrders}}</text>
+        <view class="arrow"></view>
+      </view>
+    </view>
+    <view class="order-icons">
+      <view class="order-icon-item" 
+            wx:for="{{orderSummary}}" 
+            wx:key="id" 
+            bindtap="navigateToOrder" 
+            data-url="{{item.url}}"
+            data-status="{{item.status}}">
+        <view class="icon-wrapper" style="background-color: {{item.iconColor}}10">
+          <view class="badge" wx:if="{{item.badge > 0}}">{{item.badge}}</view>
+          <text class="order-icon-text" style="color: {{item.iconColor}}">{{item.iconText}}</text>
+        </view>
+        <text class="icon-text">{{item.text}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单列表区域 -->
+  <view class="menu-section">
+    <view class="menu-item" 
+          wx:for="{{menuList}}" 
+          wx:key="id" 
+          bindtap="navigateToMenu" 
+          data-url="{{item.url}}">
+      <view class="menu-icon-wrapper" style="background-color: {{item.iconColor}}10">
+        <text class="menu-icon-text" style="color: {{item.iconColor}}">{{item.iconText}}</text>
+      </view>
+      <text class="menu-text">{{item.text}}</text>
+      <view class="arrow"></view>
+    </view>
+  </view>
+
+  <!-- 底部版本信息 -->
+  <view class="footer">
+    <text class="version">{{i18n.version}}</text>
+  </view>
+</view> 

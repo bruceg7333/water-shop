@@ -1,0 +1,100 @@
+<view class="order-detail">
+  <!-- 订单状态 -->
+  <view class="status-section" style="background: {{statusColors[order.status]}}">
+    <view class="status-text">{{order.statusText}}</view>
+    <view class="status-desc">{{statusDescriptions[order.status]}}</view>
+  </view>
+  
+  <!-- 收货地址 -->
+  <view class="address-section">
+    <view class="section-title">{{i18n.addressTitle}}</view>
+    <view class="address-info">
+      <view class="user-info">
+        <text class="name">{{order.recipient.name}}</text>
+        <text class="phone">{{order.recipient.phone}}</text>
+      </view>
+      <view class="address">{{order.recipient.address}}</view>
+    </view>
+  </view>
+  
+  <!-- 订单信息 -->
+  <view class="order-info-section">
+    <view class="section-title">{{i18n.orderInfoTitle}}</view>
+    <view class="info-item">
+      <text class="label">{{i18n.orderNoLabel}}</text>
+      <text class="value">{{order.orderNo}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.createTimeLabel}}</text>
+      <text class="value">{{order.createTime}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.paymentMethodLabel}}</text>
+      <text class="value">{{order.paymentMethod}}</text>
+    </view>
+    <view class="info-item" wx:if="{{order.payTime}}">
+      <text class="label">{{i18n.payTimeLabel}}</text>
+      <text class="value">{{order.payTime}}</text>
+    </view>
+    <view class="info-item" wx:if="{{order.deliveryTime}}">
+      <text class="label">{{i18n.deliveryTimeLabel}}</text>
+      <text class="value">{{order.deliveryTime}}</text>
+    </view>
+    <view class="info-item" wx:if="{{order.completedTime}}">
+      <text class="label">{{i18n.completedTimeLabel}}</text>
+      <text class="value">{{order.completedTime}}</text>
+    </view>
+    <view class="info-item">
+      <text class="label">{{i18n.remarkLabel}}</text>
+      <text class="value">{{order.remark || i18n.noRemark}}</text>
+    </view>
+  </view>
+  
+  <!-- 商品列表 -->
+  <view class="goods-section">
+    <view class="section-title">{{i18n.goodsInfoTitle}}</view>
+    <view class="goods-list">
+      <view class="goods-item" wx:for="{{order.goods}}" wx:key="id">
+        <image src="{{item.imageUrl}}" mode="aspectFill" bindtap="viewProduct" data-id="{{item.id}}"></image>
+        <view class="goods-info">
+          <view class="name" bindtap="viewProduct" data-id="{{item.id}}">{{item.name}}</view>
+          <view class="spec" wx:if="{{item.spec}}">{{i18n.goodsSpecLabel}}: {{item.spec}}</view>
+          <view class="price-row">
+            <text class="price">{{i18n.currencySymbol}}{{item.price}}</text>
+            <text class="quantity">{{i18n.quantityPrefix}}{{item.count}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 订单金额 -->
+  <view class="price-section">
+    <view class="price-item">
+      <text class="label">{{i18n.goodsAmountLabel}}</text>
+      <text class="value">{{i18n.currencySymbol}}{{order.goodsAmount}}</text>
+    </view>
+    <view class="price-item">
+      <text class="label">{{i18n.shippingFeeLabel}}</text>
+      <text class="value">{{i18n.currencySymbol}}{{order.shippingFee}}</text>
+    </view>
+    <view class="price-item" wx:if="{{order.discountAmount > 0}}">
+      <text class="label">{{i18n.discountAmountLabel}}</text>
+      <text class="value">-{{i18n.currencySymbol}}{{order.discountAmount}}</text>
+    </view>
+    <view class="price-item total">
+      <text class="label">{{i18n.totalAmountLabel}}</text>
+      <text class="value">{{i18n.currencySymbol}}{{order.totalAmount}}</text>
+    </view>
+  </view>
+  
+  <!-- 底部操作按钮 -->
+  <view class="footer" wx:if="{{order.status !== 'completed' && order.status !== 'canceled'}}">
+    <view class="btn-group">
+      <view class="btn btn-cancel" wx:if="{{order.status === 'pending_payment'}}" bindtap="cancelOrder">{{i18n.cancelOrder}}</view>
+      <view class="btn btn-primary" wx:if="{{order.status === 'pending_payment'}}" bindtap="payOrder">{{i18n.payNow}}</view>
+      <view class="btn btn-primary" wx:if="{{order.status === 'pending_receipt'}}" bindtap="confirmReceipt">{{i18n.confirmReceipt}}</view>
+      <view class="btn btn-default" bindtap="contactService">{{i18n.contactService}}</view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,89 @@
+<view class="order-confirm">
+  <!-- 收货地址 -->
+  <view class="address-section">
+    <view class="address-left" bindtap="selectAddress">
+      <view class="address-info" wx:if="{{address}}">
+        <view class="user-info">
+          <text class="name">{{address.name}}</text>
+          <text class="phone">{{address.phone}}</text>
+        </view>
+        <view class="address">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</view>
+      </view>
+      <view class="no-address" wx:else>
+        <text>{{i18n.selectAddress}}</text>
+      </view>
+      <text class="iconfont icon-right"></text>
+    </view>
+    <view class="address-right">
+      <view class="change-address-btn" bindtap="selectAddress">
+        <text>{{i18n.changeAddress || '更换地址'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="goods-section">
+    <view class="section-title">{{i18n.productInfo}}</view>
+    <view class="goods-list">
+      <view class="goods-item" wx:for="{{orderItems}}" wx:key="index">
+        <image src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="goods-info">
+          <view class="name">{{item.name}}</view>
+          <view class="spec" wx:if="{{item.spec}}">{{i18n.goodsSpec}}: {{item.spec}}</view>
+          <view class="price-row">
+            <text class="price">{{i18n.currencySymbol}}{{item.price}}</text>
+            <text class="quantity">{{i18n.quantityPrefix}}{{item.quantity}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 配送方式 -->
+  <view class="delivery-section">
+    <view class="section-title">{{i18n.deliveryTitle}}</view>
+    <view class="delivery-options">
+      <view 
+        class="option {{selectedDelivery === option.value ? 'active' : ''}}" 
+        wx:for="{{deliveryOptions}}" 
+        wx:for-item="option"
+        wx:key="value"
+        bindtap="selectDelivery"
+        data-value="{{option.value}}"
+      >
+        <text>{{option.label}}</text>
+        <text class="price" wx:if="{{option.price}}">{{i18n.currencySymbol}}{{option.price}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 支付方式 -->
+  <view class="payment-section">
+    <view class="section-title">{{i18n.paymentTitle}}</view>
+    <view class="payment-options">
+      <view class="option active">
+        <text>{{i18n.payment_wechat || '微信支付'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="remark-section">
+    <view class="section-title">{{i18n.remarkTitle}}</view>
+    <textarea 
+      bindinput="onRemarkInput" 
+      placeholder="{{i18n.remarkPlaceholder}}" 
+      maxlength="200"
+      value="{{remark}}"
+    ></textarea>
+  </view>
+
+  <!-- 底部结算栏 -->
+  <view class="footer">
+    <view class="total">
+      <text>{{i18n.total}}：</text>
+      <text class="price">{{i18n.currencySymbol}}{{totalPrice}}</text>
+    </view>
+    <view class="submit" bindtap="submitOrder">{{i18n.submit}}</view>
+  </view>
+</view> 

@@ -1,0 +1,56 @@
+<view class="article-list-container">
+  <!-- 分类导航 -->
+  <scroll-view scroll-x class="category-scroll" enhanced show-scrollbar="{{false}}">
+    <view class="category-list">
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="id" 
+        class="category-item {{activeCategory === item.id ? 'active' : ''}}"
+        bindtap="switchCategory"
+        data-category="{{item.id}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+  
+  <!-- 文章列表 -->
+  <view class="article-list" wx:if="{{articles.length > 0}}">
+    <view 
+      class="article-item" 
+      wx:for="{{articles}}" 
+      wx:key="id"
+      bindtap="viewArticle"
+      data-id="{{item.id}}"
+    >
+      <image class="article-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+      <view class="article-info">
+        <view class="article-title">{{item.title}}</view>
+        <view class="article-summary">{{item.summary}}</view>
+        <view class="article-meta">
+          <view class="article-date">{{item.publishDate}}</view>
+          <view class="article-views">
+            <image class="article-view-icon" src="/assets/images/icons/view.png" mode="aspectFit"></image>
+            <text>{{i18n.viewsLabel}}: {{item.views}}</text>
+          </view>
+        </view>
+        <view class="article-tags">
+          <view wx:for="{{item.tags}}" wx:key="*this" wx:for-item="tag" class="tag-item">{{tag}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 加载更多提示 -->
+  <view class="loading-section" wx:if="{{articles.length > 0}}">
+    <view class="loading-text" wx:if="{{loading}}">{{i18n.loading}}</view>
+    <view class="loading-text" wx:elif="{{!hasMore}}">{{i18n.noMore}}</view>
+    <view class="loading-text loading-more" wx:else bindtap="loadArticles">{{i18n.loadMore}}</view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <image class="empty-image" src="/static/images/empty-article.png" mode="aspectFit"></image>
+    <text class="empty-text">{{i18n.empty}}</text>
+  </view>
+</view> 

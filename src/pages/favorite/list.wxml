@@ -1,0 +1,47 @@
+<view class="favorite">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading"></view>
+    <text>{{i18n.loading || '加载中...'}}</text>
+  </view>
+  
+  <!-- 加载出错 -->
+  <view wx:elif="{{error}}" class="error-container">
+    <image src="../../../static/images/error.png" mode="aspectFit"></image>
+    <text>{{i18n.error || '加载失败，请稍后重试'}}</text>
+    <view class="btn" bindtap="loadFavoriteData">{{i18n.retry || '重试'}}</view>
+  </view>
+  
+  <view wx:elif="{{favoriteList.length === 0}}" class="empty-container">
+    <image src="../../../static/images/empty-favorite.png" mode="aspectFit"></image>
+    <text>{{i18n.empty}}</text>
+    <view class="btn" bindtap="goToHome">{{i18n.goShopping}}</view>
+  </view>
+  
+  <view wx:else class="favorite-list">
+    <view 
+      class="favorite-item {{item.isUnavailable ? 'unavailable' : ''}}" 
+      wx:for="{{favoriteList}}" 
+      wx:key="index"
+    >
+      <view class="goods-info" bindtap="viewDetail" data-id="{{item.productId}}">
+        <image src="{{item.product.imageUrl || item.imageUrl}}" mode="aspectFill"></image>
+        <view class="info">
+          <text class="name">{{item.product.name || item.name}}</text>
+          <text class="desc">{{item.product.description || item.description}}</text>
+          <view class="price-row">
+            <text class="price">{{i18n.yuan}}{{item.product.price || item.price}}</text>
+            <text class="sales">{{item.salesDisplayText}}</text>
+          </view>
+          <!-- 显示商品状态标记 -->
+          <view class="unavailable-tag" wx:if="{{item.isUnavailable}}">{{item.statusText || i18n.unavailable || '已下架'}}</view>
+          <view class="status-tag presale" wx:elif="{{item.statusText === '预售'}}">{{item.statusText}}</view>
+        </view>
+      </view>
+      <view class="actions">
+        <view class="action-btn {{item.isUnavailable ? 'disabled' : ''}}" bindtap="addToCart" data-item="{{item}}">{{i18n.addToCart}}</view>
+        <view class="action-btn outline" bindtap="removeFavorite" data-id="{{item.productId}}">{{i18n.remove}}</view>
+      </view>
+    </view>
+  </view>
+</view> 

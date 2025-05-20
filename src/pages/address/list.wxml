@@ -1,0 +1,46 @@
+<view class="address-list">
+  <view wx:if="{{addresses.length === 0}}" class="empty-container">
+    <image src="/static/images/empty-address.png" mode="aspectFit"></image>
+    <text>{{i18n.empty || '暂无收货地址'}}</text>
+  </view>
+  
+  <view wx:else class="address-items">
+    <view 
+      class="address-item" 
+      wx:for="{{addresses}}" 
+      wx:key="index"
+      bindtap="selectAddress"
+      data-address="{{item}}"
+    >
+      <view class="info">
+        <view class="user-info">
+          <text class="name">{{item.name}}</text>
+          <text class="phone">{{item.phone}}</text>
+          <text class="tag" wx:if="{{item.isDefault}}">{{i18n.defaultTag || '默认'}}</text>
+        </view>
+        <view class="address">
+          {{item.province}}{{item.city}}{{item.district}}{{item.detail}}
+        </view>
+      </view>
+      <view class="actions">
+        <view class="action-item" catchtap="setDefault" data-index="{{index}}" wx:if="{{!item.isDefault}}">
+          <image src="/static/images/icons/check.png" class="action-icon"></image>
+          <text>{{i18n.setDefault || '设为默认'}}</text>
+        </view>
+        <view class="action-item" catchtap="editAddress" data-index="{{index}}">
+          <image src="/static/images/icons/edit.png" class="action-icon"></image>
+          <text>{{i18n.edit || '编辑'}}</text>
+        </view>
+        <view class="action-item" catchtap="deleteAddress" data-index="{{index}}">
+          <image src="/static/images/icons/delete.png" class="action-icon"></image>
+          <text>{{i18n.delete || '删除'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="add-btn" bindtap="addAddress">
+    <image src="/static/images/icons/add.png" class="add-icon"></image>
+    <text>{{i18n.add || '新增收货地址'}}</text>
+  </view>
+</view> 

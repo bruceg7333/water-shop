@@ -1,0 +1,120 @@
+<view class="order-list">
+  <!-- 未登录状态显示登录提示 -->
+  <view class="login-prompt" wx:if="{{!isLogin}}">
+    <image src="/assets/images/icons/login-required.png" mode="aspectFit"></image>
+    <text class="login-text">{{i18n.loginRequired}}</text>
+    <view class="login-btn" bindtap="goToLogin">{{i18n.goToLogin}}</view>
+  </view>
+
+  <!-- 已登录状态显示订单内容 -->
+  <block wx:else>
+    <view class="tabs">
+      <view 
+        class="tab-item {{currentStatus === '' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-status=""
+      >
+        {{i18n.tabAll}}
+      </view>
+      <view 
+        class="tab-item {{currentStatus === 'pending_payment' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-status="pending_payment"
+      >
+        {{i18n.tabPending}}
+      </view>
+      <view 
+        class="tab-item {{currentStatus === 'pending_shipment' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-status="pending_shipment"
+      >
+        {{i18n.tabShipped}}
+      </view>
+      <view 
+        class="tab-item {{currentStatus === 'pending_receipt' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-status="pending_receipt"
+      >
+        {{i18n.tabReceipt}}
+      </view>
+      <view 
+        class="tab-item {{currentStatus === 'completed' ? 'active' : ''}}" 
+        bindtap="switchTab" 
+        data-status="completed"
+      >
+        {{i18n.tabCompleted}}
+      </view>
+    </view>
+    
+    <view class="empty" wx:if="{{filteredOrders.length === 0}}">
+      <image src="/assets/images/icons/empty-order.png" mode="aspectFit"></image>
+      <text>{{i18n.empty}}</text>
+      <view class="btn" bindtap="goShopping">{{i18n.goShopping}}</view>
+    </view>
+    
+    <view class="order-items" wx:else>
+      <view 
+        class="order-item" 
+        wx:for="{{filteredOrders}}" 
+        wx:key="id"
+      >
+        <view class="order-header">
+          <text class="order-number">{{i18n.orderNumber}}: {{item.orderNumber}}</text>
+          <text class="order-status">{{item.statusText}}</text>
+        </view>
+        
+        <view 
+          class="order-goods"
+          bindtap="goToDetail"
+          data-id="{{item.id}}"
+        >
+          <view 
+            class="goods-item" 
+            wx:for="{{item.goods}}" 
+            wx:key="id" 
+            wx:for-item="goods"
+          >
+            <image class="goods-image" src="{{goods.imageUrl}}" mode="aspectFill"></image>
+            <view class="goods-info">
+              <view class="goods-name">{{goods.name}}</view>
+              <view class="goods-spec" wx:if="{{goods.spec}}">{{i18n.goodsSpec}}: {{goods.spec}}</view>
+              <view class="goods-price-count">
+                <text class="goods-price">{{i18n.currencySymbol}}{{goods.price}}</text>
+                <text class="goods-count">{{i18n.quantityPrefix}}{{goods.count}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        
+        <view class="order-footer">
+          <view class="order-total">
+            {{item.totalCount}}{{i18n.pieces}} {{i18n.totalAmount}}: <text class="price">{{i18n.currencySymbol}}{{item.totalAmount}}</text>{{i18n.openParenthesis}}{{i18n.shippingFee}}{{i18n.currencySymbol}}{{item.shippingFee}}{{i18n.closeParenthesis}}
+          </view>
+          
+          <view class="order-actions">
+            <block wx:if="{{item.status === 'pending_payment'}}">
+              <view class="btn outline" bindtap="cancelOrder" data-id="{{item.id}}">{{i18n.cancelOrder}}</view>
+              <view class="btn primary" bindtap="payOrder" data-id="{{item.id}}">{{i18n.payNow}}</view>
+            </block>
+            
+            <block wx:elif="{{item.status === 'pending_shipment'}}">
+              <view class="btn outline" bindtap="viewDetail" data-id="{{item.id}}">{{i18n.viewDetail}}</view>
+              <view class="btn info" bindtap="contactService" data-id="{{item.id}}">{{i18n.contactService}}</view>
+            </block>
+            
+            <block wx:elif="{{item.status === 'pending_receipt'}}">
+              <view class="btn outline" bindtap="viewLogistics" data-id="{{item.id}}">{{i18n.viewLogistics}}</view>
+              <view class="btn info" bindtap="confirmReceipt" data-id="{{item.id}}">{{i18n.confirmReceipt}}</view>
+            </block>
+            
+            <block wx:elif="{{item.status === 'completed'}}">
+              <view class="btn outline" bindtap="deleteOrder" data-id="{{item.id}}">{{i18n.deleteOrder}}</view>
+              <view class="btn outline" wx:if="{{!item.isReviewed}}" bindtap="reviewOrder" data-id="{{item.id}}">{{i18n.reviewOrder}}</view>
+              <view class="btn primary" bindtap="buyAgain" data-id="{{item.id}}">{{i18n.buyAgain}}</view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view> 

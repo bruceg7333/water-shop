@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/cart/index",
+    "pages/profile/index",
+    "pages/order/index",
+    "pages/points/index",
+    "pages/favorite/list",
+    "pages/product/detail",
+    "pages/product/list",
+    "pages/article/detail",
+    "pages/article/list",
+    "pages/coupon/list",
+    "pages/address/list",
+    "pages/address/edit",
+    "pages/service/index",
+    "pages/about/index",
+    "pages/order/detail",
+    "pages/order/confirm",
+    "pages/order/payment",
+    "pages/order/result",
+    "pages/member/info",
+    "pages/member/login",
+    "pages/member/register",
+    "pages/promotion/index"
+  ],
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1a78c2",
+    "navigationBarTitleText": "SPRINKLE水商城",
+    "navigationBarTextStyle": "white",
+    "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a78c2",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "",
+        "iconPath": "static/images/tabbar/home.png",
+        "selectedIconPath": "static/images/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/cart/index",
+        "text": "",
+        "iconPath": "static/images/tabbar/cart.png",
+        "selectedIconPath": "static/images/tabbar/cart-active.png"
+      },
+      {
+        "pagePath": "pages/order/index",
+        "text": "",
+        "iconPath": "static/images/tabbar/order.png",
+        "selectedIconPath": "static/images/tabbar/order-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "",
+        "iconPath": "static/images/tabbar/profile.png",
+        "selectedIconPath": "static/images/tabbar/profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {},
+  "networkTimeout": {
+    "request": 10000,
+    "downloadFile": 10000
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将用于获取附近的配送信息"
+    }
+  }
+} 

@@ -1,0 +1,178 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 搜索框和语言切换 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <input 
+        class="search-input" 
+        placeholder="{{i18n.searchPlaceholder || '搜索饮用水产品'}}" 
+        value="{{searchValue}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+      <icon class="search-icon" type="search" size="18" color="#999" />
+    </view>
+    <!-- 语言切换按钮 -->
+    <view class="lang-switch" bindtap="showLanguageMenu">
+      <text class="lang-code">{{currentLanguageName || '简体中文'}}</text>
+      <view class="lang-arrow"></view>
+    </view>
+  </view>
+  
+  <!-- 语言选择下拉菜单 -->
+  <view class="language-menu {{showLanguageSelector ? 'show' : ''}}" wx:if="{{showLanguageSelector}}">
+    <view class="language-menu-mask" bindtap="hideLanguageMenu"></view>
+    <view class="language-menu-content">
+      <view class="language-menu-title">{{i18n.langSwitch || '切换语言'}}</view>
+      <view class="language-options">
+        <view 
+          wx:for="{{languages}}" 
+          wx:key="code" 
+          class="language-option {{item.code === currentLanguage ? 'active' : ''}}"
+          data-lang="{{item.code}}"
+          bindtap="changeLanguage"
+        >
+          <text>{{item.name}}</text>
+          <image wx:if="{{item.code === currentLanguage}}" class="check-icon" src="/assets/images/icons/check.png" mode="aspectFit" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#0088cc">
+    <block wx:for="{{bannerList}}" wx:key="id">
+      <swiper-item bindtap="onBannerTap" data-id="{{item.id}}" class="banner-item">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-image" />
+        <view class="banner-text">
+          <view class="banner-title">{{item.title}}</view>
+          <view class="banner-subtitle">{{item.subtitle}}</view>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 导航区域 -->
+  <view class="nav-section">
+    <view class="nav-item" bindtap="viewAllProducts">
+      <view class="nav-icon" style="background-image: linear-gradient(135deg, #1a78c2, #56CCF2);">
+        <image src="/assets/images/icons/all.png" class="nav-item-icon" />
+      </view>
+      <text class="nav-text">{{i18n.navAllProducts || '全部商品'}}</text>
+    </view>
+    <view class="nav-item" bindtap="viewAllArticles">
+      <view class="nav-icon" style="background-image: linear-gradient(135deg, #00bcd4, #80deea);">
+        <image src="/assets/images/icons/knowledge.png" class="nav-item-icon" />
+      </view>
+      <text class="nav-text">{{i18n.navWaterKnowledge || '饮水知识'}}</text>
+    </view>
+    <view class="nav-item" bindtap="onPromotionTap">
+      <view class="nav-icon" style="background-image: linear-gradient(135deg, #009688, #4db6ac);">
+        <image src="/assets/images/icons/discount.png" class="nav-item-icon" />
+      </view>
+      <text class="nav-text">{{i18n.navPromotions || '优惠活动'}}</text>
+    </view>
+    <view class="nav-item" bindtap="onNewUserGiftTap">
+      <view class="nav-icon" style="background-image: linear-gradient(135deg, #4facfe, #00f2fe);">
+        <image src="/assets/images/icons/gift.png" class="nav-item-icon" />
+      </view>
+      <text class="nav-text">{{i18n.navNewUserGift || '新人礼包'}}</text>
+    </view>
+  </view>
+
+  <!-- 限时优惠横幅 -->
+  <view class="promo-banner" style="background-image: {{promotions.color}}" bindtap="onPromotionTap">
+    <view class="promo-content">
+      <view class="promo-title">{{promotions.title}}</view>
+      <view class="promo-desc">{{promotions.description}}</view>
+    </view>
+    <view class="promo-btn">{{i18n.viewNow || '立即查看'}}</view>
+  </view>
+
+  <!-- 品牌故事 -->
+  <view class="brand-story">
+    <view class="section-title brand-title">{{i18n.brandTitle || brandInfo.title}}</view>
+    <view class="brand-content">
+      <text class="brand-desc">{{i18n.brandContent || brandInfo.content}}</text>
+      <view class="brand-tags">
+        <view class="brand-tag">{{i18n.tag1 || '0添加'}}</view>
+        <view class="brand-tag">{{i18n.tag2 || '18层过滤'}}</view>
+        <view class="brand-tag">{{i18n.tag3 || '天然矿物质'}}</view>
+        <view class="brand-tag">{{i18n.tag4 || '低钠'}}</view>
+        <view class="brand-tag">{{i18n.tag5 || '适合婴幼儿'}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门产品 -->
+  <view class="product-section">
+    <view class="section-header">
+      <view class="section-title">{{i18n.hotProducts || '热门产品'}}</view>
+      <view class="section-more" bindtap="viewAllProducts">{{i18n.viewAll || '查看全部'}}</view>
+    </view>
+    
+    <!-- 加载状态 -->
+    <view class="loading-container" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">{{i18n.loading || '加载中...'}}</text>
+    </view>
+    
+    <!-- 错误提示 -->
+    <view class="error-container" wx:elif="{{error}}" bindtap="fetchProducts">
+      <icon type="warn" size="36" color="#FF6B6B"></icon>
+      <text class="error-text">{{error}}</text>
+      <text class="retry-text">{{i18n.retry || '点击重试'}}</text>
+    </view>
+    
+    <!-- 空状态提示 -->
+    <view class="empty-container" wx:elif="{{productList.length === 0}}">
+      <image class="empty-image" src="/assets/images/icons/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">{{i18n.empty || '暂无商品数据'}}</text>
+    </view>
+    
+    <!-- 商品列表 -->
+    <view class="product-list" wx:else>
+      <view class="product-item" wx:for="{{productList}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+        <view class="product-tag {{item.tag === i18n.tagHot ? 'hot' : (item.tag === i18n.tagNew ? 'new' : 'discount')}}" wx:if="{{item.tag}}">{{item.tag}}</view>
+        <image class="product-image" src="{{item.imageUrl}}" mode="aspectFill" />
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-desc">{{item.description}}</text>
+          <view class="product-meta">
+            <view class="product-price-row">
+              <text class="product-price">¥{{item.price}}</text>
+              <text class="product-original-price" wx:if="{{item.tag === i18n.tagDiscount}}">¥{{item.price * 1.2}}</text>
+            </view>
+            <view class="product-sales-buy">
+              <text class="product-sales">{{i18n.soldFormat ? i18n.soldFormat.replace('{count}', item.sales) : '已售' + item.sales + '件'}}</text>
+              <view class="buy-btn" catchtap="onBuyNow" data-id="{{item.id}}">{{i18n.buy || '购买'}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 科普文章 -->
+  <view class="article-section">
+    <view class="section-header">
+      <view class="section-title">{{i18n.waterScience || '饮水科普'}}</view>
+      <view class="section-more" bindtap="viewAllArticles">{{i18n.viewAll || '更多文章'}}</view>
+    </view>
+    <view class="article-list">
+      <view class="article-item" wx:for="{{articles}}" wx:key="id" bindtap="onArticleTap" data-id="{{item.id}}" style="position: relative; display: flex; margin-bottom: 20rpx; padding-bottom: 20rpx; border-bottom: 1rpx solid #f0f0f0; height: 180rpx;">
+        <image class="article-image" src="{{item.imageUrl}}" mode="aspectFill" style="width: 240rpx; height: 180rpx; border-radius: 8rpx; margin-right: 20rpx; flex-shrink: 0;" />
+        <view class="article-info" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; height: 100%; padding: 0;">
+          <view class="article-title" style="font-size: 30rpx; font-weight: 500; color: #333; line-height: 1.4; margin: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;">{{item.title}}</view>
+          <view wx:if="{{item.tags && item.tags.length > 0}}" style="display: flex; margin-top: 10rpx;">
+            <view style="font-size: 22rpx; color: #0088cc; background-color: rgba(0, 136, 204, 0.1); padding: 4rpx 12rpx; border-radius: 6rpx; margin-right: 10rpx;">{{item.tags[0]}}</view>
+          </view>
+          <view style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+            <text style="font-size: 24rpx; color: #999;">{{item.publishDate}}</text>
+            <text style="font-size: 24rpx; color: #999;">{{i18n.viewsLabel || '阅读'}}: {{item.views}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

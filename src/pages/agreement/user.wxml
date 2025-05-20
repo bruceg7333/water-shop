@@ -1,0 +1,116 @@
+<view class="agreement">
+  <view class="title">用户协议</view>
+  <view class="content">
+    <view class="section">
+      <view class="section-title">1. 协议的接受与修改</view>
+      <view class="paragraph">
+        <text>1.1 本协议是用户（您）与SPRINKLE水站（"我们"）之间关于下载、安装、使用、复制本软件，以及使用我们提供的相关服务所订立的协议。</text>
+      </view>
+      <view class="paragraph">
+        <text>1.2 您在使用我们的服务之前，应当仔细阅读本协议，并同意遵守协议中的条款。</text>
+      </view>
+      <view class="paragraph">
+        <text>1.3 我们保留在任何时候修改本协议的权利，修改后的协议条款将在发布后生效。如您继续使用本服务，即表示您接受修改后的协议。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">2. 账号注册与安全</view>
+      <view class="paragraph">
+        <text>2.1 您注册成为SPRINKLE水站用户时，应当提供真实、准确、完整的个人资料。如个人资料有任何变动，应及时更新。</text>
+      </view>
+      <view class="paragraph">
+        <text>2.2 您应当妥善保管账号及密码信息，因账号密码保管不善而造成的损失由您自行承担。</text>
+      </view>
+      <view class="paragraph">
+        <text>2.3 您在使用我们的服务时，必须遵守中华人民共和国相关法律法规的规定。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">3. 订单与配送</view>
+      <view class="paragraph">
+        <text>3.1 您通过SPRINKLE水站下单购买商品时，应当提供真实、准确的收货信息，以确保商品能够正常送达。</text>
+      </view>
+      <view class="paragraph">
+        <text>3.2 我们将尽力按照承诺的配送时间送达商品，但在特殊情况下可能会出现延误，请您理解。</text>
+      </view>
+      <view class="paragraph">
+        <text>3.3 您有权在收到商品后对商品质量进行检查，如发现问题，请及时与我们联系。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">4. 支付与退款</view>
+      <view class="paragraph">
+        <text>4.1 您可以选择多种支付方式完成订单支付，包括但不限于微信支付、支付宝等。</text>
+      </view>
+      <view class="paragraph">
+        <text>4.2 如您需要退款，应按照平台规定的流程提交申请，我们将在收到申请后及时处理。</text>
+      </view>
+      <view class="paragraph">
+        <text>4.3 退款将原路返回至您的支付账户，具体到账时间取决于支付渠道的处理速度。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">5. 隐私保护</view>
+      <view class="paragraph">
+        <text>5.1 我们重视您的隐私保护，收集、使用您的个人信息将遵循《隐私政策》的规定。</text>
+      </view>
+      <view class="paragraph">
+        <text>5.2 未经您的同意，我们不会向第三方披露您的个人信息，法律法规另有规定的除外。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">6. 知识产权</view>
+      <view class="paragraph">
+        <text>6.1 SPRINKLE水站的所有内容，包括但不限于文字、图片、音频、视频、程序等均受知识产权法律法规保护。</text>
+      </view>
+      <view class="paragraph">
+        <text>6.2 未经我们书面许可，您不得擅自使用、复制、传播平台内的任何内容。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">7. 免责声明</view>
+      <view class="paragraph">
+        <text>7.1 因不可抗力或其他无法控制的原因导致服务中断或其他缺陷，我们不承担责任，但将尽力减少因此给您造成的损失。</text>
+      </view>
+      <view class="paragraph">
+        <text>7.2 对于您通过我们的服务与其他用户或第三方进行的交易或互动，我们不承担任何责任。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">8. 协议终止</view>
+      <view class="paragraph">
+        <text>8.1 您有权随时停止使用我们的服务，本协议因此终止。</text>
+      </view>
+      <view class="paragraph">
+        <text>8.2 如您违反本协议的条款，我们有权随时终止对您的服务，且无需为此承担任何责任。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">9. 法律适用与争议解决</view>
+      <view class="paragraph">
+        <text>9.1 本协议的订立、执行和解释及争议的解决均应适用中华人民共和国法律。</text>
+      </view>
+      <view class="paragraph">
+        <text>9.2 如因本协议发生争议，双方应友好协商解决；协商不成的，任何一方均有权将争议提交至有管辖权的人民法院诉讼解决。</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">10. 其他条款</view>
+      <view class="paragraph">
+        <text>10.1 本协议的最终解释权归SPRINKLE水站所有。</text>
+      </view>
+      <view class="paragraph">
+        <text>10.2 本协议自发布之日起生效。</text>
+      </view>
+    </view>
+  </view>
+</view> 

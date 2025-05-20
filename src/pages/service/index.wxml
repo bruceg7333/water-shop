@@ -1,0 +1,66 @@
+<view class="service">
+  <view class="banner">
+    <view class="title">
+      <text class="main">{{titleText}}</text>
+      <text class="sub">{{subtitleText}}</text>
+    </view>
+  </view>
+  
+  <view class="contact-methods">
+    <view class="method-title">{{contactTitleText}}</view>
+    
+    <view class="method-list">
+      <view class="method-item" bindtap="callPhone">
+        <view class="icon-wrap phone">
+          <image src="/static/images/icons/phone.png" mode="aspectFit" class="contact-icon"></image>
+        </view>
+        <view class="info">
+          <text class="name">{{phoneTitle}}</text>
+          <text class="value">{{phoneNumber}}</text>
+        </view>
+        <image src="/static/images/icons/arrow-right.png" class="arrow-icon"></image>
+      </view>
+      
+      <view class="method-item" bindtap="startChat">
+        <view class="icon-wrap chat">
+          <image src="/static/images/icons/chat.png" mode="aspectFit" class="contact-icon"></image>
+        </view>
+        <view class="info">
+          <text class="name">{{chatTitle}}</text>
+          <text class="value">{{chatDesc}}</text>
+        </view>
+        <image src="/static/images/icons/arrow-right.png" class="arrow-icon"></image>
+      </view>
+      
+      <button class="method-item wechat-button" open-type="contact">
+        <view class="icon-wrap wechat">
+          <image src="/static/images/icons/wechat.png" mode="aspectFit" class="contact-icon"></image>
+        </view>
+        <view class="info">
+          <text class="name">{{wechatTitle}}</text>
+          <text class="value">{{wechatDesc}}</text>
+        </view>
+        <image src="/static/images/icons/arrow-right.png" class="arrow-icon"></image>
+      </button>
+    </view>
+  </view>
+  
+  <view class="faq">
+    <view class="faq-title">{{faqTitleText}}</view>
+    
+    <view class="faq-list">
+      <view class="faq-item" wx:for="{{faqList}}" wx:key="index" bindtap="toggleFaq" data-index="{{index}}">
+        <view class="question">
+          <text>{{item.question}}</text>
+          <image 
+            src="{{item.isExpanded ? '/static/images/icons/arrow-up.png' : '/static/images/icons/arrow-down.png'}}" 
+            class="arrow-icon"
+          ></image>
+        </view>
+        <view class="answer" wx:if="{{item.isExpanded}}">
+          {{item.answer}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

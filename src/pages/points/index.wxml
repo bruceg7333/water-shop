@@ -1,0 +1,74 @@
+<view class="container">
+  <view class="header">
+    <view class="points-balance">
+      <text class="label">{{i18n.currentPoints}}</text>
+      <text class="value">{{pointsBalance}}</text>
+    </view>
+    <view class="points-card">
+      <image class="card-bg" src="/assets/images/points/card-bg.png" mode="aspectFill"></image>
+      <view class="card-content">
+        <view class="user-info">
+          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
+          <text class="nickname">{{userInfo.nickName}}</text>
+          <text class="level">{{userInfo.memberLevel}}</text>
+        </view>
+        <view class="points-info">
+          <text class="points-label">{{i18n.availablePoints}}</text>
+          <text class="points-value">{{pointsBalance}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === index ? 'active' : ''}}" 
+      wx:for="{{tabs}}" 
+      wx:key="index"
+      bindtap="switchTab"
+      data-index="{{index}}"
+    >
+      <text>{{item.name}}</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="records" wx:if="{{currentTab === 0}}">
+      <view class="empty" wx:if="{{pointsRecords.length === 0}}">
+        <image class="empty-icon" src="/assets/images/empty/empty.png"></image>
+        <text class="empty-text">{{i18n.emptyRecords}}</text>
+      </view>
+      <view class="record-list" wx:else>
+        <view class="record-item" wx:for="{{pointsRecords}}" wx:key="index">
+          <view class="record-info">
+            <text class="record-title">{{item.title}}</text>
+            <text class="record-time">{{item.time}}</text>
+          </view>
+          <text class="record-points {{item.type === 'increase' ? 'increase' : ''}}">
+            {{item.type === 'increase' ? '+' : '-'}}{{item.points}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <view class="ways" wx:if="{{currentTab === 1}}">
+      <view class="way-item" wx:for="{{pointsWays}}" wx:key="index">
+        <view class="way-icon-container">
+          <image class="way-icon" src="{{item.icon}}"></image>
+        </view>
+        <view class="way-info">
+          <view class="way-title">{{item.title}}</view>
+          <view class="way-desc">{{item.desc}}</view>
+        </view>
+        <view class="way-points">+{{item.points}}</view>
+      </view>
+    </view>
+
+    <view class="exchange" wx:if="{{currentTab === 2}}">
+      <view class="empty">
+        <image class="empty-icon" src="/assets/images/points/empty.png"></image>
+        <text class="empty-text">{{i18n.noExchangeItems}}</text>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,259 @@
+.order-list {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 20rpx;
+}
+
+/* 登录提示样式 */
+.login-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 200rpx 30rpx;
+  background-color: #ffffff;
+  margin: 30rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.05);
+}
+
+.login-prompt image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 30rpx;
+}
+
+.login-text {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.login-btn {
+  width: 240rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #1a78c2;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  box-shadow: 0 6rpx 16rpx rgba(26,120,194,0.2);
+  transition: all 0.3s;
+}
+
+.login-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(26,120,194,0.2);
+}
+
+.tabs {
+  display: flex;
+  background-image: linear-gradient(135deg, #1a78c2, #56CCF2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 20rpx 0;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.tab-item.active:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background: #ffffff;
+  border-radius: 2rpx;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 30rpx;
+}
+
+.empty image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 30rpx;
+}
+
+.empty .btn {
+  width: 240rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #1296db;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+}
+
+.order-items {
+  padding: 20rpx;
+}
+
+.order-item {
+  background: #fff;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.order-header {
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-number {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.order-status {
+  font-size: 26rpx;
+  color: #1296db;
+  font-weight: 500;
+}
+
+.order-goods {
+  padding: 20rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.goods-item {
+  display: flex;
+  padding: 10rpx 0;
+}
+
+.goods-image {
+  width: 120rpx;
+  height: 120rpx;
+  margin-right: 20rpx;
+  border-radius: 6rpx;
+  background-color: #f5f5f5;
+}
+
+.goods-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.goods-name {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.3;
+  margin-bottom: 10rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.goods-spec {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.goods-price-count {
+  display: flex;
+  justify-content: space-between;
+}
+
+.goods-price {
+  font-size: 28rpx;
+  color: #ff6b00;
+  font-weight: 500;
+}
+
+.goods-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.order-footer {
+  padding: 20rpx 30rpx;
+}
+
+.order-total {
+  text-align: right;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.price {
+  font-size: 28rpx;
+  color: #ff6b00;
+  font-weight: 500;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+}
+
+.btn {
+  min-width: 160rpx;
+  height: 60rpx;
+  line-height: 58rpx;
+  text-align: center;
+  background: #fff;
+  color: #666;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  border: 1rpx solid #ddd;
+  padding: 0 20rpx;
+  margin: 0;
+}
+
+.btn.outline {
+  background: #fff;
+  color: #666;
+  border: 1rpx solid #ddd;
+}
+
+/* 添加不同状态按钮的样式 */
+.btn.primary {
+  color: #fff;
+  background-color: #ff6b00;
+  border: 1rpx solid #ff6b00;
+}
+
+.btn.info {
+  color: #1296db;
+  border: 1rpx solid #1296db;
+} 

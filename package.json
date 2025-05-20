@@ -1,0 +1,18 @@
+{
+  "name": "vue-water-shop",
+  "version": "1.0.0",
+  "description": "## 项目介绍 品牌产品展示与销售平台，提供品牌方自有产品的展示和销售功能，支持折扣、销量、热度等指标展示。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "canvas": "^3.1.0"
+  }
+}

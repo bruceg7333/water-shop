@@ -1,0 +1,23 @@
+<view class="chat">
+  <scroll-view class="message-list" scroll-y scroll-with-animation scroll-top="{{scrollTop}}">
+    <view class="message-item {{item.type}}" wx:for="{{messages}}" wx:key="index">
+      <image wx:if="{{item.type === 'receive'}}" src="/static/images/customer-service.png" mode="aspectFill" class="avatar"></image>
+      <view class="content">
+        <text>{{item.content}}</text>
+      </view>
+      <image wx:if="{{item.type === 'send'}}" src="/static/images/avatar.png" mode="aspectFill" class="avatar"></image>
+    </view>
+  </scroll-view>
+  
+  <view class="input-area">
+    <input 
+      type="text" 
+      value="{{inputMessage}}"
+      bindinput="onInputChange"
+      placeholder="{{t('chat.inputPlaceholder')}}" 
+      confirm-type="send"
+      bindconfirm="sendMessage"
+    />
+    <button bindtap="sendMessage">{{t('chat.send')}}</button>
+  </view>
+</view> 

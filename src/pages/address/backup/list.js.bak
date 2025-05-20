@@ -1,0 +1,177 @@
+// 引入登录验证工具
+const { checkLogin } = require('../../utils/auth');
+const { api } = require('../../utils/request');
+const i18n = require('../../utils/i18n/index');
+const { createPage } = require('../../utils/page-base');
+
+// 定义页面配置
+const pageConfig = {
+const pageConfig = {
+  data: {
+    addresses: [
+      {
+        id: 1,
+        name: '张三',
+        phone: '13800138000',
+        province: '广东省',
+        city: '深圳市',
+        district: '南山区',
+        detail: '科技园南区10栋101室',
+        isDefault: true
+      },
+      {
+        id: 2,
+        name: '李四',
+        phone: '13900139000',
+        province: '广东省',
+        city: '深圳市',
+        district: '福田区',
+        detail: '中心区联合广场B座12楼',
+        isDefault: false
+      }
+    ],
+    from: '' // 来源页面
+  },
+  
+  onLoad: function(options) {
+    console.log("地址列表页onLoad接收到参数:", options);
+    // 初始化国际化文本
+    this.updateI18nText();
+    
+    // 如果有传递标题参数，直接使用
+    if (options && options.title) {
+      wx.setNavigationBarTitle({
+        title: decodeURIComponent(options.title)
+      });
+    }
+    
+    if (options && options.from) {
+      this.setData({
+        from: options.from
+      });
+    }
+  },
+  
+  selectAddress: function(e) {
+    console.log("选择地址，来源:", this.data.from);
+    const address = e.currentTarget.dataset.address;
+    
+    // 如果是从订单确认页面跳转过来，选择后返回
+    if (this.data.from === 'checkout') {
+      // 这里可以使用本地存储传递选中的地址
+      wx.setStorageSync('selectedAddress', address);
+      wx.navigateBack();
+    }
+  },
+  
+  setDefault: function(e) {
+    const index = e.currentTarget.dataset.index;
+    let addresses = this.data.addresses;
+    
+    // 先将所有地址设置为非默认
+    addresses.forEach(item => {
+      item.isDefault = false;
+    });
+    
+    // 将当前地址设为默认
+    addresses[index].isDefault = true;
+    
+    this.setData({
+      addresses: addresses
+    });
+    
+    wx.showToast({
+      title: '设置默认地址成功',
+      icon: 'success'
+    });
+  },
+  
+  editAddress: function(e) {
+    const index = e.currentTarget.dataset.index;
+    
+    wx.navigateTo({
+      url: '/pages/address/edit?id=' + this.data.addresses[index].id
+    });
+  },
+  
+  deleteAddress: function(e) {
+    const index = e.currentTarget.dataset.index;
+    
+    wx.showModal({
+      title: '提示',
+      content: '确定要删除该地址吗？',
+      success: (res) => {
+        if (res.confirm) {
+          let addresses = this.data.addresses;
+          
+          // 如果删除的是默认地址，且列表中还有其他地址，则将第一个地址设为默认
+          if (addresses[index].isDefault && addresses.length > 1) {
+            const newDefaultIndex = index === 0 ? 1 : 0;
+            addresses[newDefaultIndex].isDefault = true;
+          }
+          
+          addresses.splice(index, 1);
+          
+          this.setData({
+            addresses: addresses
+          });
+          
+          wx.showToast({
+            title: '删除成功',
+            icon: 'success'
+          });
+        }
+      }
+    });
+  },
+  
+  addAddress: function() {
+    wx.navigateTo({
+      url: '/pages/address/edit'
+    });
+  },
+  
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow() {
+    // 检查用户是否已登录
+    if (!checkLogin()) {
+      return; // 未登录，已跳转到登录页
+    }
+    
+    // 用户已登录，继续加载数据
+    this.loadAddresses();
+  },
+  
+  updateI18nText() {
+    // 设置页面标题
+    wx.setNavigationBarTitle({
+      title: this.t('page.address')
+    });
+    
+    this.setData({
+      i18n: {
+        title: this.t('page.address'),
+        empty: this.t('address.empty'),
+        defaultTag: this.t('address.defaultTag'),
+        setDefault: this.t('address.setDefault'),
+        edit: this.t('address.edit'),
+        delete: this.t('address.delete'),
+        add: this.t('address.add'),
+        confirm: this.t('address.confirm'),
+        confirmDelete: this.t('address.confirmDelete'),
+        deleteSuccess: this.t('address.deleteSuccess'),
+        deleteFailed: this.t('address.deleteFailed'),
+        setDefaultSuccess: this.t('address.setDefaultSuccess'),
+        setDefaultFailed: this.t('address.setDefaultFailed')
+      }
+    });
+  },
+  
+  navigateBack() {
+    wx.navigateBack();
+  }
+
+// 使用createPage包装页面配置
+Page(createPage(pageConfig));

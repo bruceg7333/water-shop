@@ -1,0 +1,64 @@
+<view class="container">
+  <view class="header">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="info">
+        <text class="name">{{userInfo.nickName}}</text>
+        <view class="level-container">
+          <text class="level">{{userInfo.memberLevel}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="points">
+      <text class="point-value">{{userInfo.points}}</text>
+      <text class="point-label">{{i18n.points}}</text>
+    </view>
+  </view>
+  
+  <view class="level-progress">
+    <view class="progress-title">{{i18n.progressTitle}}</view>
+    <view class="progress-bar">
+      <view class="progress-filled" style="width: {{levelProgress}}%;"></view>
+    </view>
+    <view class="progress-info">
+      <text>{{progressTipText}}</text>
+    </view>
+  </view>
+  
+  <view class="level-tabs">
+    <view wx:for="{{levels}}" wx:key="id" 
+          class="tab {{currentLevel === index ? 'active' : ''}}"
+          bindtap="switchLevel" data-index="{{index}}">
+      <view class="tab-icon">{{item.icon}}</view>
+      <view class="tab-text">{{item.name}}</view>
+    </view>
+  </view>
+  
+  <view class="level-content">
+    <view class="level-card">
+      <view class="card-header" style="background-image: linear-gradient(135deg, {{levels[currentLevel].colorLight || '#ffdfbf'}}, {{levels[currentLevel].color}});">
+        <view class="card-level">
+          <text class="level-name">{{levels[currentLevel].name}}</text>
+          <view class="level-icon">{{levels[currentLevel].icon}}</view>
+        </view>
+        <text class="level-condition">{{i18n.currentLevel}}: {{i18n.pointsRequirement}} {{levels[currentLevel].points}}</text>
+      </view>
+      
+      <view class="benefits-list">
+        <view class="benefit-item" wx:for="{{levels[currentLevel].benefits}}" wx:key="*this" wx:if="{{item && item !== ''}}">
+          <view class="benefit-icon">✓</view>
+          <view class="benefit-text">{{item}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="level-rules">
+    <view class="rules-title">{{i18n.rules.title}}</view>
+    <view class="rules-content">
+      <view class="rule-item" wx:for="{{i18n.rules.items}}" wx:key="*this" wx:if="{{item && item !== ''}}">
+        {{index + 1}}. {{item}}
+      </view>
+    </view>
+  </view>
+</view> 

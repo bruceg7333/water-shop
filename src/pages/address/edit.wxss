@@ -1,0 +1,90 @@
+.address-edit {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 150rpx;
+}
+
+.form-group {
+  margin-top: 20rpx;
+  background: #fff;
+  border-radius: 10rpx;
+  overflow: hidden;
+  margin: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.form-item {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  position: relative;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  font-weight: 500;
+}
+
+.form-item input, .form-item textarea {
+  width: 100%;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.placeholder {
+  color: #ccc;
+}
+
+.address-picker {
+  position: relative;
+}
+
+.picker-value {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.picker-value.placeholder {
+  color: #ccc;
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  width: 32rpx;
+  height: 32rpx;
+  transform: translateY(-50%);
+}
+
+.switch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch-item .label {
+  margin-bottom: 0;
+}
+
+.save-btn {
+  position: fixed;
+  bottom: 20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  height: 90rpx;
+  background: #0084ff;
+  color: #fff;
+  border-radius: 45rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+  font-weight: bold;
+  box-shadow: 0 10rpx 20rpx rgba(0, 132, 255, 0.2);
+} 

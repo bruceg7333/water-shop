@@ -1,0 +1,204 @@
+.service {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.banner {
+  position: relative;
+  height: 300rpx;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1976D2, #64B5F6, #42A5F5);
+  display: flex;
+  align-items: flex-end;
+}
+
+.banner image {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: relative;
+  width: 100%;
+  padding: 30rpx;
+  color: #fff;
+  background: transparent;
+}
+
+.title .main {
+  font-size: 36rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.title .sub {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.contact-methods {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 10rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.method-title, .faq-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.method-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.method-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  background: #fff;
+  font-size: inherit;
+  text-align: left;
+  line-height: 1.5;
+  border-radius: 0;
+  position: relative;
+}
+
+.method-item:last-child {
+  border-bottom: none;
+}
+
+.method-item::after {
+  border: none;
+}
+
+/* 微信客服按钮特殊样式 */
+.wechat-button {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 30rpx !important;
+  margin: 0 !important;
+  font-weight: normal !important;
+  line-height: 1.5 !important;
+  box-sizing: border-box !important;
+}
+
+.icon-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  color: #fff;
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.contact-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.arrow-icon {
+  width: 32rpx;
+  height: 32rpx;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.phone {
+  background: #ff4d4f;
+}
+
+.chat {
+  background: #0084ff;
+}
+
+.wechat {
+  background: #09bb07;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 6rpx;
+  display: block;
+}
+
+.value {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
+.faq {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 10rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  margin-bottom: 50rpx;
+}
+
+.faq-item {
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+.question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  font-size: 28rpx;
+}
+
+.answer {
+  padding: 0 30rpx 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 重置按钮样式 */
+.reset-button {
+  background: transparent; 
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  border: none;
+  width: 100%;
+  height: auto;
+  position: static;
+  display: block;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.reset-button::after {
+  border: none;
+}
+
+/* 微信客服内容样式 */
+.method-content {
+  display: flex;
+  width: 100%;
+  align-items: center;
+} 

@@ -1,0 +1,59 @@
+<view class="about">
+  <!-- 使用蓝色渐变背景替代图片 -->
+  <view class="banner gradient-bg">
+    <view class="title">
+      <text class="main">SPRINKLE</text>
+      <text class="sub">{{slogan}}</text>
+    </view>
+  </view>
+  
+  <view class="content">
+    <view class="section">
+      <view class="section-title">{{brandIntro}}</view>
+      <view class="section-content">
+        <text>{{brandIntroContent}}</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">{{brandPhilosophy}}</view>
+      <view class="section-content">
+        <text>{{brandPhilosophyContent}}</text>
+      </view>
+    </view>
+    
+    <view class="section">
+      <view class="section-title">{{productSeries}}</view>
+      <view class="section-content">
+        <text>{{productSeriesContent}}</text>
+      </view>
+    </view>
+    
+    <view class="section contact-section">
+      <view class="section-title">{{contactUs}}</view>
+      <view class="contact-list">
+        <view class="contact-item" bindtap="copyText" data-text="4008888888">
+          <text class="contact-label">{{phone}}</text>
+          <text class="contact-value">400-888-8888</text>
+          <image src="/static/images/icons/copy.png" class="copy-icon"></image>
+        </view>
+        <view class="contact-item" bindtap="copyText" data-text="sprinkle@example.com">
+          <text class="contact-label">{{email}}</text>
+          <text class="contact-value">sprinkle@example.com</text>
+          <image src="/static/images/icons/copy.png" class="copy-icon"></image>
+        </view>
+        <view class="contact-item" bindtap="copyText" data-text="SPRINKLE官方旗舰店">
+          <text class="contact-label">{{officialStore}}</text>
+          <text class="contact-value">{{officialStoreName}}</text>
+          <image src="/static/images/icons/copy.png" class="copy-icon"></image>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="footer">
+    <navigator url="/pages/agreement/user" class="footer-link">{{userAgreement}}</navigator>
+    <text class="divider">|</text>
+    <navigator url="/pages/agreement/privacy" class="footer-link">{{privacyPolicy}}</navigator>
+  </view>
+</view> 

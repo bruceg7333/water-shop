@@ -1,0 +1,264 @@
+/* cart/index.wxss */
+.cart-container {
+  width: 100%;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  padding-bottom: 100rpx;
+}
+
+/* 购物车头部 */
+.cart-header {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-image: linear-gradient(135deg, #1a78c2, #56CCF2);
+  color: #fff;
+  margin-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.select-all {
+  display: flex;
+  align-items: center;
+}
+
+/* 通用复选框基础样式 */
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  /* 默认：商品列表中的未选中样式 */
+  background-color: #ffffff;
+  border: 2rpx solid #0088cc;
+}
+
+/* 通用选中样式 */
+.checkbox.checked {
+  background-color: #0088cc;
+  border-color: #0088cc; /* 边框与背景同色，视觉上无额外圈 */
+}
+
+/* 购物车头部全选按钮的特殊样式 */
+.cart-header .checkbox {
+  /* 未选中时：适应深色背景 */
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2rpx solid #ffffff;
+}
+
+.cart-header .checkbox.checked {
+  /* 选中时：适应深色背景 */
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* 购物车列表 */
+.cart-list {
+  background-color: #fff;
+}
+
+/* 滑动相关样式 */
+.cart-item-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.movable-area {
+  width: 100%;
+  height: 220rpx; /* 适应购物车项目高度 */
+  position: relative;
+}
+
+.movable-view {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.delete-btn-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150rpx;
+  height: 100%;
+  background-color: #ff4500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.delete-btn-text {
+  color: #fff;
+  font-size: 30rpx;
+}
+
+.cart-item {
+  display: flex;
+  padding: 30rpx;
+  align-items: center;
+  position: relative;
+  border-bottom: 1rpx solid #eee;
+  background-color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.item-select {
+  margin-right: 20rpx;
+}
+
+.item-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 10rpx;
+  margin-right: 20rpx;
+  background-color: #f5f5f5;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 160rpx;
+  padding-right: 50rpx;
+}
+
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 15rpx;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-all;
+  max-width: calc(100% - 10rpx);
+  line-height: 1.4;
+}
+
+.item-price {
+  font-size: 32rpx;
+  color: #ff4500;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.item-count {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+}
+
+.count-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #ddd;
+  background-color: #f7f7f7;
+  font-size: 30rpx;
+}
+
+.count-btn.disabled {
+  color: #ccc;
+}
+
+.count-number {
+  width: 80rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1rpx solid #ddd;
+  border-bottom: 1rpx solid #ddd;
+  background-color: #fff;
+  font-size: 28rpx;
+}
+
+/* 旧的删除按钮隐藏 */
+.delete-btn {
+  display: none;
+}
+
+/* 结算栏 */
+.checkout-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.total-price {
+  flex: 1;
+  padding-left: 30rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.price {
+  color: #ff4500;
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.checkout-btn {
+  width: 240rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  background-color: #0088cc;
+  color: #fff;
+  font-size: 30rpx;
+}
+
+/* 空购物车 */
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 300rpx;
+}
+
+.empty-cart-icon {
+  font-size: 80rpx;
+  color: #ccc;
+  margin-bottom: 30rpx;
+}
+
+.empty-cart-text {
+  font-size: 36rpx;
+  color: #999;
+  margin-bottom: 60rpx;
+}
+
+.go-shopping-btn {
+  width: 200rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background-color: #0088cc;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+} 

@@ -1,0 +1,54 @@
+<view class="payment">
+  <view class="amount-section">
+    <text class="label">{{i18n.amountLabel}}</text>
+    <text class="amount">{{i18n.currencySymbol}}{{order.totalPrice}}</text>
+  </view>
+  
+  <view class="payment-methods">
+    <text class="section-title">{{i18n.paymentMethodTitle}}</text>
+    <view class="methods-list">
+      <view 
+        class="method-item {{selectedMethod === method.id ? 'active' : ''}}" 
+        wx:for="{{paymentMethods}}" 
+        wx:for-item="method"
+        wx:key="id"
+        bindtap="selectPaymentMethod"
+        data-id="{{method.id}}"
+      >
+        <view class="method-info">
+          <image src="{{method.icon}}" mode="aspectFit"></image>
+          <text>{{method.name}}</text>
+        </view>
+        <view class="checkbox">
+          <view class="inner" wx:if="{{selectedMethod === method.id}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="order-info">
+    <text class="section-title">{{i18n.orderInfoTitle}}</text>
+    <view class="info-list">
+      <view class="info-item">
+        <text class="label">{{i18n.orderNoLabel}}</text>
+        <text class="value">{{order.orderNo}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">{{i18n.productAmountLabel}}</text>
+        <text class="value">{{i18n.currencySymbol}}{{order.totalPrice}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">{{i18n.discountAmountLabel}}</text>
+        <text class="value">-{{i18n.currencySymbol}}0.00</text>
+      </view>
+      <view class="info-item">
+        <text class="label">{{i18n.payAmountLabel}}</text>
+        <text class="value highlight">{{i18n.currencySymbol}}{{order.totalPrice}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <view class="footer">
+    <view class="pay-btn" bindtap="confirmPayment">{{i18n.payNow}}</view>
+  </view>
+</view> 

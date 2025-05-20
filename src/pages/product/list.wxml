@@ -1,0 +1,82 @@
+<view class="product-list-container">
+  <!-- 加载中提示 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <image class="loading-icon" src="../../../static/images/loading.gif" mode="aspectFit"></image>
+    <text>{{i18n.loading || '加载中...'}}</text>
+  </view>
+
+  <!-- 分类和排序导航 -->
+  <view class="filter-section" wx:if="{{!isLoading}}">
+    <scroll-view scroll-x class="category-scroll">
+      <view class="category-list">
+        <view 
+          wx:for="{{categories}}" 
+          wx:key="id" 
+          class="category-item {{activeCategory === item.id ? 'active' : ''}}"
+          bindtap="switchCategory"
+          data-category="{{item.id}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </scroll-view>
+    
+    <view class="sort-section">
+      <view 
+        wx:for="{{sortOptions}}" 
+        wx:key="id" 
+        class="sort-item {{activeSort === item.id ? 'active' : ''}}"
+        bindtap="switchSort"
+        data-sort="{{item.id}}"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </view>
+  
+  <!-- 商品列表 -->
+  <view class="product-list" wx:if="{{!isLoading && filteredProducts.length > 0}}">
+    <view 
+      class="product-item" 
+      wx:for="{{filteredProducts}}" 
+      wx:key="id"
+      bindtap="viewProductDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="product-tag {{item.tag === i18n.hotTag ? 'hot' : (item.tag === i18n.newTag ? 'new' : 'discount')}}" wx:if="{{item.tag}}">
+        {{item.tag}}
+      </view>
+      <image class="product-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+      <view class="product-info">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-desc">{{item.description}}</text>
+        <view class="product-meta">
+          <view class="price-sales">
+            <text class="product-price">{{i18n.currencySymbol}}{{item.price}}</text>
+            <text class="product-sales">{{i18n.soldPrefix}} {{item.sales}} {{i18n.soldSuffix}}</text>
+          </view>
+          <view class="add-cart-btn" catchtap="addToCart" data-id="{{item.id}}">
+            <text class="cart-icon-text">+</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 加载更多提示 -->
+  <view class="load-more" wx:if="{{!isLoading && filteredProducts.length > 0}}">
+    <view wx:if="{{loadingMore}}" class="loading-more">
+      <image class="loading-icon-small" src="../../../static/images/loading.gif" mode="aspectFit"></image>
+      <text>{{i18n.loadMore || '加载更多...'}}</text>
+    </view>
+    <view wx:elif="{{!hasMore}}" class="no-more">
+      <text>{{i18n.noMoreData || '已经到底啦'}}</text>
+    </view>
+  </view>
+  
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!isLoading && filteredProducts.length === 0}}">
+    <image class="empty-image" src="../../../static/images/empty-product.png" mode="aspectFit"></image>
+    <text class="empty-text">{{i18n.empty || '暂无相关商品'}}</text>
+  </view>
+</view> 

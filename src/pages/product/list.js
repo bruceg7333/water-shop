@@ -1,0 +1,437 @@
+// 引入必要的模块
+const i18n = require('../../utils/i18n/index');
+const { createPage } = require('../../utils/page-base');
+const { api } = require('../../utils/request');
+
+// 定义页面配置
+const pageConfig = {
+  data: {
+    productList: [],
+    activeCategory: 'all',
+    categories: [],
+    sortOptions: [],
+    activeSort: 'default',
+    filteredProducts: [],
+    isLoading: true,
+    i18n: {}, // 国际化文本
+    page: 1, // 当前页码
+    limit: 10, // 每页数量
+    hasMore: true, // 是否有更多数据
+    loadingMore: false // 是否正在加载更多
+  },
+  
+  /**
+   * 更新国际化文本
+   */
+  updateI18nText() {
+    // 更新页面的国际化文本
+    const i18nText = {
+      title: this.t('page.products'),
+      empty: this.t('product.list.empty'),
+      addToCart: this.t('product.detail.addToCart'),
+      addedToCart: this.t('product.list.addedToCart'),
+      currencySymbol: this.t('common.unit.yuan'),
+      soldPrefix: this.t('product.list.soldCount').replace('{count}', ''),
+      soldSuffix: ' ' + this.t('common.unit.piece'),
+      loading: this.t('common.loading'),
+      loadMore: this.t('common.loadMore'),
+      noMoreData: this.t('common.noMoreData'),
+      tagHot: this.t('product.list.tag.hot'),
+      tagNew: this.t('product.list.tag.new'),
+      tagDiscount: this.t('product.list.tag.discount')
+    };
+    
+    // 分类和排序选项
+    const categories = [
+      { id: 'all', name: this.t('product.list.category.all') },
+      { id: 'pure', name: this.t('product.list.category.pure') },
+      { id: 'mineral', name: this.t('product.list.category.mineral') },
+      { id: 'soda', name: this.t('product.list.category.soda') }
+    ];
+    
+    const sortOptions = [
+      { id: 'default', name: this.t('product.list.sort.default') },
+      { id: 'sales', name: this.t('product.list.sort.sales') },
+      { id: 'price-asc', name: this.t('product.list.sort.priceAsc') },
+      { id: 'price-desc', name: this.t('product.list.sort.priceDesc') }
+    ];
+    
+    this.setData({
+      i18n: i18nText,
+      categories,
+      sortOptions
+    });
+  },
+  
+  onLoad: function(options) {
+    // 更新导航栏标题
+    wx.setNavigationBarTitle({
+      title: this.t('page.products')
+    });
+    
+    // 初始化国际化文本
+    this.updateI18nText();
+    
+    // 如果有查询参数，可以处理
+    if (options && options.category) {
+      this.setData({
+        activeCategory: options.category
+      });
+    }
+    
+    // 加载商品数据
+    this.loadProducts();
+  },
+  
+  // 从API加载商品数据
+  loadProducts: function(loadMore = false) {
+    // 如果是加载更多，且没有更多数据，则直接返回
+    if (loadMore && !this.data.hasMore) {
+      return;
+    }
+    
+    // 设置加载状态
+    if (loadMore) {
+      this.setData({ loadingMore: true });
+    } else {
+      this.setData({ 
+        isLoading: true,
+        page: 1, // 重置页码
+        filteredProducts: [] // 清空现有数据
+      });
+    }
+    
+    // 构建API查询参数
+    const params = {
+      page: loadMore ? this.data.page : 1,
+      limit: this.data.limit
+    };
+    
+    if (this.data.activeCategory !== 'all') {
+      params.category = this.data.activeCategory;
+    }
+    
+    // 根据排序选项设置排序参数
+    if (this.data.activeSort === 'sales') {
+      params.sort = 'sales';
+    } else if (this.data.activeSort === 'price-asc') {
+      params.sort = 'price_asc';
+    } else if (this.data.activeSort === 'price-desc') {
+      params.sort = 'price_desc';
+    }
+    
+    // 添加调试日志
+    console.log('请求商品参数:', params);
+    
+    // 调用商品API获取数据
+    api.product.getList(params)
+      .then(res => {
+        // 打印API返回结果
+        console.log('商品API返回:', res);
+        
+        if (res.success && res.data) {
+          // 直接从返回结构中获取products数组
+          let products = res.data.products || [];
+          const total = res.data.total || 0;
+          console.log('商品数据:', products);
+          
+          // 处理每个商品，确保有有效的ID
+          products = products.map(p => {
+            // 确保有id字段，优先使用_id，然后是id
+            const productId = p._id || p.id;
+            
+            // MongoDB ObjectId可能是对象，需要转为字符串
+            let finalId = productId;
+            if (productId && typeof productId === 'object' && productId.toString) {
+              finalId = productId.toString();
+            }
+            
+            // 日志记录商品ID
+            console.log(`商品ID处理: 原始=${JSON.stringify(productId)}, 最终=${finalId}`);
+            
+            // 国际化商品标签
+            let displayTagText = p.tag; // 默认使用数据库原始值
+            if (p.tag === '热销') {
+              // 如果翻译的标签不是key本身，则使用翻译后的值，否则使用原始值
+              displayTagText = (this.data.i18n.tagHot && this.data.i18n.tagHot !== 'product.list.tag.hot') ? this.data.i18n.tagHot : p.tag;
+            } else if (p.tag === '新品') {
+              displayTagText = (this.data.i18n.tagNew && this.data.i18n.tagNew !== 'product.list.tag.new') ? this.data.i18n.tagNew : p.tag;
+            } else if (p.tag === '优惠') {
+              displayTagText = (this.data.i18n.tagDiscount && this.data.i18n.tagDiscount !== 'product.list.tag.discount') ? this.data.i18n.tagDiscount : p.tag;
+            }
+            
+            return { 
+              ...p, 
+              id: finalId,  // 使用处理后的ID
+              _id: finalId, // 保留_id字段
+              displayTag: displayTagText 
+            };
+          });
+          
+          // 计算是否还有更多数据
+          const hasMore = products.length > 0 && 
+            (loadMore ? this.data.filteredProducts.length + products.length : products.length) < total;
+          
+          // 如果是加载更多，则追加数据，否则替换数据
+          const newProductList = loadMore ? 
+            [...this.data.filteredProducts, ...products] : 
+            products;
+          
+          this.setData({
+            productList: newProductList,
+            filteredProducts: newProductList,
+            isLoading: false,
+            loadingMore: false,
+            hasMore: hasMore,
+            page: loadMore ? this.data.page + 1 : 2 // 更新页码
+          });
+          
+          // 商品为空时提示
+          if (newProductList.length === 0) {
+            wx.showToast({
+              title: this.data.i18n.empty,
+              icon: 'none',
+              duration: 2000
+            });
+          }
+        } else {
+          console.error('获取商品列表失败:', res);
+          this.setData({ 
+            isLoading: false,
+            loadingMore: false
+          });
+          wx.showToast({
+            title: res.message || this.t('common.error'),
+            icon: 'none',
+            duration: 2000
+          });
+          // 加载失败时使用本地演示数据
+          if (!loadMore) {
+            this.loadDemoProducts();
+          }
+        }
+      })
+      .catch(err => {
+        console.error('获取商品列表出错:', err);
+        this.setData({ 
+          isLoading: false,
+          loadingMore: false
+        });
+        wx.showToast({
+          title: this.t('common.networkError') || '网络错误',
+          icon: 'none',
+          duration: 2000
+        });
+        // 加载失败时使用本地演示数据
+        if (!loadMore) {
+          this.loadDemoProducts();
+        }
+      });
+  },
+  
+  // 加载更多商品
+  loadMoreProducts: function() {
+    if (!this.data.loadingMore && this.data.hasMore) {
+      this.loadProducts(true);
+    }
+  },
+  
+  // 页面上拉触底事件处理函数
+  onReachBottom: function() {
+    this.loadMoreProducts();
+  },
+  
+  // 下拉刷新事件
+  onPullDownRefresh: function() {
+    this.loadProducts();
+    wx.stopPullDownRefresh();
+  },
+  
+  // 加载演示商品数据（仅在API调用失败时使用）
+  loadDemoProducts: function() {
+    console.log('加载演示商品数据');
+    
+    const demoProductsRaw = [
+      {
+        id: "1",  // 使用字符串类型ID
+        name: 'SPRINKLE 纯净水',
+        description: '来自高山冰川，纯净甘甜',
+        price: 2.00,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 1000,
+        stock: 100,
+        tag: '热销' // 数据库原始标签
+      },
+      {
+        id: "2",  // 使用字符串类型ID
+        name: 'SPRINKLE 矿泉水',
+        description: '富含矿物质，健康饮用水选择',
+        price: 2.50,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 800,
+        stock: 100,
+        tag: '优惠' // 数据库原始标签
+      },
+      {
+        id: 3,
+        name: 'SPRINKLE 山泉水',
+        description: '大容量家庭装，经济实惠',
+        price: 3.00,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 600,
+        stock: 100,
+        tag: '新品' // 数据库原始标签
+      },
+      {
+        id: 4,
+        name: 'SPRINKLE 苏打水',
+        description: '天然矿物质，口感清爽',
+        price: 3.50,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 500,
+        stock: 100
+      },
+      {
+        id: 5,
+        name: 'SPRINKLE 饮用纯净水',
+        description: '适合婴幼儿饮用，纯净无添加',
+        price: 4.00,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 300,
+        stock: 100,
+        tag: '热销'
+      },
+      {
+        id: 6,
+        name: 'SPRINKLE 天然矿泉水',
+        description: '源自天然矿泉，富含矿物质',
+        price: 4.50,
+        imageUrl: '/assets/images/products/sprinkle.png',
+        sales: 200,
+        stock: 100
+      }
+    ];
+    
+    // 对演示数据也进行标签国际化处理
+    const demoProducts = demoProductsRaw.map(p => {
+      let displayTagText = p.tag;
+      if (p.tag === '热销') {
+        displayTagText = (this.data.i18n.tagHot && this.data.i18n.tagHot !== 'product.list.tag.hot') ? this.data.i18n.tagHot : p.tag;
+      } else if (p.tag === '新品') {
+        displayTagText = (this.data.i18n.tagNew && this.data.i18n.tagNew !== 'product.list.tag.new') ? this.data.i18n.tagNew : p.tag;
+      } else if (p.tag === '优惠') {
+        displayTagText = (this.data.i18n.tagDiscount && this.data.i18n.tagDiscount !== 'product.list.tag.discount') ? this.data.i18n.tagDiscount : p.tag;
+      }
+      return { ...p, displayTag: displayTagText };
+    });
+    
+    this.setData({
+      productList: demoProducts,
+      filteredProducts: demoProducts,
+      isLoading: false
+    });
+  },
+  
+  // 切换分类
+  switchCategory: function(e) {
+    const category = e.currentTarget.dataset.category;
+    this.setData({
+      activeCategory: category,
+      page: 1, // 重置页码
+      hasMore: true // 重置加载更多状态
+    });
+    
+    // 重新加载商品
+    this.loadProducts();
+  },
+  
+  // 切换排序
+  switchSort: function(e) {
+    const sort = e.currentTarget.dataset.sort;
+    this.setData({
+      activeSort: sort,
+      page: 1, // 重置页码
+      hasMore: true // 重置加载更多状态
+    });
+    
+    // 重新加载商品
+    this.loadProducts();
+  },
+  
+  // 查看商品详情
+  viewProductDetail: function(e) {
+    const id = e.currentTarget.dataset.id;
+    
+    console.log('查看商品详情，原始ID:', id);
+    
+    // 确保ID不为undefined
+    if (!id) {
+      console.error('无效的商品ID:', id);
+      wx.showToast({
+        title: '无效的商品ID',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 从商品列表中找到对应的商品
+    const product = this.data.filteredProducts.find(p => 
+      p.id && (p.id.toString() === id.toString() || 
+      (p._id && p._id.toString() === id.toString()))
+    );
+    
+    if (!product) {
+      console.error('找不到对应ID的商品:', id);
+      wx.showToast({
+        title: '商品不存在',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 获取MongoDB _id或普通id
+    const productId = product._id || product.id;
+    
+    console.log('跳转到商品详情页，处理后ID:', productId);
+    
+    wx.navigateTo({
+      url: `/pages/product/detail?id=${productId}`
+    });
+  },
+  
+  // 添加到购物车
+  addToCart: function(e) {
+    const id = e.currentTarget.dataset.id;
+    const product = this.data.productList.find(item => item.id.toString() === id.toString());
+    
+    if (product) {
+      // 添加到购物车API
+      api.cart.add({
+        productId: id,
+        quantity: 1
+      }).then(res => {
+        if (res.success) {
+          wx.showToast({
+            title: this.data.i18n.addedToCart,
+            icon: 'success'
+          });
+        } else {
+          wx.showToast({
+            title: res.message || this.t('common.error'),
+            icon: 'none'
+          });
+        }
+      }).catch(err => {
+        console.error('添加到购物车失败:', err);
+        // 模拟添加成功
+        wx.showToast({
+          title: this.data.i18n.addedToCart,
+          icon: 'success'
+        });
+      });
+    }
+  }
+};
+
+// 使用createPage包装页面配置
+Page(createPage(pageConfig)); 

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "饮水科普",
+  "backgroundTextStyle": "dark",
+  "backgroundColor": "#f5f5f5",
+  "enablePullDownRefresh": true,
+  "usingComponents": {}
+} 

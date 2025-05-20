@@ -1,0 +1,164 @@
+.about {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding-bottom: 50rpx;
+}
+
+/* 添加banner样式，参考客服中心页面 */
+.banner {
+  position: relative;
+  height: 300rpx;
+  overflow: hidden;
+}
+
+/* 蓝色渐变背景样式 */
+.gradient-bg {
+  background: linear-gradient(135deg, #0062ff, #6ba5ff, #0084ff);
+  display: flex;
+  align-items: flex-end;
+}
+
+.banner image {
+  width: 100%;
+  height: 100%;
+}
+
+.title {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 30rpx;
+  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  color: #fff;
+}
+
+.title .main {
+  font-size: 36rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.title .sub {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+/* 原header样式保留备用 */
+.header {
+  display: none; /* 隐藏原header */
+  flex-direction: column;
+  align-items: center;
+  padding: 60rpx 0;
+  background: #fff;
+}
+
+.logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 20rpx;
+}
+
+.name {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.slogan {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.version {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.content {
+  margin-top: 20rpx;
+}
+
+.section {
+  background: #fff;
+  padding: 30rpx;
+  margin: 0 20rpx 20rpx;
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: #333;
+  padding-bottom: 10rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 联系方式列表容器 */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+.contact-label {
+  font-size: 28rpx;
+  color: #333;
+  width: 150rpx;
+  flex-shrink: 0;
+}
+
+.contact-value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 20rpx;
+}
+
+.copy-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: auto;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30rpx 0;
+  margin-top: 10rpx;
+}
+
+.footer-link {
+  font-size: 26rpx;
+  color: #0084ff;
+}
+
+.divider {
+  margin: 0 20rpx;
+  color: #ddd;
+} 

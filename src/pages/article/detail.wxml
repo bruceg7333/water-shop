@@ -1,0 +1,76 @@
+<view class="article-container" wx:if="{{article}}">
+  <!-- 文章头部 -->
+  <view class="article-header">
+    <image class="header-image" src="{{article.imageUrl}}" mode="aspectFill"></image>
+    <view class="header-overlay">
+      <view class="article-title">{{article.title}}</view>
+      <view class="article-meta">
+        <text class="article-author">{{i18n.authorLabel || '作者'}}: {{article.author}}</text>
+        <text class="article-date">{{i18n.dateLabel || '发布日期'}}: {{article.publishDate}}</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 文章内容 -->
+  <view class="article-content">
+    <rich-text nodes="{{article.content}}"></rich-text>
+  </view>
+  
+  <!-- 文章底部 -->
+  <view class="article-footer">
+    <view class="article-tags">
+      <view wx:for="{{article.tags}}" wx:key="*this" class="tag-item">{{item}}</view>
+    </view>
+    <view class="article-stats">
+      <view class="stat-item">
+        <image class="stat-icon" src="/assets/images/icons/view.png" mode="aspectFit"></image>
+        <text>{{i18n.viewsLabel || '阅读'}}: {{article.views}}</text>
+      </view>
+      <view class="stat-item">
+        <image class="stat-icon" src="/assets/images/icons/share.png" mode="aspectFit"></image>
+        <text>{{i18n.sharesLabel || '分享'}}: {{article.shares}}</text>
+      </view>
+      <button class="share-btn" open-type="share">
+        <image class="btn-icon" src="/assets/images/icons/share.png" mode="aspectFit"></image>
+        {{i18n.shareButton || '分享'}}
+      </button>
+    </view>
+  </view>
+  
+  <!-- 相关文章 -->
+  <view class="related-articles" wx:if="{{relatedArticles.length > 0}}">
+    <view class="section-title">{{i18n.relatedArticles || '相关文章'}}</view>
+    <view class="related-list">
+      <view 
+        wx:for="{{relatedArticles}}" 
+        wx:key="id" 
+        class="related-item"
+        bindtap="viewRelatedArticle" 
+        data-id="{{item.id}}"
+      >
+        <image class="related-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+        <view class="related-info">
+          <view class="related-title">{{item.title}}</view>
+          <view class="related-meta">
+            <text>{{i18n.viewsLabel || '阅读'}}: {{item.views}}</text>
+            <text>{{item.publishDate}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 返回首页按钮 -->
+  <view class="home-btn" bindtap="goToHome">
+    <image src="/assets/images/tabbar/home.svg" mode="aspectFit" class="home-icon"></image>
+    <text>{{i18n.homeButton || '首页'}}</text>
+  </view>
+</view>
+
+<!-- 加载中或错误提示 -->
+<view class="loading-container" wx:else>
+  <view class="loading-content">
+    <image class="loading-image" src="/static/images/loading.png" mode="aspectFit"></image>
+    <text class="loading-text">{{i18n.loadingText || '内容加载中...'}}</text>
+  </view>
+</view> 
