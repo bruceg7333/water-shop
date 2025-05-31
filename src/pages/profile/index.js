@@ -21,7 +21,7 @@ const pageConfig = {
         text: '待付款',
         iconText: '¥',
         iconColor: '#ff9a9e',
-        badge: 2,
+        badge: 0,
         url: 'pages/order/index?status=pending_payment',
         status: 'pending_payment'
       },
@@ -39,7 +39,7 @@ const pageConfig = {
         text: '待收货',
         iconText: '🚚',
         iconColor: '#a1c4fd',
-        badge: 1,
+        badge: 0,
         url: 'pages/order/index?status=pending_receipt',
         status: 'pending_receipt'
       },
@@ -201,145 +201,96 @@ const pageConfig = {
     });
   },
 
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad() {
-    // 初始化国际化文本
-    this.updateI18nText();
-    
-    // 检查用户是否已登录
-    this.checkLoginStatus();
-    
     // 更新导航栏标题
     wx.setNavigationBarTitle({
       title: this.t('page.profile')
     });
     
-    // 监听登录成功事件，刷新页面数据
-    this.loginSuccessEventListener();
+    // 初始化国际化文本
+    this.updateI18nText();
+    
+    // 检查登录状态并加载用户信息
+    this.checkLoginStatus();
   },
-  
+
   /**
    * 监听登录成功事件
    */
   loginSuccessEventListener() {
-    // 监听自定义登录成功事件
-    wx.onAppHide(() => {
-      // 应用切入后台时记录状态，用于检测登录状态变化
-      this.appHideLoginStatus = wx.getStorageSync('isLoggedIn') || false;
+    // 监听登录成功事件
+    wx.onAppShow(() => {
+      // 检查登录状态变化
+      const currentLoginStatus = wx.getStorageSync('isLoggedIn');
+      if (currentLoginStatus && !this.data.userInfo.isLogin) {
+        // 用户刚刚登录成功，重新加载用户信息
+        console.log('检测到用户登录，重新加载用户信息');
+        this.checkLoginStatus();
+      }
     });
     
+    // 监听自定义登录成功事件
     wx.onAppShow(() => {
-      // 应用切回前台时，检查登录状态是否发生变化
-      const currentLoginStatus = wx.getStorageSync('isLoggedIn') || false;
-      if (this.appHideLoginStatus !== currentLoginStatus) {
-        console.log('登录状态发生变化，刷新页面');
-        // 登录状态发生变化，刷新页面数据
-        if (currentLoginStatus) {
-          // 登录成功，加载用户数据
-          this.loadUserInfo();
-          this.loadOrderStatistics();
-        } else {
-          // 登出，更新未登录状态
-          this.checkLoginStatus();
-        }
+      const redirectUrl = wx.getStorageSync('redirectUrl');
+      if (redirectUrl) {
+        wx.removeStorageSync('redirectUrl');
+        // 如果有重定向URL，说明是从登录页返回的
+        this.checkLoginStatus();
       }
     });
   },
-  
+
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-    // 每次显示页面时，都重新获取用户最新数据
-    console.log('个人中心页面显示');
+    // 检查登录状态变化
+    const currentLoginStatus = wx.getStorageSync('isLoggedIn');
+    const currentToken = wx.getStorageSync('token');
     
-    // 确保登录状态正确
-    this.validateLoginStatus();
-    
-    // 获取上次登录状态
-    const lastLoginState = this.data.userInfo.isLogin;
-    
-    // 检查用户是否已登录，但不自动跳转
-    const isLoggedIn = checkLogin({
-      redirectOnFail: false, // 不自动跳转到登录页
-      showToast: false // 不显示提示
-    });
-    
-    // 如果登录状态发生变化，强制刷新数据
-    if (isLoggedIn !== lastLoginState) {
-      console.log('登录状态变化，从', lastLoginState, '变为', isLoggedIn);
-      
-      if (isLoggedIn) {
-        // 用户刚登录，强制重新加载数据
-        this.loadUserInfo();
-        this.loadOrderStatistics();
-      } else {
-        // 用户刚退出登录，更新未登录状态
-        this.checkLoginStatus();
-      }
-    } else if (isLoggedIn) {
-      // 已登录状态没变，尝试更新最新数据
-      // 如果当前没有正在加载数据，则尝试刷新
-      if (!this.data.isLoadingUserData) {
-        this.loadUserInfo();
-        this.loadOrderStatistics();
-      }
+    // 如果登录状态发生变化，重新检查
+    if (currentLoginStatus !== this.data.userInfo.isLogin || 
+        (currentLoginStatus && !currentToken)) {
+      console.log('登录状态发生变化，重新检查');
+      this.checkLoginStatus();
+    } else if (currentLoginStatus && this.data.userInfo.isLogin) {
+      // 已登录状态，加载订单统计（可能有新订单）
+      this.loadOrderStatistics();
     }
+    
+    // 更新国际化文本（可能语言设置发生了变化）
+    this.updateI18nText();
   },
-  
+
   /**
-   * 验证登录状态，确保token有效
+   * 验证登录状态的有效性
    */
   validateLoginStatus() {
-    // 从本地存储获取登录信息
     const token = wx.getStorageSync('token');
     const isLoggedIn = wx.getStorageSync('isLoggedIn');
+    const userInfo = wx.getStorageSync('userInfo');
     
-    // 如果没有令牌但登录状态为true，清除错误的登录状态
-    if (!token && isLoggedIn) {
-      console.warn('发现无效的登录状态：有isLoggedIn标记但没有token');
+    // 检查必要的登录信息是否完整
+    if (!token || !isLoggedIn || !userInfo) {
+      console.log('登录信息不完整，清除登录状态');
       this.handleInvalidLoginState();
-      return;
+      return false;
     }
     
-    // 如果有token，验证其是否失效，但不进行额外的API调用
-    // 如果在之前的api.user.getCurrentUser()调用中发现了token无效，已经会处理登录状态
-    // 在这里不再进行额外的API调用，避免重复验证导致循环
-    if (token && isLoggedIn) {
-      // 使用已有的用户信息API，而不是直接调用
-      try {
-        this.loadUserInfo();
-      } catch (error) {
-        console.error('加载用户信息失败，可能是token无效:', error);
-        // 出错时由loadUserInfo中处理登录状态
-      }
-    }
+    return true;
   },
-  
+
   /**
    * 处理无效的登录状态
    */
   handleInvalidLoginState(showPrompt = true) {
-    // 清除所有登录相关的存储
+    // 清除所有登录相关的本地存储
     wx.removeStorageSync('token');
     wx.removeStorageSync('userInfo');
     wx.removeStorageSync('isLoggedIn');
-    
-    // 显示友好提示，使用国际化
-    if (showPrompt) {
-      wx.showModal({
-        title: this.t('common.tip') || '提示',
-        content: this.t('profile.pleaseLogin') || '请先登录',
-        confirmText: this.t('common.confirm') || '确定',
-        cancelText: this.t('common.cancel') || '取消',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/member/login'
-            });
-          }
-        }
-      });
-    }
     
     // 更新UI为未登录状态
     this.setData({
@@ -348,76 +299,59 @@ const pageConfig = {
       'userInfo.isLogin': false,
       'userInfo.memberLevel': this.t('profile.member.normal'),
       'userInfo.points': 0,
-      'userInfo.couponCount': 0
+      'userInfo.couponCount': 0,
+      isLoadingUserData: false
     });
     
-    // 更新订单状态角标
-    const orderSummary = this.data.orderSummary.map(item => {
-      return {
-        ...item,
-        badge: 0  // 未登录时角标设为0
-      };
-    });
-    
+    // 重置订单统计角标
+    const orderSummary = this.data.orderSummary.map(item => ({
+      ...item,
+      badge: 0
+    }));
     this.setData({ orderSummary });
+    
+    // 可选：显示登录提示
+    if (showPrompt) {
+      wx.showToast({
+        title: this.t('common.loginExpired'),
+        icon: 'none'
+      });
+    }
   },
 
   /**
-   * 检查登录状态并更新UI
+   * 检查登录状态并加载相应数据
    */
   checkLoginStatus() {
-    // 从本地存储获取用户信息
-    const isLoggedIn = wx.getStorageSync('isLoggedIn') || false;
-    const token = wx.getStorageSync('token') || null;
-    const userInfo = wx.getStorageSync('userInfo') || null;
+    // 验证登录状态的有效性
+    if (!this.validateLoginStatus()) {
+      return;
+    }
     
-    // 同时验证token和isLoggedIn标志
-    if (isLoggedIn && token && userInfo) {
-      this.setData({
-        'userInfo.avatarUrl': userInfo.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
-        'userInfo.nickName': userInfo.nickName || userInfo.username,
-        'userInfo.isLogin': true,
-        'userInfo.memberLevel': userInfo.role === 'admin' ? this.t('profile.member.admin') : this.t('profile.member.normal'),
-        'userInfo.points': userInfo.points || 0,
-        'userInfo.couponCount': 0 // 这里可以通过API获取优惠券数量
-      });
-    } else {
-      // 未登录状态下，清除订单状态角标
-      const orderSummary = this.data.orderSummary.map(item => {
-        return {
-          ...item,
-          badge: 0  // 未登录时角标设为0
-        };
-      });
-      
-      // 确保清除所有登录状态
-      if (isLoggedIn || token || userInfo) {
-        wx.removeStorageSync('token');
-        wx.removeStorageSync('userInfo');
-        wx.removeStorageSync('isLoggedIn');
-      }
-      
-      this.setData({
-        'userInfo.avatarUrl': 'https://placehold.co/120x120/cccccc/ffffff?text=User',
-        'userInfo.nickName': this.t('profile.notLogged'),
-        'userInfo.isLogin': false,
-        'userInfo.memberLevel': this.t('profile.member.normal'),
-        'userInfo.points': 0,
-        'userInfo.couponCount': 0,
-        orderSummary  // 更新订单摘要，清除角标
-      });
-    }
+    // 更新登录状态
+    this.setData({
+      'userInfo.isLogin': true
+    });
+    
+    // 加载用户信息
+    this.loadUserInfo();
+    
+    // 加载订单统计
+    this.loadOrderStatistics();
   },
 
+  /**
+   * 处理用户登录
+   */
   handleUserLogin() {
-    // 如果用户未登录，点击头像区域跳转到登录页面
-    if (!this.data.userInfo.isLogin) {
-      wx.navigateTo({
-        url: '/pages/member/login'
-      });
-    }
+    wx.navigateTo({
+      url: '/pages/member/login'
+    });
   },
 
+  /**
+   * 处理用户退出登录
+   */
   handleLogout() {
     wx.showModal({
       title: this.t('common.tip'),
@@ -426,24 +360,18 @@ const pageConfig = {
       cancelText: this.t('common.cancel'),
       success: (res) => {
         if (res.confirm) {
-          // 清除登录状态和用户信息
-          wx.removeStorageSync('isLoggedIn');
+          // 清除登录信息
           wx.removeStorageSync('token');
           wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('isLoggedIn');
           
-          // 更新用户信息为未登录状态
-          this.setData({
-            'userInfo.avatarUrl': 'https://placehold.co/120x120/cccccc/ffffff?text=User',
-            'userInfo.nickName': this.t('profile.notLogged'),
-            'userInfo.isLogin': false,
-            'userInfo.memberLevel': this.t('profile.member.normal'),
-            'userInfo.points': 0,
-            'userInfo.couponCount': 0
-          });
+          // 更新UI状态
+          this.handleInvalidLoginState(false);
           
+          // 显示退出成功提示
           wx.showToast({
             title: this.t('profile.logoutSuccess'),
-            icon: 'none'
+            icon: 'success'
           });
         }
       }
@@ -451,14 +379,16 @@ const pageConfig = {
   },
 
   /**
-   * 通用功能导航，带登录校验和防重复提示
-   * 优化后的方法，添加了防重复提示逻辑
+   * 导航到菜单项
    */
   navigateToMenu(e) {
     const url = e.currentTarget.dataset.url;
+    const index = e.currentTarget.dataset.index;
     
-    // 检查是否已登录
-    if (!this.data.userInfo.isLogin) {
+    // 某些功能需要登录
+    const needLoginMenus = [0, 1, 2, 3]; // 收藏、优惠券、积分、地址
+    
+    if (needLoginMenus.includes(index) && !this.data.userInfo.isLogin) {
       // 防止短时间内重复提示
       const now = Date.now();
       if (now - this.data.lastLoginToastTime < 3000) {
@@ -475,23 +405,23 @@ const pageConfig = {
       
       // 延迟跳转到登录页，给用户足够时间看到提示
       setTimeout(() => {
+        // 记录当前URL以便登录后返回
+        wx.setStorageSync('redirectUrl', '/' + url);
         wx.navigateTo({
-          url: '/pages/member/login?redirect=' + encodeURIComponent(url)
+          url: '/pages/member/login'
         });
       }, 1500);
       return;
     }
     
-    // 确保URL以'/'开头
-    const formattedUrl = url.startsWith('/') ? url : '/' + url;
-    
+    // 跳转到对应页面
     wx.navigateTo({
-      url: formattedUrl
+      url: '/' + url
     });
   },
 
   /**
-   * 订单导航，带登录校验和防重复提示
+   * 导航到订单页面，带登录校验和防重复提示
    * 优化后的方法，添加了防重复提示逻辑
    */
   navigateToOrder(e) {
@@ -755,9 +685,15 @@ const pageConfig = {
       });
   },
 
+  /**
+   * 加载订单统计数据 - 修复版本，启用真实API调用
+   */
   loadOrderStatistics() {
+    console.log('开始加载订单统计数据');
+    
     // 检查登录状态
     if (!this.data.userInfo.isLogin) {
+      console.log('用户未登录，重置订单角标为0');
       // 未登录状态下重置订单角标为0
       const orderSummary = this.data.orderSummary.map(item => ({
         ...item,
@@ -768,23 +704,29 @@ const pageConfig = {
     }
     
     // 调用API获取真实订单统计数据
+    console.log('用户已登录，开始调用订单统计API');
     api.order.getStatistics().then(res => {
+      console.log('订单统计API响应:', res);
+      
       if (res.success && res.data) {
         // 处理订单统计数据并更新UI
         const orderStats = res.data || {};
+        console.log('订单统计数据:', orderStats);
         
         const orderSummary = this.data.orderSummary.map(item => {
           let badge = 0;
           
           if (item.status === 'pending_payment') {
-            badge = orderStats.pendingPayment || 0;
+            badge = orderStats.pendingPayment || orderStats.pending_payment || 0;
           } else if (item.status === 'pending_shipment') {
-            badge = orderStats.pendingShipment || 0;
+            badge = orderStats.pendingShipment || orderStats.pending_shipment || 0;
           } else if (item.status === 'pending_receipt') {
-            badge = orderStats.pendingReceipt || 0;
+            badge = orderStats.pendingReceipt || orderStats.pending_receipt || 0;
           } else if (item.status === 'completed') {
             badge = orderStats.completed || 0;
           }
+          
+          console.log(`订单状态 ${item.status} 的角标数量: ${badge}`);
           
           return {
             ...item,
@@ -792,40 +734,30 @@ const pageConfig = {
           };
         });
         
+        console.log('更新后的订单摘要:', orderSummary);
         this.setData({ orderSummary });
+      } else {
+        console.error('订单统计API返回失败:', res);
+        // 显示默认值
+        this.setDefaultOrderBadges();
       }
     }).catch(err => {
-      console.error('获取订单统计失败', err);
+      console.error('获取订单统计失败:', err);
       
-      // API调用失败时使用模拟数据作为备用
-      const orderStats = {
-        pendingPayment: 0,
-        pendingShipment: 0,
-        pendingReceipt: 0,
-        completed: 0
-      };
-      
-      const orderSummary = this.data.orderSummary.map(item => {
-        let badge = 0;
-        
-        if (item.status === 'pending_payment') {
-          badge = orderStats.pendingPayment;
-        } else if (item.status === 'pending_shipment') {
-          badge = orderStats.pendingShipment;
-        } else if (item.status === 'pending_receipt') {
-          badge = orderStats.pendingReceipt;
-        } else if (item.status === 'completed') {
-          badge = orderStats.completed;
-        }
-        
-        return {
-          ...item,
-          badge
-        };
-      });
-      
-      this.setData({ orderSummary });
+      // API调用失败时显示默认值
+      this.setDefaultOrderBadges();
     });
+  },
+  
+  // 设置默认订单角标
+  setDefaultOrderBadges() {
+    console.log('设置默认订单角标');
+    const orderSummary = this.data.orderSummary.map(item => ({
+      ...item,
+      badge: 0
+    }));
+    
+    this.setData({ orderSummary });
   }
 };
 
