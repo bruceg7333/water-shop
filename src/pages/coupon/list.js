@@ -1,5 +1,5 @@
 const i18n = require('../../utils/i18n/index');
-const api = require('../../utils/api');
+const { api } = require('../../utils/request');
 
 Page({
   data: {
@@ -38,9 +38,9 @@ Page({
       error: false
     });
     
-    api.getUserCoupons().then(res => {
+    api.coupon.getList().then(res => {
       this.setData({
-        coupons: res.data || [],
+        coupons: res.data?.coupons || [],
         loading: false
       });
       this.filterCoupons();
@@ -96,8 +96,8 @@ Page({
     const coupon = e.currentTarget.dataset.coupon;
     
     // 验证优惠券是否有效
-    api.verifyCoupon(coupon.id).then(res => {
-      if (res.data.valid) {
+    api.coupon.claim(coupon.id).then(res => {
+      if (res.success) {
         // 存储选中的优惠券信息
         wx.setStorageSync('selectedCoupon', coupon);
         
@@ -112,7 +112,7 @@ Page({
         });
       } else {
         wx.showToast({
-          title: res.data.message || i18n.t('common.error'),
+          title: res.message || i18n.t('common.error'),
           icon: 'none'
         });
       }

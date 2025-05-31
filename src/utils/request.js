@@ -464,6 +464,21 @@ const api = {
       url: `/articles/${id}/share`,
       method: 'POST'
     })
+  },
+
+  // 轮播图相关
+  banner: {
+    // 获取有效轮播图（小程序端使用）
+    getActiveBanners: () => request({
+      url: '/banners/active',
+      showLoading: false
+    }),
+    // 记录轮播图点击
+    clickBanner: (id) => request({
+      url: `/banners/${id}/click`,
+      method: 'POST',
+      showLoading: false
+    })
   }
 };
 

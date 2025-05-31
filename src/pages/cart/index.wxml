@@ -1,75 +1,86 @@
 <!-- 购物车页面 -->
 <view class="cart-container">
-  <block wx:if="{{!isEmpty}}">
-    <!-- 购物车头部 -->
-    <view class="cart-header">
-      <view class="select-all" bindtap="toggleSelectAll">
-        <view class="checkbox {{selectedAll ? 'checked' : ''}}">
-          <!-- 选中时，背景为白色，图标为蓝色 -->
-          <icon wx:if="{{selectedAll}}" type="success" size="20" color="#0088cc"/>
-        </view>
-        <text>{{i18n.selectAll || '全选'}}</text>
-      </view>
-    </view>
+  <!-- 未登录状态显示登录提示 -->
+  <view class="login-prompt" wx:if="{{!isLogin}}">
+    <view class="login-icon">🔐</view>
+    <text class="login-text">{{i18n.loginRequired}}</text>
+    <view class="login-btn" bindtap="goToLogin">{{i18n.goToLogin}}</view>
+  </view>
 
-    <!-- 购物车列表 -->
-    <view class="cart-list">
-      <view class="cart-item-container" wx:for="{{cartItems}}" wx:key="id">
-        <movable-area class="movable-area">
-          <movable-view class="movable-view" direction="horizontal" x="{{item.x || 0}}" inertia="true" 
-                      out-of-bounds="{{true}}" damping="30" bindchange="handleMovableChange" 
-                      bindtouchend="handleTouchEnd" data-index="{{index}}">
-            <view class="cart-item" bindtap="resetSlide" data-index="{{index}}">
-              <!-- 商品选择框 -->
-              <view class="item-select" catchtap="toggleSelect" data-index="{{index}}">
-                <view class="checkbox {{item.selected ? 'checked' : ''}}">
-                  <!-- 选中时，背景为蓝色，图标为白色 -->
-                  <icon wx:if="{{item.selected}}" type="success" size="20" color="#ffffff"/>
-                </view>
-              </view>
-              
-              <!-- 商品图片 -->
-              <image class="item-image" src="{{item.imageUrl}}" mode="aspectFill" catchtap=""></image>
-              
-              <!-- 商品信息 -->
-              <view class="item-info" catchtap="">
-                <view class="item-content">
-                  <view class="item-name">{{item.name}}</view>
-                  <view class="item-price">{{i18n.unit || '¥'}}{{item.price}}</view>
+  <!-- 已登录状态显示购物车内容 -->
+  <block wx:else>
+    <block wx:if="{{!isEmpty}}">
+      <!-- 购物车头部 -->
+      <view class="cart-header">
+        <view class="select-all" bindtap="toggleSelectAll">
+          <view class="checkbox {{selectedAll ? 'checked' : ''}}">
+            <!-- 选中时，背景为白色，图标为蓝色 -->
+            <icon wx:if="{{selectedAll}}" type="success" size="20" color="#0088cc"/>
+          </view>
+          <text>{{i18n.selectAll || '全选'}}</text>
+        </view>
+      </view>
+
+      <!-- 购物车列表 -->
+      <view class="cart-list">
+        <view class="cart-item-container" wx:for="{{cartItems}}" wx:key="id">
+          <movable-area class="movable-area">
+            <movable-view class="movable-view" direction="horizontal" x="{{item.x || 0}}" 
+                        inertia="{{false}}" out-of-bounds="{{true}}" damping="30" 
+                        bindchange="handleMovableChange" data-index="{{index}}">
+              <view class="cart-item">
+                <!-- 商品选择框 -->
+                <view class="item-select" catchtap="toggleSelect" data-index="{{index}}">
+                  <view class="checkbox {{item.selected ? 'checked' : ''}}">
+                    <!-- 选中时，背景为蓝色，图标为白色 -->
+                    <icon wx:if="{{item.selected}}" type="success" size="20" color="#ffffff"/>
+                  </view>
                 </view>
                 
-                <!-- 商品数量控制 -->
-                <view class="item-count">
-                  <view class="count-btn {{item.count <= 1 ? 'disabled' : ''}}" catchtap="decreaseCount" data-index="{{index}}">-</view>
-                  <view class="count-number">{{item.count}}</view>
-                  <view class="count-btn" catchtap="increaseCount" data-index="{{index}}">+</view>
+                <!-- 商品图片 -->
+                <image class="item-image" src="{{item.imageUrl}}" mode="aspectFill"></image>
+                
+                <!-- 商品信息 -->
+                <view class="item-info">
+                  <view class="item-content">
+                    <view class="item-name">{{item.name}}</view>
+                    <view class="item-price">{{i18n.unit || '¥'}}{{item.price}}</view>
+                  </view>
+                  
+                  <!-- 商品数量控制 -->
+                  <view class="item-count">
+                    <view class="count-btn {{item.count <= 1 ? 'disabled' : ''}}" catchtap="decreaseCount" data-index="{{index}}">-</view>
+                    <view class="count-number">{{item.count}}</view>
+                    <view class="count-btn" catchtap="increaseCount" data-index="{{index}}">+</view>
+                  </view>
                 </view>
               </view>
+            </movable-view>
+            
+            <!-- 删除按钮 -->
+            <view class="delete-btn-container" bindtap="deleteItem" data-index="{{index}}">
+              <view class="delete-btn-text">{{i18n.delete || '删除'}}</view>
             </view>
-          </movable-view>
-          <!-- 删除按钮 -->
-          <view class="delete-btn-container" bindtap="deleteItem" data-index="{{index}}">
-            <view class="delete-btn-text">{{i18n.delete || '删除'}}</view>
-          </view>
-        </movable-area>
+          </movable-area>
+        </view>
       </view>
-    </view>
 
-    <!-- 结算栏 -->
-    <view class="checkout-bar">
-      <view class="total-price">
-        {{i18n.total || '合计'}}: <text class="price">{{i18n.unit || '¥'}}{{totalPrice}}</text>
+      <!-- 结算栏 -->
+      <view class="checkout-bar">
+        <view class="total-price">
+          {{i18n.total || '合计'}}: <text class="price">{{i18n.unit || '¥'}}{{totalPrice}}</text>
+        </view>
+        <view class="checkout-btn" bindtap="checkout">{{i18n.checkout || '去结算'}}</view>
       </view>
-      <view class="checkout-btn" bindtap="checkout">{{i18n.checkout || '去结算'}}</view>
-    </view>
-  </block>
+    </block>
 
-  <!-- 空购物车 -->
-  <block wx:else>
-    <view class="empty-cart">
-      <view class="empty-cart-icon">🛒</view>
-      <view class="empty-cart-text">{{i18n.empty || '购物车空空如也'}}</view>
-      <view class="go-shopping-btn" bindtap="goShopping">{{i18n.goShopping || '去逛逛'}}</view>
-    </view>
+    <!-- 空购物车 -->
+    <block wx:else>
+      <view class="empty-cart">
+        <view class="empty-cart-icon">🛒</view>
+        <view class="empty-cart-text">{{i18n.empty || '购物车空空如也'}}</view>
+        <view class="go-shopping-btn" bindtap="goShopping">{{i18n.goShopping || '去逛逛'}}</view>
+      </view>
+    </block>
   </block>
 </view> 

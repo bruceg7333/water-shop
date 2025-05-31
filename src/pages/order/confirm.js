@@ -1,5 +1,6 @@
 const { createPage } = require('../../utils/page-base');
 const i18n = require('../../utils/i18n/index');
+const { api } = require('../../utils/request');
 
 // 定义页面配置
 const pageConfig = {
@@ -145,8 +146,6 @@ const pageConfig = {
   
   // 加载默认地址
   loadDefaultAddress: function() {
-    const api = require('../../utils/api.js').default;
-    
     // 调用API获取地址列表
     api.getAddresses()
       .then(res => {

@@ -230,9 +230,10 @@ Page({
         
         // 延迟跳转，让用户看到登录成功提示
         setTimeout(() => {
+          console.log('登录成功，准备跳转...');
           // 使用统一的重定向方法，简化逻辑
           redirectAfterLogin();
-        }, 1500);
+        }, 500);
       } else {
         this.setData({
           errorMsg: response.message || i18n.t('login.errorMessages.loginFailed') || '登录失败，请重试',
@@ -293,9 +294,10 @@ Page({
 
         // 延迟跳转，让用户看到登录成功提示
         setTimeout(() => {
+          console.log('登录成功，准备跳转...');
           // 使用统一的重定向方法，简化逻辑
           redirectAfterLogin();
-        }, 1500);
+        }, 500);
       } else {
         this.setData({
           errorMsg: response.message || i18n.t('login.errorMessages.loginFailed') || '微信登录失败，请重试',

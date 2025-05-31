@@ -245,11 +245,6 @@ const pageConfig = {
             title: res.message || this.t('common.error'),
             icon: 'none'
           });
-          
-          // API获取失败时，加载演示数据作为回退
-          if (this.data.orders.length === 0) {
-            this.loadDemoOrders();
-          }
         }
       })
       .catch(err => {
@@ -265,122 +260,211 @@ const pageConfig = {
           title: this.t('common.error'),
           icon: 'none'
         });
-        
-        // 出错时，如果没有数据则加载演示数据作为回退
-        if (this.data.orders.length === 0) {
-          this.loadDemoOrders();
-        }
       });
   },
   
   // 加载演示订单数据
   loadDemoOrders() {
-    const demoOrders = [
+    // 获取当前登录用户信息
+    const userInfo = wx.getStorageSync('userInfo') || { nickName: '默认用户' };
+    const now = new Date();
+    
+    // 格式化当前日期
+    const formatDate = (date, offsetDays = 0) => {
+      const d = new Date(date);
+      d.setDate(d.getDate() - offsetDays);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hour = String(d.getHours()).padStart(2, '0');
+      const minute = String(d.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hour}:${minute}`;
+    };
+    
+    // 生成订单号
+    const generateOrderNumber = (date, index = 0) => {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const randomNum = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+      return `${year}${month}${day}${index + 1}${randomNum}`;
+    };
+    
+    // 商品数据 - 使用正确的图片路径
+    const products = [
       {
-        id: 1,
-        orderNumber: '202405010001',
-        status: 'pending_payment',
-        createTime: '2024-05-01 10:30',
-        totalAmount: 22.00,
-        shippingFee: 5.00,
-        totalCount: 2,
-        goods: [
-          {
-            id: 1,
-            name: 'SPRINKLE 纯净水',
-            spec: '550ml',
-            price: 8.50,
-            count: 2,
-            imageUrl: '/static/images/products/water1.jpg'
-          }
-        ]
+        id: 'p001',
+        name: 'SPRINKLE 纯净水',
+        specs: ['550ml', '1.5L', '4L'],
+        prices: [3.50, 6.50, 12.00],
+        images: ['/assets/images/products/water1.jpg']
       },
       {
-        id: 2,
-        orderNumber: '202404300001',
-        status: 'pending_shipment',
-        createTime: '2024-04-30 15:45',
-        totalAmount: 46.00,
-        shippingFee: 0.00,
-        totalCount: 5,
-        goods: [
-          {
-            id: 1,
-            name: 'SPRINKLE 纯净水',
-            spec: '550ml',
-            price: 8.50,
-            count: 2,
-            imageUrl: '/static/images/products/water1.jpg'
-          },
-          {
-            id: 2,
-            name: 'SPRINKLE 矿泉水',
-            spec: '1L',
-            price: 9.50,
-            count: 3,
-            imageUrl: '/static/images/products/water2.jpg'
-          }
-        ]
+        id: 'p002',
+        name: 'SPRINKLE 矿泉水',
+        specs: ['500ml', '1L', '5L'],
+        prices: [4.00, 7.00, 15.00],
+        images: ['/assets/images/products/water2.jpg']
       },
       {
-        id: 3,
-        orderNumber: '202404290002',
-        status: 'pending_receipt',
-        createTime: '2024-04-29 09:15',
-        totalAmount: 30.00,
-        shippingFee: 0.00,
-        totalCount: 3,
-        goods: [
-          {
-            id: 3,
-            name: 'SPRINKLE 山泉水',
-            spec: '2L',
-            price: 10.00,
-            count: 3,
-            imageUrl: '/static/images/products/water3.jpg'
-          }
-        ]
+        id: 'p003',
+        name: 'SPRINKLE 山泉水',
+        specs: ['380ml', '2L'],
+        prices: [5.00, 10.00],
+        images: ['/assets/images/products/water3.jpg']
       },
       {
-        id: 4,
-        orderNumber: '202404280001',
-        status: 'completed',
-        createTime: '2024-04-28 14:00',
-        totalAmount: 86.00,
-        shippingFee: 0.00,
-        totalCount: 10,
-        goods: [
-          {
-            id: 1,
-            name: 'SPRINKLE 纯净水',
-            spec: '550ml',
-            price: 8.50,
-            count: 4,
-            imageUrl: '/static/images/products/water1.jpg'
-          },
-          {
-            id: 2,
-            name: 'SPRINKLE 矿泉水',
-            spec: '1L',
-            price: 9.50,
-            count: 3,
-            imageUrl: '/static/images/products/water2.jpg'
-          },
-          {
-            id: 3,
-            name: 'SPRINKLE 山泉水',
-            spec: '2L',
-            price: 10.00,
-            count: 3,
-            imageUrl: '/static/images/products/water3.jpg'
-          }
-        ],
-        isReviewed: true
+        id: 'p004',
+        name: 'SPRINKLE 苏打水',
+        specs: ['330ml', '500ml'],
+        prices: [6.00, 8.50],
+        images: ['/assets/images/products/water4.jpg']
+      },
+      {
+        id: 'p005',
+        name: 'SPRINKLE 弱碱性水',
+        specs: ['550ml'],
+        prices: [7.50],
+        images: ['/assets/images/products/water1.jpg']
       }
     ];
     
+    // 随机生成订单商品
+    const generateOrderItems = (count = 1) => {
+      const items = [];
+      const usedIndices = new Set();
+      
+      // 确保至少添加一个商品
+      while (items.length < count) {
+        // 随机选择产品
+        const productIndex = Math.floor(Math.random() * products.length);
+        
+        // 避免重复添加相同商品
+        if (count > 1 && items.length > 0 && usedIndices.has(productIndex)) {
+          continue;
+        }
+        
+        usedIndices.add(productIndex);
+        const product = products[productIndex];
+        
+        // 随机选择规格
+        const specIndex = Math.floor(Math.random() * product.specs.length);
+        const spec = product.specs[specIndex];
+        const price = product.prices[specIndex];
+        
+        // 随机数量 1-5
+        const itemCount = Math.floor(Math.random() * 5) + 1;
+        
+        items.push({
+          id: product.id,
+          name: product.name,
+          spec: spec,
+          price: price,
+          count: itemCount,
+          imageUrl: product.images[0]
+        });
+      }
+      
+      return items;
+    };
+    
+    // 创建不同状态的订单
+    const orders = [
+      // 待支付订单
+      {
+        id: 'ord001',
+        orderNumber: generateOrderNumber(now),
+        status: 'pending_payment',
+        createTime: formatDate(now),
+        goods: generateOrderItems(1),
+        get totalCount() {
+          return this.goods.reduce((sum, item) => sum + item.count, 0);
+        },
+        get totalAmount() {
+          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
+        },
+        shippingFee: 0.00
+      },
+      
+      // 待发货订单
+      {
+        id: 'ord002',
+        orderNumber: generateOrderNumber(now, 1),
+        status: 'pending_shipment',
+        createTime: formatDate(now, 1),
+        goods: generateOrderItems(2),
+        get totalCount() {
+          return this.goods.reduce((sum, item) => sum + item.count, 0);
+        },
+        get totalAmount() {
+          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
+        },
+        shippingFee: 0.00
+      },
+      
+      // 待收货订单
+      {
+        id: 'ord003',
+        orderNumber: generateOrderNumber(now, 2),
+        status: 'pending_receipt',
+        createTime: formatDate(now, 3),
+        goods: generateOrderItems(1),
+        get totalCount() {
+          return this.goods.reduce((sum, item) => sum + item.count, 0);
+        },
+        get totalAmount() {
+          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
+        },
+        shippingFee: 0.00,
+        shippingInfo: {
+          company: '顺丰速运',
+          trackingNumber: 'SF' + Math.floor(Math.random() * 100000000)
+        }
+      },
+      
+      // 已完成订单
+      {
+        id: 'ord004',
+        orderNumber: generateOrderNumber(now, 3),
+        status: 'completed',
+        createTime: formatDate(now, 7),
+        goods: generateOrderItems(3),
+        get totalCount() {
+          return this.goods.reduce((sum, item) => sum + item.count, 0);
+        },
+        get totalAmount() {
+          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
+        },
+        shippingFee: 0.00,
+        isReviewed: Math.random() > 0.5 // 随机是否已评价
+      },
+      
+      // 已取消订单
+      {
+        id: 'ord005',
+        orderNumber: generateOrderNumber(now, 4),
+        status: 'canceled',
+        createTime: formatDate(now, 10),
+        goods: generateOrderItems(1),
+        get totalCount() {
+          return this.goods.reduce((sum, item) => sum + item.count, 0);
+        },
+        get totalAmount() {
+          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
+        },
+        shippingFee: 0.00,
+        cancelReason: '用户取消'
+      }
+    ];
+    
+    // 计算金额，转为两位小数的字符串
+    orders.forEach(order => {
+      order.totalAmount = order.totalAmount.toFixed(2);
+    });
+    
     this.setData({
-      orders: demoOrders
+      orders: orders
     }, () => {
       // 设置数据后，确保更新订单状态文本并过滤订单
       this.updateOrderStatusText();

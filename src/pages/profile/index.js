@@ -758,42 +758,16 @@ const pageConfig = {
   loadOrderStatistics() {
     // 检查登录状态
     if (!this.data.userInfo.isLogin) {
-      // 未登录状态下不请求订单数据
+      // 未登录状态下重置订单角标为0
+      const orderSummary = this.data.orderSummary.map(item => ({
+        ...item,
+        badge: 0
+      }));
+      this.setData({ orderSummary });
       return;
     }
     
-    // 模拟获取订单统计数据
-    const orderStats = {
-      pendingPayment: 2,
-      pendingShipment: 1,
-      pendingReceipt: 0,
-      completed: 0
-    };
-    
-    // 使用订单统计数据更新UI
-    const orderSummary = this.data.orderSummary.map(item => {
-      let badge = 0;
-      
-      if (item.status === 'pending_payment') {
-        badge = orderStats.pendingPayment;
-      } else if (item.status === 'pending_shipment') {
-        badge = orderStats.pendingShipment;
-      } else if (item.status === 'pending_receipt') {
-        badge = orderStats.pendingReceipt;
-      } else if (item.status === 'completed') {
-        badge = orderStats.completed;
-      }
-      
-      return {
-        ...item,
-        badge
-      };
-    });
-    
-    this.setData({ orderSummary });
-    
-    // 实际开发中，这里应该调用API获取真实数据
-    /*
+    // 调用API获取真实订单统计数据
     api.order.getStatistics().then(res => {
       if (res.success && res.data) {
         // 处理订单统计数据并更新UI
@@ -822,8 +796,36 @@ const pageConfig = {
       }
     }).catch(err => {
       console.error('获取订单统计失败', err);
+      
+      // API调用失败时使用模拟数据作为备用
+      const orderStats = {
+        pendingPayment: 0,
+        pendingShipment: 0,
+        pendingReceipt: 0,
+        completed: 0
+      };
+      
+      const orderSummary = this.data.orderSummary.map(item => {
+        let badge = 0;
+        
+        if (item.status === 'pending_payment') {
+          badge = orderStats.pendingPayment;
+        } else if (item.status === 'pending_shipment') {
+          badge = orderStats.pendingShipment;
+        } else if (item.status === 'pending_receipt') {
+          badge = orderStats.pendingReceipt;
+        } else if (item.status === 'completed') {
+          badge = orderStats.completed;
+        }
+        
+        return {
+          ...item,
+          badge
+        };
+      });
+      
+      this.setData({ orderSummary });
     });
-    */
   }
 };
 

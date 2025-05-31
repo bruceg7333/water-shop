@@ -1,5 +1,7 @@
 const i18n = require('./utils/i18n/index');
 const EventEmitter = require('./utils/event-emitter');
+const { checkLogin } = require('./utils/auth');
+const { api } = require('./utils/request');
 
 App({
   globalData: {
@@ -18,11 +20,8 @@ App({
       this.globalData.userInfo = userInfo;
     }
     
-    // 检查是否有购物车数据
-    const cartItems = wx.getStorageSync('cartItems');
-    if (cartItems && cartItems.length > 0) {
-      this.updateTabBarBadge(cartItems.length);
-    }
+    // 初始化购物车角标
+    this.updateCartBadge();
     
     // 初始化国际化
     this.initializeI18n();
@@ -175,6 +174,64 @@ App({
         console.log('移除TabBar徽标失败：', err);
       });
     }
+  },
+
+  // 从API获取购物车数量并更新角标
+  updateCartBadge() {
+    console.log('=== 开始更新购物车角标 ===');
+    
+    // 检查是否已登录
+    const isLoggedIn = checkLogin({ redirectOnFail: false, showToast: false });
+    console.log('登录状态:', isLoggedIn);
+    
+    if (!isLoggedIn) {
+      // 未登录，移除角标
+      console.log('用户未登录，移除角标');
+      this.updateTabBarBadge(0);
+      return Promise.resolve(0);
+    }
+    
+    // 检查token是否存在
+    const token = wx.getStorageSync('token');
+    console.log('Token存在:', !!token);
+    if (!token) {
+      console.log('Token不存在，移除角标');
+      this.updateTabBarBadge(0);
+      return Promise.resolve(0);
+    }
+    
+    // 已登录，从API获取购物车数量
+    console.log('开始调用购物车数量API...');
+    return api.getCartCount()
+      .then(res => {
+        console.log('购物车数量API响应:', res);
+        if (res && res.success && typeof res.data?.count === 'number') {
+          const count = res.data.count;
+          console.log(`设置角标数量: ${count}`);
+          this.updateTabBarBadge(count);
+          return count;
+        } else {
+          console.warn('购物车数量API返回数据格式异常:', res);
+          this.updateTabBarBadge(0);
+          return 0;
+        }
+      })
+      .catch(err => {
+        console.error('获取购物车数量失败:', err);
+        
+        // 如果是认证错误，清除登录状态并移除角标
+        if (err && (err.needLogin || err.message?.includes('登录'))) {
+          console.log('认证失败，清除登录状态');
+          wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('isLoggedIn');
+          this.updateTabBarBadge(0);
+        } else {
+          // 其他错误，暂时不更新角标
+          console.log('其他错误，保持当前角标状态');
+        }
+        return 0;
+      });
   },
 
   onShow() {

@@ -1,6 +1,7 @@
 const { createPage } = require('../../utils/page-base');
 const i18n = require('../../utils/i18n/index');
 const { api } = require('../../utils/request');
+const { checkLogin } = require('../../utils/auth');
 
 // 定义页面配置
 const pageConfig = {
@@ -88,76 +89,26 @@ const pageConfig = {
     }
   },
 
-  // 添加获取商品数据的方法
-  loadProductData(productId) {
-    if (!productId || productId === 'undefined' || productId === 'null') {
-      console.error('loadProductData: 无效的商品ID:', productId);
-      wx.showToast({
-        title: this.t('product.detail.error.invalidId') || '无效的商品ID',
-        icon: 'none'
-      });
-      return;
-    }
-    
-    wx.showLoading({
-      title: this.t('common.loading') || '加载中...'
-    });
-    
-    console.log('加载商品数据，ID:', productId);
-    
-    // 调用获取商品详情的API
-    api.product.getDetail(productId)
-      .then(res => {
-        if (res.success && res.data && res.data.product) {
-          // 获取成功，更新商品数据
-          const productData = res.data.product;
-          
-          // 确保商品数据中有有效的ID
-          if (productData) {
-            // 如果MongoDB _id是对象，转换为字符串
-            if (productData._id && typeof productData._id === 'object' && productData._id.toString) {
-              productData._id = productData._id.toString();
-            }
-            
-            // 确保id字段存在
-            if (!productData.id && productData._id) {
-              productData.id = productData._id;
-            }
-            
-            console.log('处理后的商品数据:', productData);
-          }
-          
-          // 如果尚未选择规格，默认选择第一个规格
-          let selectedSpec = this.data.selectedSpec;
-          if (productData.specifications && productData.specifications.length > 0) {
-            selectedSpec = productData.specifications[0];
-          }
-          
-          this.setData({
-            product: productData,
-            selectedSpec: selectedSpec
-          });
-          
-          // 保持onLoad中设置的国际化商品详情标题
-        } else {
-          // 获取失败，显示提示
-          console.error('商品数据响应无效:', res);
-          wx.showToast({
-            title: this.t('product.detail.error.invalidData') || '无效的商品数据',
-            icon: 'none'
-          });
-        }
-      })
-      .catch(err => {
-        console.error('获取商品详情失败:', err);
-        wx.showToast({
-          title: this.t('product.detail.error.fetchFailed') || '获取商品详情失败',
-          icon: 'none'
+  onShow: function() {
+    // 优先使用全局角标更新方法，确保数据一致性
+    const app = getApp();
+    if (app && typeof app.updateCartBadge === 'function') {
+      app.updateCartBadge().then(count => {
+        console.log('商品详情页全局角标更新完成，数量:', count);
+        // 同步更新本页面的购物车数量显示
+        this.setData({
+          cartCount: count
         });
-      })
-      .finally(() => {
-        wx.hideLoading();
+      }).catch(err => {
+        console.log('商品详情页全局角标更新失败:', err);
+        // 失败时使用本地方法获取
+        this.getCartCount();
       });
+    } else {
+      console.warn('全局updateCartBadge方法不存在，使用本地方法');
+      // 如果全局方法不存在，使用本地方法
+      this.getCartCount();
+    }
   },
 
   onUnload: function() {
@@ -183,43 +134,65 @@ const pageConfig = {
   },
 
   addToCart: function() {
-    // 添加到购物车逻辑
-    let cartItems = wx.getStorageSync('cartItems') || [];
-    const existingItemIndex = cartItems.findIndex(item => item.id === this.data.product.id && item.spec === this.data.selectedSpec);
-    
-    if (existingItemIndex !== -1) {
-      // 如果商品已存在，增加数量
-      cartItems[existingItemIndex].count += 1;
-    } else {
-      // 如果商品不存在，添加新商品
-      cartItems.push({
-        id: this.data.product.id,
-        name: this.data.product.name,
-        price: this.data.product.price,
-        imageUrl: this.data.product.images[0],
-        spec: this.data.selectedSpec,
-        count: 1,
-        selected: true
+    // 检查是否已登录
+    if (!checkLogin({ redirectOnFail: false, showToast: false })) {
+      wx.showToast({
+        title: this.t('common.loginFirst'),
+        icon: 'none'
       });
+      return;
     }
     
-    wx.setStorageSync('cartItems', cartItems);
-    
-    // 更新本页面购物车角标显示
-    this.setData({
-      cartCount: cartItems.length
-    });
-    
-    // 尝试更新全局TabBar的角标显示（如果存在该方法）
-    const app = getApp();
-    if (app && typeof app.updateTabBarBadge === 'function') {
-      app.updateTabBarBadge(cartItems.length);
+    const product = this.data.product;
+    if (!product || !product.id) {
+      wx.showToast({
+        title: this.t('common.error'),
+        icon: 'none'
+      });
+      return;
     }
     
-    wx.showToast({
-      title: this.t('product.detail.msg.addToCartSuccess'),
-      icon: 'success'
+    wx.showLoading({
+      title: '添加中...',
+      mask: true
     });
+    
+    // 使用API添加到购物车
+    api.addToCart({
+      productId: product.id,
+      quantity: 1,
+      spec: this.data.selectedSpec || '默认规格'
+    })
+      .then(res => {
+        wx.hideLoading();
+        if (res.success) {
+          wx.showToast({
+            title: this.t('product.detail.msg.addToCartSuccess'),
+            icon: 'success'
+          });
+          
+          // 更新本页面购物车数量显示
+          this.getCartCount();
+          
+          // 更新全局TabBar的角标显示
+          if (getApp() && typeof getApp().updateCartBadge === 'function') {
+            getApp().updateCartBadge();
+          }
+        } else {
+          wx.showToast({
+            title: res.message || this.t('common.error'),
+            icon: 'none'
+          });
+        }
+      })
+      .catch(err => {
+        wx.hideLoading();
+        console.error('添加到购物车失败:', err);
+        wx.showToast({
+          title: this.t('common.error'),
+          icon: 'none'
+        });
+      });
   },
 
   buyNow: function() {
@@ -255,6 +228,135 @@ const pageConfig = {
     wx.switchTab({
       url: '/pages/cart/index'
     });
+  },
+
+  // 从API加载商品详情数据
+  loadProductData: function(productId) {
+    console.log('开始加载商品详情，ID:', productId);
+    
+    wx.showLoading({
+      title: '加载中...',
+      mask: true
+    });
+    
+    api.product.getDetail(productId)
+      .then(res => {
+        console.log('商品详情API响应:', res);
+        
+        if (res.success && res.data && res.data.product) {
+          const product = res.data.product;
+          
+          // 处理商品图片数据
+          let images = [];
+          if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+            images = product.images;
+          } else if (product.imageGallery && Array.isArray(product.imageGallery) && product.imageGallery.length > 0) {
+            images = product.imageGallery;
+          } else if (product.imageUrl) {
+            images = [product.imageUrl];
+          } else if (product.image) {
+            images = [product.image];
+          } else {
+            images = ['/assets/images/products/default.png'];
+          }
+          
+          // 处理商品规格数据
+          let specifications = [];
+          if (product.specifications && Array.isArray(product.specifications)) {
+            specifications = product.specifications;
+          } else if (product.specs && Array.isArray(product.specs)) {
+            specifications = product.specs;
+          } else {
+            // 默认规格
+            specifications = ['默认规格'];
+          }
+          
+          // 构建产品数据对象
+          const productData = {
+            id: product._id || product.id,
+            name: product.name || '商品名称',
+            price: parseFloat(product.price) || 0,
+            originalPrice: parseFloat(product.originalPrice) || null,
+            description: product.description || '暂无描述',
+            images: images,
+            specifications: specifications,
+            sales: product.sales || 0,
+            stock: product.stock || 0,
+            detailContent: product.detailContent || product.content || '<p>暂无详细描述</p>'
+          };
+          
+          console.log('处理后的商品数据:', productData);
+          
+          this.setData({
+            product: productData,
+            selectedSpec: specifications[0] || '默认规格'
+          });
+          
+          // 更新页面标题为商品名称
+          wx.setNavigationBarTitle({
+            title: productData.name
+          });
+          
+        } else {
+          console.error('获取商品详情失败:', res);
+          wx.showToast({
+            title: '获取商品详情失败: ' + (res.message || '数据格式错误'),
+            icon: 'none',
+            duration: 2000
+          });
+          
+          setTimeout(() => {
+            wx.navigateBack({
+              fail: () => {
+                wx.switchTab({
+                  url: '/pages/index/index'
+                });
+              }
+            });
+          }, 2000);
+        }
+      })
+      .catch(err => {
+        console.error('加载商品详情出错:', err);
+        wx.showToast({
+          title: '网络错误，无法加载商品详情',
+          icon: 'none',
+          duration: 2000
+        });
+        
+        setTimeout(() => {
+          wx.navigateBack({
+            fail: () => {
+              wx.switchTab({
+                url: '/pages/index/index'
+              });
+            }
+          });
+        }, 2000);
+      })
+      .finally(() => {
+        wx.hideLoading();
+      });
+  },
+
+  // 显示错误并返回上一页
+  showErrorAndGoBack(message) {
+    wx.showToast({
+      title: message,
+      icon: 'none',
+      duration: 2000
+    });
+    
+    setTimeout(() => {
+      wx.navigateBack({
+        fail: () => {
+          // 如果返回失败，跳转到首页
+          wx.switchTab({
+            url: '/pages/index/index'
+          });
+        }
+      });
+    }, 2000);
   },
 
   /**
@@ -458,10 +560,35 @@ const pageConfig = {
   
   // 获取购物车数量
   getCartCount() {
-    const cartItems = wx.getStorageSync('cartItems') || [];
-    this.setData({
-      cartCount: cartItems.length
-    });
+    // 检查是否已登录
+    if (!checkLogin({ redirectOnFail: false, showToast: false })) {
+      // 未登录，设置购物车数量为0
+      this.setData({
+        cartCount: 0
+      });
+      return;
+    }
+    
+    // 已登录，从API获取购物车数量
+    api.getCartCount()
+      .then(res => {
+        console.log('获取购物车数量返回:', res);
+        if (res.success && typeof res.data.count === 'number') {
+          this.setData({
+            cartCount: res.data.count
+          });
+        } else {
+          this.setData({
+            cartCount: 0
+          });
+        }
+      })
+      .catch(err => {
+        console.error('获取购物车数量失败:', err);
+        this.setData({
+          cartCount: 0
+        });
+      });
   },
   
   // 点赞评论
@@ -638,21 +765,14 @@ const pageConfig = {
    * 在语言切换后调用
    */
   refreshI18n() {
-    // 刷新国际化文本
     this.updateI18nText();
-    
-    // 如果当前在评论标签页，可以考虑重新格式化评论日期
-    if (this.data.currentTab === 1) {
-      // 如果需要根据当前语言环境重新格式化评论日期，可以在这里处理
-      // 目前使用标准格式，暂不需要特殊处理
-    }
   },
   
   /**
    * 监听语言变化
    */
   onLanguageChanged(lang) {
-    console.log('语言已切换为:', lang);
+    console.log('商品详情页收到语言变化事件:', lang);
     this.refreshI18n();
   }
 };

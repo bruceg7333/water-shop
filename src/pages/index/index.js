@@ -319,11 +319,60 @@ const pageConfig = {
     // 更新国际化文本
     this.updateI18nText();
     
+    // 获取轮播图数据
+    this.fetchBanners();
+    
     // 获取商品列表
     this.fetchProducts();
     
     // 获取热门文章
     this.fetchArticles();
+  },
+
+  // 获取轮播图数据
+  fetchBanners() {
+    api.banner.getActiveBanners()
+      .then(res => {
+        console.log('轮播图API响应:', res);
+        if (res.success && res.data && res.data.length > 0) {
+          // 转换API数据为前端需要的格式
+          const bannerList = res.data.map((banner, index) => ({
+            id: banner._id || banner.id,
+            imageUrl: banner.image || banner.imageUrl,
+            title: banner.title || `轮播图 ${index + 1}`,
+            subtitle: banner.description || '',
+            linkUrl: this.getBannerLinkUrl(banner)
+          }));
+          
+          this.setData({
+            bannerList
+          });
+          console.log('轮播图数据设置完成:', bannerList);
+        } else {
+          console.log('API未返回轮播图数据，使用默认数据');
+          // API失败时保持使用静态数据
+        }
+      })
+      .catch(err => {
+        console.error('获取轮播图失败:', err);
+        // 加载失败时使用静态数据
+      });
+  },
+
+  // 根据轮播图类型生成链接URL
+  getBannerLinkUrl(banner) {
+    switch (banner.type) {
+      case 'product':
+        return banner.targetProduct ? `pages/product/detail?id=${banner.targetProduct._id || banner.targetProduct}` : '';
+      case 'category':
+        return banner.targetCategory ? `pages/product/list?categoryId=${banner.targetCategory}` : '';
+      case 'article':
+        return banner.targetArticle ? `pages/article/detail?id=${banner.targetArticle._id || banner.targetArticle}` : '';
+      case 'url':
+        return banner.targetUrl || '';
+      default:
+        return '';
+    }
   },
 
   // 显示语言选择器
@@ -350,6 +399,9 @@ const pageConfig = {
     
     // 使用page-base中的switchLanguage方法切换语言
     this.switchLanguage(lang);
+    
+    // 重新获取轮播图数据，确保语言切换后轮播图正常显示
+    this.fetchBanners();
     
     // 隐藏菜单
     this.hideLanguageMenu();
@@ -703,6 +755,20 @@ const pageConfig = {
   // 更新文章标签的国际化
   updateArticleTags() {
     // 整个函数可以删除，因为我们不再使用标签
+  },
+
+  onShow() {
+    // 更新购物车角标，使用Promise确保执行完成
+    const app = getApp();
+    if (app && typeof app.updateCartBadge === 'function') {
+      app.updateCartBadge().then(count => {
+        console.log('首页角标更新完成，数量:', count);
+      }).catch(err => {
+        console.log('首页角标更新失败:', err);
+      });
+    } else {
+      console.warn('app.updateCartBadge方法不存在');
+    }
   },
 };
 
