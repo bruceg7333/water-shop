@@ -455,16 +455,14 @@ const pageConfig = {
       return;
     }
     
-    // 确保URL正确，统一使用order/index页面
-    if (status) {
-      wx.navigateTo({
-        url: '/pages/order/index?status=' + status
-      });
-    } else {
-      wx.navigateTo({
-        url: '/pages/order/index'
-      });
-    }
+    // 使用全局变量存储订单状态，供订单页面读取
+    getApp().globalData = getApp().globalData || {};
+    getApp().globalData.orderStatus = status || '';
+
+    // 使用switchTab跳转到tabbar页面
+    wx.switchTab({
+      url: '/pages/order/index'
+    });
   },
 
   /**
@@ -499,8 +497,12 @@ const pageConfig = {
       return;
     }
     
-    // 跳转到订单列表页，不传status表示查看全部订单
-    wx.navigateTo({
+    // 使用全局变量存储订单状态，供订单页面读取
+    getApp().globalData = getApp().globalData || {};
+    getApp().globalData.orderStatus = '';  // 空字符串表示查看全部订单
+
+    // 使用switchTab跳转到tabbar页面
+    wx.switchTab({
       url: '/pages/order/index'
     });
   },
@@ -723,7 +725,7 @@ const pageConfig = {
           } else if (item.status === 'pending_receipt') {
             badge = orderStats.pendingReceipt || orderStats.pending_receipt || 0;
           } else if (item.status === 'completed') {
-            badge = orderStats.completed || 0;
+            badge = 0; // 已完成订单不显示角标
           }
           
           console.log(`订单状态 ${item.status} 的角标数量: ${badge}`);

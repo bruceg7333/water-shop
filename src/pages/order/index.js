@@ -127,11 +127,23 @@ const pageConfig = {
     // 初始化国际化文本
     this.updateI18nText();
     
-    // 从URL参数中获取订单状态（如果有）
+    // 首先检查全局变量中的订单状态（来自tabbar跳转）
     let status = '';
-    if (options && options.status) {
-      status = options.status;
+    const globalData = getApp().globalData;
+    if (globalData && globalData.orderStatus !== undefined) {
+      status = globalData.orderStatus;
+      console.log('从全局变量获取订单状态:', status);
+      // 清除全局变量，避免下次误用
+      delete globalData.orderStatus;
     }
+
+    // 如果没有全局状态，从URL参数中获取订单状态
+    if (!status && options && options.status) {
+      status = options.status;
+      console.log('从URL参数获取订单状态:', status);
+    }
+
+    console.log('最终使用的订单状态:', status);
     
     this.setData({
       currentStatus: status
@@ -151,9 +163,9 @@ const pageConfig = {
     if (isLoggedIn) {
       this.loadOrders();
     } else {
-      // 未登录，加载本地演示数据
-      console.log('用户未登录，显示本地演示数据');
-      this.loadDemoOrders();
+      // 未登录，显示空数据
+      this.setData({ orders: [], filteredOrders: [] });
+      console.log('用户未登录，请登录后查看订单');
     }
   },
   
@@ -177,9 +189,8 @@ const pageConfig = {
       if (isLoggedIn) {
         this.loadOrders();
       } else {
-        // 如果登出了，清空订单数据并加载演示数据
+        // 如果登出了，清空订单数据
         this.setData({ orders: [], filteredOrders: [] });
-        this.loadDemoOrders();
       }
     } else if (isLoggedIn) {
       // 已登录状态未变，检查是否需要重新加载数据
@@ -261,214 +272,6 @@ const pageConfig = {
           icon: 'none'
         });
       });
-  },
-  
-  // 加载演示订单数据
-  loadDemoOrders() {
-    // 获取当前登录用户信息
-    const userInfo = wx.getStorageSync('userInfo') || { nickName: '默认用户' };
-    const now = new Date();
-    
-    // 格式化当前日期
-    const formatDate = (date, offsetDays = 0) => {
-      const d = new Date(date);
-      d.setDate(d.getDate() - offsetDays);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const hour = String(d.getHours()).padStart(2, '0');
-      const minute = String(d.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day} ${hour}:${minute}`;
-    };
-    
-    // 生成订单号
-    const generateOrderNumber = (date, index = 0) => {
-      const d = new Date(date);
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      const randomNum = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-      return `${year}${month}${day}${index + 1}${randomNum}`;
-    };
-    
-    // 商品数据 - 使用正确的图片路径
-    const products = [
-      {
-        id: 'p001',
-        name: 'SPRINKLE 纯净水',
-        specs: ['550ml', '1.5L', '4L'],
-        prices: [3.50, 6.50, 12.00],
-        images: ['/assets/images/products/water1.jpg']
-      },
-      {
-        id: 'p002',
-        name: 'SPRINKLE 矿泉水',
-        specs: ['500ml', '1L', '5L'],
-        prices: [4.00, 7.00, 15.00],
-        images: ['/assets/images/products/water2.jpg']
-      },
-      {
-        id: 'p003',
-        name: 'SPRINKLE 山泉水',
-        specs: ['380ml', '2L'],
-        prices: [5.00, 10.00],
-        images: ['/assets/images/products/water3.jpg']
-      },
-      {
-        id: 'p004',
-        name: 'SPRINKLE 苏打水',
-        specs: ['330ml', '500ml'],
-        prices: [6.00, 8.50],
-        images: ['/assets/images/products/water4.jpg']
-      },
-      {
-        id: 'p005',
-        name: 'SPRINKLE 弱碱性水',
-        specs: ['550ml'],
-        prices: [7.50],
-        images: ['/assets/images/products/water1.jpg']
-      }
-    ];
-    
-    // 随机生成订单商品
-    const generateOrderItems = (count = 1) => {
-      const items = [];
-      const usedIndices = new Set();
-      
-      // 确保至少添加一个商品
-      while (items.length < count) {
-        // 随机选择产品
-        const productIndex = Math.floor(Math.random() * products.length);
-        
-        // 避免重复添加相同商品
-        if (count > 1 && items.length > 0 && usedIndices.has(productIndex)) {
-          continue;
-        }
-        
-        usedIndices.add(productIndex);
-        const product = products[productIndex];
-        
-        // 随机选择规格
-        const specIndex = Math.floor(Math.random() * product.specs.length);
-        const spec = product.specs[specIndex];
-        const price = product.prices[specIndex];
-        
-        // 随机数量 1-5
-        const itemCount = Math.floor(Math.random() * 5) + 1;
-        
-        items.push({
-          id: product.id,
-          name: product.name,
-          spec: spec,
-          price: price,
-          count: itemCount,
-          imageUrl: product.images[0]
-        });
-      }
-      
-      return items;
-    };
-    
-    // 创建不同状态的订单
-    const orders = [
-      // 待支付订单
-      {
-        id: 'ord001',
-        orderNumber: generateOrderNumber(now),
-        status: 'pending_payment',
-        createTime: formatDate(now),
-        goods: generateOrderItems(1),
-        get totalCount() {
-          return this.goods.reduce((sum, item) => sum + item.count, 0);
-        },
-        get totalAmount() {
-          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
-        },
-        shippingFee: 0.00
-      },
-      
-      // 待发货订单
-      {
-        id: 'ord002',
-        orderNumber: generateOrderNumber(now, 1),
-        status: 'pending_shipment',
-        createTime: formatDate(now, 1),
-        goods: generateOrderItems(2),
-        get totalCount() {
-          return this.goods.reduce((sum, item) => sum + item.count, 0);
-        },
-        get totalAmount() {
-          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
-        },
-        shippingFee: 0.00
-      },
-      
-      // 待收货订单
-      {
-        id: 'ord003',
-        orderNumber: generateOrderNumber(now, 2),
-        status: 'pending_receipt',
-        createTime: formatDate(now, 3),
-        goods: generateOrderItems(1),
-        get totalCount() {
-          return this.goods.reduce((sum, item) => sum + item.count, 0);
-        },
-        get totalAmount() {
-          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
-        },
-        shippingFee: 0.00,
-        shippingInfo: {
-          company: '顺丰速运',
-          trackingNumber: 'SF' + Math.floor(Math.random() * 100000000)
-        }
-      },
-      
-      // 已完成订单
-      {
-        id: 'ord004',
-        orderNumber: generateOrderNumber(now, 3),
-        status: 'completed',
-        createTime: formatDate(now, 7),
-        goods: generateOrderItems(3),
-        get totalCount() {
-          return this.goods.reduce((sum, item) => sum + item.count, 0);
-        },
-        get totalAmount() {
-          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
-        },
-        shippingFee: 0.00,
-        isReviewed: Math.random() > 0.5 // 随机是否已评价
-      },
-      
-      // 已取消订单
-      {
-        id: 'ord005',
-        orderNumber: generateOrderNumber(now, 4),
-        status: 'canceled',
-        createTime: formatDate(now, 10),
-        goods: generateOrderItems(1),
-        get totalCount() {
-          return this.goods.reduce((sum, item) => sum + item.count, 0);
-        },
-        get totalAmount() {
-          return this.goods.reduce((sum, item) => sum + item.price * item.count, 0) + this.shippingFee;
-        },
-        shippingFee: 0.00,
-        cancelReason: '用户取消'
-      }
-    ];
-    
-    // 计算金额，转为两位小数的字符串
-    orders.forEach(order => {
-      order.totalAmount = order.totalAmount.toFixed(2);
-    });
-    
-    this.setData({
-      orders: orders
-    }, () => {
-      // 设置数据后，确保更新订单状态文本并过滤订单
-      this.updateOrderStatusText();
-    });
   },
   
   // 根据当前选中的状态筛选订单
