@@ -1,7 +1,7 @@
 <view class="container">
   <!-- 用户信息区域 -->
   <view class="user-info-section">
-    <view class="user-header" bindtap="handleUserLogin">
+    <view class="user-header" bindtap="{{userInfo.isLogin ? 'navigateToProfileEdit' : 'handleUserLogin'}}">
       <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" style="background-color: #e0e0e0;"></image>
       <view class="user-detail">
         <text class="nickname">{{userInfo.nickName}}</text>

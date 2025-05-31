@@ -22,7 +22,8 @@
     "pages/member/info",
     "pages/member/login",
     "pages/member/register",
-    "pages/promotion/index"
+    "pages/promotion/index",
+    "pages/profile-edit/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

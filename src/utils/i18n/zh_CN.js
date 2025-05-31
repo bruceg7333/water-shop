@@ -31,7 +31,8 @@ module.exports = {
     member: '会员中心',
     login: '会员登录',
     memberRegister: '会员注册',
-    promotion: '促销活动'
+    promotion: '促销活动',
+    profileEdit: '编辑资料'
   },
   
   // 登录页面文本
@@ -92,7 +93,12 @@ module.exports = {
     openParenthesis: '（',
     closeParenthesis: '）',
     loadMore: '加载更多...',
-    noMoreData: '已经到底啦'
+    noMoreData: '已经到底啦',
+    loadFailed: '加载失败',
+    uploading: '上传中...',
+    uploadFailed: '上传失败',
+    saveSuccess: '保存成功',
+    saveFailed: '保存失败'
   },
   
   // 底部导航栏
@@ -440,6 +446,28 @@ module.exports = {
       title: '优惠券',
       count: '张优惠券',
       label: '优惠券'
+    },
+    edit: {
+      avatar: '头像',
+      nickname: '昵称',
+      nicknamePlaceholder: '请输入昵称',
+      phone: '手机号',
+      notBound: '未绑定',
+      bindPhone: '绑定',
+      changePhone: '更换',
+      gender: '性别',
+      selectGender: '请选择',
+      birthday: '生日',
+      selectBirthday: '请选择',
+      email: '邮箱',
+      emailPlaceholder: '请输入邮箱',
+      signature: '个性签名',
+      signaturePlaceholder: '请输入个性签名',
+      male: '男',
+      female: '女',
+      unknown: '未知',
+      nicknameRequired: '请输入昵称',
+      invalidEmail: '邮箱格式不正确'
     }
   },
   

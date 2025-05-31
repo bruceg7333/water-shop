@@ -176,7 +176,10 @@ export const redirectAfterLogin = () => {
     wx.removeStorageSync('redirectUrl');
     
     // 如果是tabBar页面，需要使用switchTab
-    if (['/pages/home/index', '/pages/cart/index', '/pages/profile/index'].includes(redirectUrl)) {
+    const tabBarPages = ['/pages/home/index', '/pages/cart/index', '/pages/profile/index'];
+    const isTabBar = tabBarPages.some(page => redirectUrl.startsWith(page));
+    
+    if (isTabBar) {
       console.log('跳转到tabBar页面:', redirectUrl);
       wx.switchTab({
         url: redirectUrl,
@@ -212,7 +215,7 @@ export const redirectAfterLogin = () => {
     // 没有重定向URL，跳转到首页
     console.log('没有重定向URL，跳转到首页');
     wx.switchTab({
-      url: '/pages/home/index'
+      url: '/pages/index/index'
     });
   }
 };

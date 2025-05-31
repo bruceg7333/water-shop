@@ -458,10 +458,22 @@ const pageConfig = {
     // 使用全局变量存储订单状态，供订单页面读取
     getApp().globalData = getApp().globalData || {};
     getApp().globalData.orderStatus = status || '';
-
+    
+    console.log('准备导航到: /pages/order/index，状态:', status);
+    
     // 使用switchTab跳转到tabbar页面
     wx.switchTab({
-      url: '/pages/order/index'
+      url: '/pages/order/index',
+      success: () => {
+        console.log('导航成功');
+      },
+      fail: (err) => {
+        console.error('导航失败:', err);
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'none'
+        });
+      }
     });
   },
 
@@ -760,7 +772,24 @@ const pageConfig = {
     }));
     
     this.setData({ orderSummary });
-  }
+  },
+
+     /**
+    * 跳转到编辑资料页面
+    */
+     navigateToProfileEdit() {
+      // 检查是否已登录
+      if (!this.data.userInfo.isLogin) {
+        wx.navigateTo({
+          url: '/pages/member/login'
+        });
+        return;
+      }
+      
+      wx.navigateTo({
+        url: '/pages/profile-edit/index'
+      });
+    }
 };
 
 // 使用createPage包装页面配置

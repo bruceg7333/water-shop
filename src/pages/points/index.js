@@ -117,11 +117,25 @@ const pageConfig = {
       })
       .catch(err => {
         console.error('获取用户信息失败:', err);
+        wx.hideLoading();
+        
+        // 如果是401错误，说明token过期，直接返回上一页
+        if (err && (err.statusCode === 401 || err.code === 401)) {
+          wx.showToast({
+            title: '登录已过期，请重新登录',
+            icon: 'none',
+            duration: 2000
+          });
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 2000);
+          return;
+        }
+        
         this.setData({
           pointsRecords: [],
           pointsBalance: 0
         });
-        wx.hideLoading();
       });
   },
   
