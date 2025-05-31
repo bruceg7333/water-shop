@@ -117,9 +117,10 @@
   color: white;
   border: none;
   border-radius: 20rpx;
-  padding: 0;
+  padding: 0 20rpx;
   font-size: 28rpx;
-  width: 120rpx;
+  min-width: 80rpx;
+  max-width: 150rpx;
   height: 60rpx;
   line-height: 60rpx;
   text-align: center;
@@ -128,6 +129,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* 居中显示的绑定按钮 */
@@ -150,14 +153,16 @@
   color: white;
   border: none;
   border-radius: 16rpx;
-  padding: 12rpx 20rpx;
+  padding: 0 20rpx;
   font-size: 26rpx;
-  min-width: 120rpx;
+  min-width: 80rpx;
+  max-width: 120rpx;
   height: 56rpx;
   line-height: 56rpx;
   margin-left: 20rpx;
   box-shadow: 0 3rpx 10rpx rgba(255, 154, 86, 0.3);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .change-phone-btn::after {

@@ -257,10 +257,11 @@ const pageConfig = {
       console.log('登录状态发生变化，重新检查');
       this.checkLoginStatus();
     } else if (currentLoginStatus && this.data.userInfo.isLogin) {
-      // 已登录状态，加载订单统计（可能有新订单）
+      // 已登录状态，重新加载用户信息和订单统计（可能头像昵称已更新）
+      console.log("重新加载用户信息以获取最新数据");
+      this.loadUserInfo();
       this.loadOrderStatistics();
     }
-    
     // 更新国际化文本（可能语言设置发生了变化）
     this.updateI18nText();
   },
@@ -534,6 +535,23 @@ const pageConfig = {
   },
 
   /**
+   * 跳转到编辑资料页面
+   */
+  navigateToProfileEdit() {
+    // 检查是否已登录
+    if (!this.data.userInfo.isLogin) {
+      wx.navigateTo({
+        url: '/pages/member/login'
+      });
+      return;
+    }
+    
+    wx.navigateTo({
+      url: '/pages/profile-edit/index'
+    });
+  },
+
+  /**
    * 根据积分获取会员等级文本
    */
   getMemberLevelByPoints(points) {
@@ -772,24 +790,7 @@ const pageConfig = {
     }));
     
     this.setData({ orderSummary });
-  },
-
-     /**
-    * 跳转到编辑资料页面
-    */
-     navigateToProfileEdit() {
-      // 检查是否已登录
-      if (!this.data.userInfo.isLogin) {
-        wx.navigateTo({
-          url: '/pages/member/login'
-        });
-        return;
-      }
-      
-      wx.navigateTo({
-        url: '/pages/profile-edit/index'
-      });
-    }
+  }
 };
 
 // 使用createPage包装页面配置
