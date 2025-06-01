@@ -32,7 +32,8 @@ module.exports = {
     memberLogin: 'Login',
     memberRegister: 'Register',
     promotion: 'Promotions',
-    login: 'Login'
+    login: 'Login',
+    profileEdit: 'Edit Profile'
   },
   
   // Login page text
@@ -85,10 +86,21 @@ module.exports = {
     edit: 'Edit',
     save: 'Save',
     loginFirst: 'Please login first',
+    loginRequired: 'You need to login first to use this feature',
+    toLogin: 'Go to Login',
+    requestFailed: 'Request failed',
+    networkError: 'Network error, please try again later',
+    operationFailed: 'Operation failed, please try again later',
     openParenthesis: '(',
     closeParenthesis: ')',
     loadMore: 'Loading more...',
-    noMoreData: 'No more products'
+    noMoreData: 'No more products',
+    loadFailed: 'Load failed',
+    uploading: 'Uploading...',
+    uploadFailed: 'Upload failed',
+    saveSuccess: 'Save successful',
+    saveFailed: 'Save failed',
+    loginExpired: 'Login expired'
   },
   
   // Bottom navigation bar
@@ -451,6 +463,28 @@ module.exports = {
       title: 'Coupons',
       count: 'coupons',
       label: 'Coupons'
+    },
+    edit: {
+      avatar: 'Avatar',
+      nickname: 'Nickname',
+      nicknamePlaceholder: 'Enter nickname',
+      phone: 'Phone Number',
+      notBound: 'Not bound',
+      bindPhone: 'Bind',
+      changePhone: 'Change',
+      gender: 'Gender',
+      selectGender: 'Please select',
+      birthday: 'Birthday',
+      selectBirthday: 'Please select',
+      email: 'Email',
+      emailPlaceholder: 'Enter email address',
+      signature: 'Signature',
+      signaturePlaceholder: 'Enter personal signature',
+      male: 'Male',
+      female: 'Female',
+      unknown: 'Unknown',
+      nicknameRequired: 'Please enter nickname',
+      invalidEmail: 'Invalid email format'
     }
   },
   

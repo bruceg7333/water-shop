@@ -17,12 +17,20 @@
   text-align: center;
 }
 
-.logo {
+.logo-text {
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
   margin-bottom: 20rpx;
-  background-color: #e6f5ff;
+  background: linear-gradient(135deg, #1a78c2, #07c160);
+  color: #ffffff;
+  font-size: 80rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(26, 120, 194, 0.3);
 }
 
 .title {

@@ -25,6 +25,10 @@
   background-color: #fff;
   border: 4rpx solid rgba(255, 255, 255, 0.4);
   object-fit: cover;
+  object-position: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .user-detail {

@@ -12,10 +12,13 @@ module.exports = {
     home: '首頁',
     cart: '購物車',
     order: '訂單管理',
+    orderDetail: '訂單詳情',
+    orderConfirm: '確認訂單',
     profile: '個人中心',
     products: '商品列表',
     productDetail: '商品詳情',
     address: '收貨地址',
+    addressAdd: '新增收貨地址',
     addressEdit: '編輯地址',
     coupon: '優惠券',
     favorite: '我的收藏',
@@ -28,7 +31,9 @@ module.exports = {
     member: '會員中心',
     memberLogin: '會員登錄',
     memberRegister: '會員註冊',
-    promotion: '促銷活動'
+    promotion: '促銷活動',
+    login: '登錄',
+    profileEdit: '編輯資料'
   },
   
   // 通用文本
@@ -49,7 +54,10 @@ module.exports = {
     delete: '刪除',
     edit: '編輯',
     save: '保存',
-    loginFirst: '請先登錄'
+    loginFirst: '請先登錄',
+    loginRequired: '您需要登錄後才能使用此功能',
+    loginExpired: '登錄已過期',
+    toLogin: '去登錄'
   },
   
   // 底部導航欄
@@ -217,8 +225,64 @@ module.exports = {
     logoutConfirm: '確定要退出登錄嗎？',
     logoutSuccess: '已退出登錄',
     pleaseLogin: '請先登錄',
-    settings: '設置'
-  },
+    settings: '設置',
+    order: {
+      title: '我的訂單',
+      all: '全部訂單',
+      pending: '待付款',
+      shipped: '待發貨',
+      receipt: '待收貨',
+      review: '待評價'
+    },
+    menu: {
+      address: '收貨地址',
+      favorite: '我的收藏',
+      coupon: '優惠券',
+      points: '我的積分',
+      service: '聯繫客服',
+      about: '關於我們'
+    },
+    member: {
+      normal: '普通會員',
+      bronze: '青銅會員',
+      silver: '白銀會員',
+      gold: '黃金會員',
+      platinum: '鉑金會員',
+      diamond: '鑽石會員',
+      admin: '管理員'
+    },
+    points: {
+      title: '我的積分',
+      balance: '積分餘額',
+      label: '水滴積分'
+    },
+    coupon: {
+      title: '優惠券',
+      count: '張優惠券',
+      label: '優惠券'
+    },
+    edit: {
+      avatar: '頭像',
+      nickname: '昵稱',
+      nicknamePlaceholder: '請輸入昵稱',
+      phone: '手機號',
+      notBound: '未綁定',
+      bindPhone: '綁定',
+      changePhone: '更換',
+      gender: '性別',
+      selectGender: '請選擇',
+      birthday: '生日',
+      selectBirthday: '請選擇',
+      email: '郵箱',
+      emailPlaceholder: '請輸入郵箱',
+      signature: '個性簽名',
+      signaturePlaceholder: '請輸入個性簽名',
+      male: '男',
+      female: '女',
+      unknown: '未知',
+      nicknameRequired: '請輸入昵稱',
+      invalidEmail: '郵箱格式不正確'
+    }   },
   
   // 文章列表頁
   articleList: {

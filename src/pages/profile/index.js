@@ -8,7 +8,7 @@ const { createPage } = require('../../utils/page-base');
 const pageConfig = {
   data: {
     userInfo: {
-      avatarUrl: 'https://placehold.co/120x120/cccccc/ffffff?text=User',
+      avatarUrl: '/assets/images/profile/default-avatar.svg',
       nickName: '未登录',
       isLogin: false,
       memberLevel: '普通会员',
@@ -295,7 +295,7 @@ const pageConfig = {
     
     // 更新UI为未登录状态
     this.setData({
-      'userInfo.avatarUrl': 'https://placehold.co/120x120/cccccc/ffffff?text=User',
+      'userInfo.avatarUrl': '/assets/images/profile/default-avatar.svg',
       'userInfo.nickName': this.t('profile.notLogged'),
       'userInfo.isLogin': false,
       'userInfo.memberLevel': this.t('profile.member.normal'),
@@ -614,7 +614,7 @@ const pageConfig = {
           
           // 更新UI
           this.setData({
-            'userInfo.avatarUrl': userData.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+            'userInfo.avatarUrl': userData.avatar || '/assets/images/profile/default-avatar.svg',
             'userInfo.nickName': userData.nickName || userData.username,
             'userInfo.isLogin': true,
             'userInfo.memberLevel': memberLevel,
@@ -678,7 +678,7 @@ const pageConfig = {
         this.getMemberLevelByPoints(points);
       
       this.setData({
-        'userInfo.avatarUrl': userInfo.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+        'userInfo.avatarUrl': userInfo.avatar || '/assets/images/profile/default-avatar.svg',
         'userInfo.nickName': userInfo.nickName || userInfo.username,
         'userInfo.isLogin': true,
         'userInfo.memberLevel': memberLevel,
@@ -688,7 +688,7 @@ const pageConfig = {
     } else {
       // 如果本地存储也没有用户信息，确保UI处于未登录状态
       this.setData({
-        'userInfo.avatarUrl': 'https://placehold.co/120x120/cccccc/ffffff?text=User',
+        'userInfo.avatarUrl': '/assets/images/profile/default-avatar.svg',
         'userInfo.nickName': this.t('profile.notLogged'),
         'userInfo.isLogin': false,
         'userInfo.memberLevel': this.t('profile.member.normal'),

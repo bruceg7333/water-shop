@@ -137,28 +137,45 @@ const pageConfig = {
     });
 
     try {
-      // TODO: 实现头像上传API
-      // const uploadRes = await api.uploadFile(filePath);
-      // if (uploadRes.success) {
-      //   this.setData({
-      //     avatarUrl: uploadRes.data.url
-      //   });
-      //   wx.hideLoading();
-      //   wx.showToast({
-      //     title: this.t('common.uploadSuccess'),
-      //     icon: 'success'
-      //   });
-      // } else {
-      //   throw new Error(uploadRes.message || '上传失败');
-      // }
+      // 实现头像上传API
+      const token = wx.getStorageSync('token');
       
-      // 暂时模拟成功上传（使用本地临时路径）
+      const uploadRes = await new Promise((resolve, reject) => {
+        wx.uploadFile({
+          url: 'http://localhost:5001/api/upload/avatar', // 需要新建一个头像上传接口
+          filePath: filePath,
+          name: 'image',
+          header: {
+            'Authorization': `Bearer ${token}`
+          },
+          success: (res) => {
+            try {
+              const data = JSON.parse(res.data);
+              if (data.success) {
+                resolve(data);
+              } else {
+                reject(new Error(data.message || '上传失败'));
+              }
+            } catch (error) {
+              reject(new Error('响应解析失败'));
+            }
+          },
+          fail: reject
+        });
+      });
+
+      // 上传成功，更新头像URL
+      this.setData({
+        avatarUrl: uploadRes.data.url
+      });
+      
       wx.hideLoading();
       wx.showToast({
-        title: '头像已更新',
+        title: this.t('common.uploadSuccess'),
         icon: 'success'
       });
     } catch (error) {
+      console.error('头像上传失败:', error);
       wx.hideLoading();
       wx.showToast({
         title: this.t('common.uploadFailed'),

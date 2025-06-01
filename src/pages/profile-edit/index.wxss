@@ -86,10 +86,10 @@
 
 /* 手机号值容器 */
 .phone-value {
+  flex: 1;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  width: 100%;
+  justify-content: flex-end;
 }
 
 .phone-text {
@@ -113,24 +113,26 @@
 
 /* 绑定手机号按钮 */
 .bind-phone-btn {
-  background: linear-gradient(135deg, #1a78c2 0%, #4a9eff 100%);
-  color: white;
-  border: none;
-  border-radius: 20rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
+  background: linear-gradient(135deg, #1a78c2 0%, #4a9eff 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 20rpx !important;
+  padding: 0 20rpx !important;
+  font-size: 28rpx !important;
   min-width: 80rpx;
   max-width: 150rpx;
-  height: 60rpx;
-  line-height: 60rpx;
-  text-align: center;
-  box-shadow: 0 4rpx 12rpx rgba(26, 120, 194, 0.3);
+  height: 60rpx !important;
+  line-height: 60rpx !important;
+  text-align: center !important;
+  box-shadow: 0 4rpx 12rpx rgba(26, 120, 194, 0.3) !important;
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  margin-left: auto !important;
   flex-shrink: 0;
+  position: relative;
 }
 
 /* 居中显示的绑定按钮 */

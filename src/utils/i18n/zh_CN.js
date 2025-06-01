@@ -86,6 +86,7 @@ module.exports = {
     save: '保存',
     loginFirst: '请先登录',
     loginRequired: '您需要登录后才能使用此功能',
+    loginExpired: '登录已过期',
     toLogin: '去登录',
     requestFailed: '请求失败',
     networkError: '网络异常，请稍后重试',

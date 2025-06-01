@@ -6,7 +6,7 @@ const { checkLogin } = require('../../utils/auth');
 const pageConfig = {
   data: {
     userInfo: {
-      avatarUrl: 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+      avatarUrl: '/assets/images/profile/default-avatar.svg',
       nickName: '',
       memberLevel: '',
       points: 0
@@ -174,7 +174,7 @@ const pageConfig = {
       // 设置一个初始的用户信息，稍后可能会被API返回的数据更新
       this.setData({
         userInfo: {
-          avatarUrl: storedUser.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+          avatarUrl: storedUser.avatar || '/assets/images/profile/default-avatar.svg',
           nickName: storedUser.nickName || storedUser.username || this.t('product.reviews.anonymous'),
           points: storedUser.points || 0,
           memberLevel: this.getMemberLevelByPoints(storedUser.points || 0)
@@ -241,7 +241,7 @@ const pageConfig = {
         // 设置用户数据
         this.setData({
           userInfo: {
-            avatarUrl: storedUser.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+            avatarUrl: storedUser.avatar || '/assets/images/profile/default-avatar.svg',
             nickName: storedUser.nickName || storedUser.username || this.t('product.reviews.anonymous'),
             points: totalPoints,
             // 会员等级由积分决定，不再使用角色字段
@@ -282,7 +282,7 @@ const pageConfig = {
       
       this.setData({
         userInfo: {
-          avatarUrl: storedUser.avatar || 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+          avatarUrl: storedUser.avatar || '/assets/images/profile/default-avatar.svg',
           nickName: storedUser.nickName || storedUser.username || this.t('product.reviews.anonymous'),
           points: points,
           memberLevel: this.getMemberLevelByPoints(points)
@@ -323,7 +323,7 @@ const pageConfig = {
     
     this.setData({
       userInfo: {
-        avatarUrl: 'https://placehold.co/120x120/1a78c2/ffffff?text=User',
+        avatarUrl: '/assets/images/profile/default-avatar.svg',
         nickName: this.t('product.reviews.anonymous'),
         points: points,
         memberLevel: this.getMemberLevelByPoints(points)

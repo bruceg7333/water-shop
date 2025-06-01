@@ -1,6 +1,6 @@
 <view class="container">
   <view class="login-header">
-    <image class="logo" src="/static/images/icons/logo.png" mode="aspectFit"></image>
+    <view class="logo-text">S</view>
     <text class="title">{{i18n.title || 'SPRINKLE水商城'}}</text>
     <text class="subtitle">{{i18n.subtitle || '登录账号'}}</text>
   </view>
