@@ -4,20 +4,6 @@
       <text class="label">{{i18n.currentPoints}}</text>
       <text class="value">{{pointsBalance}}</text>
     </view>
-    <view class="points-card">
-      <image class="card-bg" src="/assets/images/points/card-bg.png" mode="aspectFill"></image>
-      <view class="card-content">
-        <view class="user-info">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-          <text class="nickname">{{userInfo.nickName}}</text>
-          <text class="level">{{userInfo.memberLevel}}</text>
-        </view>
-        <view class="points-info">
-          <text class="points-label">{{i18n.availablePoints}}</text>
-          <text class="points-value">{{pointsBalance}}</text>
-        </view>
-      </view>
-    </view>
   </view>
 
   <view class="tabs">
