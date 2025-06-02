@@ -95,33 +95,26 @@ Page({
   useCoupon: function(e) {
     const coupon = e.currentTarget.dataset.coupon;
     
-    // 验证优惠券是否有效
-    api.coupon.claim(coupon.id).then(res => {
-      if (res.success) {
-        // 存储选中的优惠券信息
-        wx.setStorageSync('selectedCoupon', coupon);
-        
-        // 跳转到商品列表页面
-        wx.switchTab({
-          url: '/pages/index/index'
-        });
-        
-        wx.showToast({
-          title: i18n.t('coupon.toast.selected'),
-          icon: 'none'
-        });
-      } else {
-        wx.showToast({
-          title: res.message || i18n.t('common.error'),
-          icon: 'none'
-        });
-      }
-    }).catch(err => {
-      console.error('验证优惠券失败:', err);
+    // 检查优惠券状态
+    if (coupon.status !== 'available') {
       wx.showToast({
-        title: i18n.t('common.error'),
+        title: '优惠券不可用',
         icon: 'none'
       });
+      return;
+    }
+    
+    // 存储选中的优惠券信息
+    wx.setStorageSync('selectedCoupon', coupon);
+    
+    // 跳转到商品列表页面
+    wx.navigateTo({
+      url: '/pages/product/list'
+    });
+    
+    wx.showToast({
+      title: '优惠券已选择，请选择商品',
+      icon: 'none'
     });
   }
 })
