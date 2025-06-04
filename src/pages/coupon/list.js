@@ -8,7 +8,11 @@ Page({
     coupons: [],
     filteredCoupons: [],
     loading: true,
-    error: false
+    error: false,
+    // 兑换相关
+    showExchangeModal: false,
+    exchangeCode: '',
+    exchangeLoading: false
   },
   
   onLoad: function() {
@@ -114,7 +118,86 @@ Page({
     
     wx.showToast({
       title: '优惠券已选择，请选择商品',
-      icon: 'none'
+      icon: 'success'
+    });
+  },
+  
+  // 显示兑换弹窗
+  showExchangeModal: function() {
+    this.setData({
+      showExchangeModal: true,
+      exchangeCode: ''
+    });
+  },
+  
+  // 隐藏兑换弹窗
+  hideExchangeModal: function() {
+    this.setData({
+      showExchangeModal: false,
+      exchangeCode: '',
+      exchangeLoading: false
+    });
+  },
+  
+  // 输入兑换码
+  onExchangeCodeInput: function(e) {
+    this.setData({
+      exchangeCode: e.detail.value.trim()
+    });
+  },
+  
+  // 确认兑换
+  confirmExchange: function() {
+    const { exchangeCode } = this.data;
+    
+    if (!exchangeCode) {
+      wx.showToast({
+        title: '请输入兑换码',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    this.setData({
+      exchangeLoading: true
+    });
+    
+    api.coupon.exchange(exchangeCode).then(res => {
+      this.setData({
+        exchangeLoading: false
+      });
+      
+      if (res.success) {
+        wx.showToast({
+          title: res.message || '兑换成功',
+          icon: 'success'
+        });
+        
+        // 隐藏弹窗
+        this.hideExchangeModal();
+        
+        // 刷新优惠券列表
+        this.loadCouponData();
+      } else {
+        wx.showToast({
+          title: res.message || '兑换失败，请检查兑换码',
+          icon: 'none',
+          duration: 2000
+        });
+      }
+      
+    }).catch(err => {
+      this.setData({
+        exchangeLoading: false
+      });
+      
+      console.error('兑换优惠券失败:', err);
+      
+      wx.showToast({
+        title: err.message || '网络异常，请稍后重试',
+        icon: 'none',
+        duration: 2000
+      });
     });
   }
 })

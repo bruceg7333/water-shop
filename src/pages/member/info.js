@@ -184,11 +184,16 @@ const pageConfig = {
     
     // 获取用户信息
     api.user.getCurrentUser()
-      .then(res => {
-        console.log('从API获取用户信息成功:', res);
-        // 获取积分记录并计算总积分
-        this.loadPointsAndCalculate();
-      })
+        .then(res => {
+          console.log('从API获取用户信息成功:', res);
+          if (res.success && res.data) {
+            // 优先使用API返回的用户积分数据
+            this.updateUserInfoFromAPI(res.data);
+          } else {
+            // API返回失败，使用缓存数据
+            this.loadUserInfoFromStorage();
+          }
+        })
       .catch(err => {
         console.error('从API获取用户信息失败:', err);
         // 如果从API获取失败，使用从存储加载的信息
@@ -204,68 +209,62 @@ const pageConfig = {
       });
   },
   
-  /**
-   * 加载积分记录并计算总积分
+    /**
+   * 从用户API数据更新用户信息
    */
-  loadPointsAndCalculate: function() {
-    api.getPointsRecords()
-      .then(res => {
-        console.log('获取积分记录成功:', res);
-        
-        // 从本地存储获取用户信息
-        const storedUser = wx.getStorageSync('userInfo') || {};
-        let totalPoints = storedUser.points || 0; // 默认使用存储中的积分值
-        
-        // 如果有积分记录，计算总积分
-        if (res.success && res.data && res.data.length > 0) {
-          // 计算总积分
-          totalPoints = 0; // 重置为0，然后累加记录中的积分
-          for (const record of res.data) {
-            if (record.type === 'increase') {
-              totalPoints += record.points;
-            } else if (record.type === 'decrease') {
-              totalPoints -= record.points;
-            }
-          }
-        } else {
-          // 没有积分记录，使用存储中的积分或API返回的用户积分
-          console.log('没有积分记录，使用存储中的积分:', totalPoints);
-          
-          // 如果API返回了用户信息中包含积分，优先使用
-          if (res.userData && typeof res.userData.points === 'number') {
-            totalPoints = res.userData.points;
-            console.log('使用API返回的用户积分:', totalPoints);
-          }
+    updateUserInfoFromAPI: function(userData) {
+      // 处理嵌套的用户数据结构
+      let userInfo = userData;
+      if (userData.user) {
+        userInfo = userData.user;
+      }
+      
+      // 获取积分，优先使用API返回的积分
+      const points = userInfo.points || 0;
+      console.log('API返回的积分数据:', points);
+      
+      // 处理头像URL
+      const formatAvatarUrl = (avatar) => {
+        if (!avatar) return '/assets/images/profile/default-avatar.svg';
+        if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+          return avatar;
         }
-        
-        // 设置用户数据
-        this.setData({
-          userInfo: {
-            avatarUrl: storedUser.avatar || '/assets/images/profile/default-avatar.svg',
-            nickName: storedUser.nickName || storedUser.username || this.t('product.reviews.anonymous'),
-            points: totalPoints,
-            // 会员等级由积分决定，不再使用角色字段
-            memberLevel: this.getMemberLevelByPoints(totalPoints)
-          }
-        });
-        
-        console.log('最终使用的总积分:', totalPoints);
-        console.log('当前会员等级:', this.getMemberLevelByPoints(totalPoints));
-        
-        // 计算会员等级进度
-        this.calculateLevelProgress();
-        
-        // 初始化当前会员等级tab
-        this.initCurrentLevel();
-        
-        wx.hideLoading();
-      })
-      .catch(err => {
-        console.error('获取积分记录失败:', err);
-        this.loadUserInfoFromStorage();
-        wx.hideLoading();
+        if (avatar.startsWith('/assets/') || avatar.startsWith('/static/')) {
+          return avatar;
+        }
+        const baseUrl = 'http://localhost:5001';
+        return avatar.startsWith('/') ? `${baseUrl}${avatar}` : `${baseUrl}/${avatar}`;
+      };
+      
+      // 设置用户数据
+      this.setData({
+        userInfo: {
+          avatarUrl: formatAvatarUrl(userInfo.avatar) || '/assets/images/profile/default-avatar.svg',
+          nickName: userInfo.nickName || userInfo.username || this.t('product.reviews.anonymous'),
+          points: points,
+          memberLevel: this.getMemberLevelByPoints(points)
+        }
       });
-  },
+      
+      console.log('使用API积分数据:', points);
+      console.log('会员等级:', this.getMemberLevelByPoints(points));
+      
+      // 同步更新本地存储
+      wx.setStorageSync('userInfo', {
+        ...wx.getStorageSync('userInfo'),
+        points: points,
+        avatar: userInfo.avatar,
+        nickName: userInfo.nickName || userInfo.username
+      });
+      
+      // 计算会员等级进度
+      this.calculateLevelProgress();
+      
+      // 初始化当前会员等级tab
+      this.initCurrentLevel();
+      
+      wx.hideLoading();
+    },
   
   /**
    * 从本地存储加载用户信息

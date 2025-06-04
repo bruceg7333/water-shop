@@ -11,6 +11,13 @@
     </view>
   </view>
   
+  <!-- 兑换按钮 -->
+  <view class="exchange-btn-container">
+    <view class="exchange-btn" bindtap="showExchangeModal">
+      <text>兑换优惠券</text>
+    </view>
+  </view>
+  
   <!-- 加载中 -->
   <view wx:if="{{loading}}" class="loading-container">
     <view class="loading"></view>
@@ -56,4 +63,43 @@
       <view class="corner"></view>
     </view>
   </view>
-</view> 
+  
+  <!-- 兑换弹窗 -->
+  <view class="exchange-modal" wx:if="{{showExchangeModal}}">
+    <view class="modal-mask" bindtap="hideExchangeModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">兑换优惠券</text>
+        <view class="close-btn" bindtap="hideExchangeModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">兑换码</text>
+          <input 
+            class="exchange-input" 
+            placeholder="请输入兑换码" 
+            value="{{exchangeCode}}"
+            bindinput="onExchangeCodeInput"
+            maxlength="20"
+          />
+        </view>
+        <view class="tips">
+          <text>• 兑换码不区分大小写</text>
+          <text>• 每个兑换码只能使用一次</text>
+          <text>• 请确保兑换码在有效期内</text>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn-group">
+          <view class="cancel-btn" bindtap="hideExchangeModal">取消</view>
+          <view 
+            class="confirm-btn {{exchangeLoading ? 'loading' : ''}}" 
+            bindtap="confirmExchange"
+          >
+            {{exchangeLoading ? '兑换中...' : '确认兑换'}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

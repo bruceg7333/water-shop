@@ -133,14 +133,8 @@ const request = (options) => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           resolve(res.data);
         } else {
-          // 处理业务错误
-          const errorMsg = (res.data && res.data.message) || i18n.t('common.requestFailed') || '请求失败';
-          wx.showToast({
-            title: errorMsg,
-            icon: 'none',
-            duration: 2000
-          });
-          reject(res.data);
+          // 处理业务错误，不显示Toast，让调用方自己处理
+          reject(res.data || { message: i18n.t('common.requestFailed') || '请求失败' });
         }
       },
       fail: (err) => {
@@ -421,6 +415,12 @@ const api = {
       url: `/coupons/claim`,
       method: 'POST',
       data: { couponId: id }
+    }),
+    // 兑换优惠券
+    exchange: (code) => request({
+      url: '/coupons/exchange',
+      method: 'POST',
+      data: { code }
     })
   },
   
@@ -485,4 +485,4 @@ const api = {
 module.exports = {
   request,
   api
-}; 
+};
