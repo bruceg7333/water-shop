@@ -101,6 +101,7 @@ const pageConfig = {
         // 订单金额
         goodsAmountLabel: this.t('order.goodsAmount'),
         shippingFeeLabel: this.t('order.shippingFee'),
+        couponLabel: this.t('order.couponLabel'),
         discountAmountLabel: this.t('order.discountAmount'),
         totalAmountLabel: this.t('order.payment.payAmount'),
         
@@ -256,6 +257,29 @@ const pageConfig = {
             discountAmount: orderData.discountAmount || 0, 
             totalAmount: orderData.totalPrice || orderData.totalAmount || 0,
             
+            // 优惠券信息 - 优先使用parsedCouponInfo，其次使用usedCoupon
+            usedCoupon: (() => {
+              // 如果有解析后的优惠券信息，使用它
+              if (orderData.parsedCouponInfo) {
+                return {
+                  id: orderData.parsedCouponInfo.id,
+                  name: orderData.parsedCouponInfo.name || '',
+                  type: orderData.parsedCouponInfo.type || 'fixed',
+                  value: orderData.parsedCouponInfo.value || 0
+                };
+              }
+              // 否则使用usedCoupon字段
+              if (orderData.usedCoupon && orderData.usedCoupon.coupon) {
+                return {
+                  id: orderData.usedCoupon.coupon._id || orderData.usedCoupon.coupon.id,
+                  name: orderData.usedCoupon.coupon.name || '',
+                  type: orderData.usedCoupon.coupon.type || 'fixed',
+                  value: orderData.usedCoupon.coupon.value || 0
+                };
+              }
+              return null;
+            })(),
+            
             // 收件人信息
             recipient: {
               name: orderData.shippingAddress?.name || '',
@@ -305,7 +329,8 @@ const pageConfig = {
         month: '2-digit', 
         day: '2-digit',
         hour: '2-digit', 
-        minute: '2-digit'
+        minute: '2-digit',
+        second: '2-digit'
       });
     } catch (e) {
       return dateString;
@@ -455,4 +480,4 @@ const pageConfig = {
 };
 
 // 创建页面
-Page(createPage(pageConfig)); 
+Page(createPage(pageConfig));

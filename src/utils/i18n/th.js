@@ -98,6 +98,7 @@ module.exports = {
   // แถบนำทางด้านล่าง (底部导航栏)
   tabbar: {
     home: 'หน้าหลัก',
+    shop: 'ร้านค้า',
     cart: 'ตะกร้า',
     order: 'คำสั่งซื้อ',
     profile: 'ฉัน'
@@ -246,7 +247,8 @@ module.exports = {
       },
       soldCount: 'ขายแล้ว {count} ชิ้น',
       empty: 'ไม่พบสินค้าที่เกี่ยวข้อง',
-      addedToCart: 'เพิ่มลงตะกร้าแล้ว'
+      addedToCart: 'เพิ่มลงตะกร้าแล้ว',
+      buyNow: 'ซื้อเลย'
     }
   },
   

@@ -14,6 +14,7 @@ const ICON_SIZE = 24;
 // 定义图标类型和对应的绘制函数
 const ICONS = {
   home: drawHome,
+  shop: drawShop,
   cart: drawCart,
   order: drawOrder,
   profile: drawProfile
@@ -137,6 +138,43 @@ function drawOrder(ctx, color) {
   ctx.beginPath();
   ctx.moveTo(8, 17);
   ctx.lineTo(16, 17);
+  ctx.stroke();
+}
+
+// 绘制商城图标
+function drawShop(ctx, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  
+  // 绘制商店外框
+  ctx.beginPath();
+  ctx.rect(4, 6, 16, 15);
+  ctx.stroke();
+  
+  // 绘制屋顶
+  ctx.beginPath();
+  ctx.moveTo(3, 6);
+  ctx.lineTo(12, 2);
+  ctx.lineTo(21, 6);
+  ctx.stroke();
+  
+  // 绘制门
+  ctx.beginPath();
+  ctx.rect(10, 13, 4, 8);
+  ctx.stroke();
+  
+  // 绘制窗户
+  ctx.beginPath();
+  ctx.rect(6, 10, 3, 3);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.rect(15, 10, 3, 3);
+  ctx.stroke();
+  
+  // 绘制招牌
+  ctx.beginPath();
+  ctx.rect(7, 4, 10, 2);
   ctx.stroke();
 }
 

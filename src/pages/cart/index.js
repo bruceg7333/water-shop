@@ -122,7 +122,9 @@ const pageConfig = {
           const cartItems = apiItems.map(item => {
             const product = item.product || {};
             return {
-              id: product._id || product.id,
+              id: product._id || product.id || item.productId, // 使用商品的真实ID
+              productId: product._id || product.id || item.productId, // 保存商品ID
+              cartItemId: item._id || item.id, // 保存购物车项目ID
               name: product.name || item.name,
               price: parseFloat(item.price || product.price || 0),
               count: item.quantity || 1,
@@ -295,36 +297,15 @@ const pageConfig = {
     const { index } = e.currentTarget.dataset;
     const { cartItems } = this.data;
     
-    cartItems[index].count += 1;
+    const item = cartItems[index];
+    const newQuantity = item.count + 1;
     
-    this.setData({
-      cartItems
-    });
-    
-    // 保存到本地存储
-    wx.setStorageSync('cartItems', cartItems);
-    
-    // 更新总价
-    this.calculateTotal();
-    
-    // 使用全局updateCartBadge方法更新购物车角标，确保与API数据同步
-    const app = getApp();
-    if (app && typeof app.updateCartBadge === 'function') {
-      app.updateCartBadge().then(count => {
-        console.log('增加商品后角标更新完成，数量:', count);
-      }).catch(err => {
-        console.log('增加商品后角标更新失败:', err);
-      });
-    }
-  },
-
-  // 减少商品数量
-  decreaseCount(e) {
-    const { index } = e.currentTarget.dataset;
-    const { cartItems } = this.data;
-    
-    if (cartItems[index].count > 1) {
-      cartItems[index].count -= 1;
+    // 如果已登录，调用API更新数据库
+    if (this.data.isLogin && item.id) {
+      this.updateQuantityInDatabase(item.id, newQuantity, index);
+    } else {
+      // 未登录或本地数据，直接更新本地
+      cartItems[index].count = newQuantity;
       
       this.setData({
         cartItems
@@ -335,15 +316,34 @@ const pageConfig = {
       
       // 更新总价
       this.calculateTotal();
+    }
+  },
+
+  // 减少商品数量
+  decreaseCount(e) {
+    const { index } = e.currentTarget.dataset;
+    const { cartItems } = this.data;
+    
+    if (cartItems[index].count > 1) {
+      const item = cartItems[index];
+      const newQuantity = item.count - 1;
       
-      // 使用全局updateCartBadge方法更新购物车角标，确保与API数据同步
-      const app = getApp();
-      if (app && typeof app.updateCartBadge === 'function') {
-        app.updateCartBadge().then(count => {
-          console.log('减少商品后角标更新完成，数量:', count);
-        }).catch(err => {
-          console.log('减少商品后角标更新失败:', err);
+      // 如果已登录，调用API更新数据库
+      if (this.data.isLogin && item.id) {
+        this.updateQuantityInDatabase(item.id, newQuantity, index);
+      } else {
+        // 未登录或本地数据，直接更新本地
+        cartItems[index].count = newQuantity;
+        
+        this.setData({
+          cartItems
         });
+        
+        // 保存到本地存储
+        wx.setStorageSync('cartItems', cartItems);
+        
+        // 更新总价
+        this.calculateTotal();
       }
     }
   },
@@ -405,6 +405,54 @@ const pageConfig = {
     });
   },
 
+  // 更新数据库中的商品数量
+  updateQuantityInDatabase(itemId, quantity, index) {
+    wx.showLoading({
+      title: this.t('common.loading')
+    });
+    
+    api.updateCartItem({
+      productId: itemId, // 这里使用的是购物车项目ID，而不是商品ID
+      quantity: quantity
+    }).then(res => {
+      wx.hideLoading();
+      
+      if (res.success) {
+        // 更新成功，更新本地数据
+        const { cartItems } = this.data;
+        cartItems[index].count = quantity;
+        
+        this.setData({
+          cartItems
+        });
+        
+        // 保存到本地存储
+        wx.setStorageSync('cartItems', cartItems);
+        
+        // 更新总价
+        this.calculateTotal();
+        
+        // 更新购物车角标
+        const app = getApp();
+        if (app && typeof app.updateCartBadge === 'function') {
+          app.updateCartBadge();
+        }
+      } else {
+        wx.showToast({
+          title: res.message || this.t('cart.updateFailed'),
+          icon: 'none'
+        });
+      }
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('更新购物车数量失败:', err);
+      wx.showToast({
+        title: this.t('cart.updateFailed'),
+        icon: 'none'
+      });
+    });
+  },
+
   // 去结算
   checkout() {
     const { cartItems, totalPrice } = this.data;
@@ -458,8 +506,8 @@ const pageConfig = {
 
   // 去购物
   goShopping() {
-    wx.switchTab({
-      url: '/pages/index/index'
+    wx.navigateTo({
+      url: '/pages/product/list'
     });
   },
 
@@ -678,4 +726,4 @@ const pageConfig = {
 };
 
 // 使用createPage包装页面配置
-Page(createPage(pageConfig)); 
+Page(createPage(pageConfig));

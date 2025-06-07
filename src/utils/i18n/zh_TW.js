@@ -63,6 +63,7 @@ module.exports = {
   // 底部導航欄
   tabbar: {
     home: '首頁',
+    shop: '商城',
     cart: '購物車',
     order: '訂單',
     profile: '我的'
@@ -181,7 +182,8 @@ module.exports = {
       },
       soldCount: '已售{count}件',
       empty: '暫無相關商品',
-      addedToCart: '已加入購物車'
+      addedToCart: '已加入購物車',
+      buyNow: '立即購買'
     }
   },
   

@@ -5,14 +5,7 @@ const { api } = require('../../utils/request');
 // 定义页面配置
 const pageConfig = {
   data: {
-    address: {
-      name: '张三',
-      phone: '13800138000',
-      province: '广东省',
-      city: '深圳市',
-      district: '南山区',
-      detail: '科技园南区'
-    },
+    address: null,
     orderItems: [
       {
         id: 1,
@@ -29,6 +22,12 @@ const pageConfig = {
     selectedPayment: 'wechat',
     remark: '',
     totalPrice: '0.00',
+    // 优惠券相关
+    availableCoupons: [],
+    selectedCoupon: null,
+    originalPrice: '0.00',
+    discountAmount: '0.00',
+    showCouponModal: false,
     i18n: {} // 国际化文本
   },
   
@@ -130,6 +129,9 @@ const pageConfig = {
     
     // 加载默认地址
     this.loadDefaultAddress();
+    
+    // 加载用户可用优惠券
+    this.loadAvailableCoupons();
   },
   
   onShow: function() {
@@ -141,6 +143,9 @@ const pageConfig = {
       });
       // 清除缓存中的选中地址，防止重复使用
       wx.removeStorageSync('selectedAddress');
+    } else if (!this.data.address) {
+      // 如果没有选中地址且当前也没有地址，则加载默认地址
+      this.loadDefaultAddress();
     }
   },
   
@@ -149,9 +154,10 @@ const pageConfig = {
     // 调用API获取地址列表
     api.getAddresses()
       .then(res => {
-        if (res.success && res.data && res.data.addresses && res.data.addresses.length > 0) {
+        console.log('获取地址API响应:', res);
+        if (res.success && res.data && res.data.length > 0) {
           // 找到默认地址或使用第一个地址
-          const defaultAddress = res.data.addresses.find(addr => addr.isDefault) || res.data.addresses[0];
+          const defaultAddress = res.data.find(addr => addr.isDefault) || res.data[0];
           
           this.setData({
             address: {
@@ -160,7 +166,7 @@ const pageConfig = {
               province: defaultAddress.province,
               city: defaultAddress.city,
               district: defaultAddress.district,
-              detail: defaultAddress.address
+              detail: defaultAddress.detail
             }
           });
         }
@@ -184,12 +190,30 @@ const pageConfig = {
     
     // 运费始终为0
     const deliveryPrice = 0;
-    const totalPrice = (goodsTotal + deliveryPrice).toFixed(2);
+    const originalPrice = goodsTotal + deliveryPrice;
     
-    console.log('计算总价：商品总价', goodsTotal, '运费', deliveryPrice, '最终价格', totalPrice);
+    // 计算优惠券折扣
+    let discountAmount = 0;
+    if (this.data.selectedCoupon) {
+      const coupon = this.data.selectedCoupon;
+      if (coupon.type === 'percentage') {
+        discountAmount = goodsTotal * (coupon.amount / 100);
+        if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+          discountAmount = coupon.maxDiscount;
+        }
+      } else if (coupon.type === 'fixed') {
+        discountAmount = Math.min(coupon.amount, goodsTotal);
+      }
+    }
+    
+    const finalPrice = Math.max(0, originalPrice - discountAmount);
+    
+    console.log('计算总价：商品总价', goodsTotal, '运费', deliveryPrice, '原价', originalPrice, '折扣', discountAmount, '最终价格', finalPrice);
     
     this.setData({
-      totalPrice: totalPrice
+      originalPrice: originalPrice.toFixed(2),
+      discountAmount: discountAmount.toFixed(2),
+      totalPrice: finalPrice.toFixed(2)
     });
   },
   
@@ -253,6 +277,7 @@ const pageConfig = {
           spec: item.spec || ''
         };
       }),
+      isTestData: true, // 添加测试数据标记，告诉后端这可能是测试商品
       // 确保地址格式与后端shippingAddress模型匹配
       shippingAddress: {
         name: this.data.address.name,
@@ -265,8 +290,9 @@ const pageConfig = {
       paymentMethod: this.getPaymentMethodValue(),
       itemsPrice: this.calculateItemsTotal(),
       shippingPrice: this.getShippingPrice(),
-      totalPrice: parseFloat(this.data.totalPrice),
-      remark: this.data.remark
+      totalPrice: this.calculateItemsTotal() + this.getShippingPrice(), // 传递原始总价，让后端计算优惠券
+      remark: this.data.remark,
+      couponId: this.data.selectedCoupon ? this.data.selectedCoupon.id : null
     };
 
     // 记录发送的数据，方便调试
@@ -289,12 +315,9 @@ const pageConfig = {
           
           // 微信支付处理
           wx.navigateTo({
-            url: `/pages/order/payment?id=${orderId}&amount=${this.data.totalPrice}`,
+            url: `/pages/order/payment?id=${orderId}`, // 不传递金额，让支付页面从API获取
             success: () => {
-              console.log('跳转到支付页面成功，参数:', {
-                orderId: orderId,
-                amount: this.data.totalPrice
-              });
+              console.log('跳转到支付页面成功，订单ID:', orderId);
             },
             fail: (err) => {
               console.error('跳转到支付页面失败:', err);
@@ -364,12 +387,141 @@ const pageConfig = {
     
     // 更新TabBar购物车徽标
     if (typeof getApp().updateTabBarBadge === 'function') {
-      getApp().updateTabBarBadge(remainingItems.length);
+      getApp().updateTabBarBadge();
     }
     
     console.log('已从购物车移除已下单商品', orderedProductIds);
+  },
+  
+  // 加载用户可用优惠券
+  loadAvailableCoupons: function() {
+    api.coupon.getUserCoupons({ status: 'unused' })
+      .then(res => {
+        if (res.success && res.data && res.data.coupons) {
+          const availableCoupons = res.data.coupons.filter(coupon => {
+            // 过滤出可用的优惠券（未使用且未过期）
+            return coupon.status === 'available' && !coupon.isUsed;
+          });
+          
+          this.setData({
+            availableCoupons: availableCoupons
+          });
+          
+          // 自动选择最优惠券
+          this.autoSelectBestCoupon();
+        }
+      })
+      .catch(err => {
+        console.error('获取优惠券失败:', err);
+      });
+  },
+  
+  // 自动选择最优惠券
+  autoSelectBestCoupon: function() {
+    const { availableCoupons } = this.data;
+    if (availableCoupons.length === 0) return;
+    
+    const itemsTotal = this.calculateItemsTotal();
+    let bestCoupon = null;
+    let maxDiscount = 0;
+    
+    availableCoupons.forEach(couponData => {
+      // 检查最低消费条件
+      if (couponData.condition && itemsTotal < couponData.condition) {
+        return; // 不满足使用条件
+      }
+      
+      // 计算折扣金额 - 修复类型判断逻辑
+      let discount = 0;
+      const couponType = couponData.type || 'fixed'; // 默认为固定金额类型
+      
+      if (couponType === 'percentage') {
+        // 百分比折扣 - 统一使用price字段
+        discount = itemsTotal * (couponData.price / 100);
+        if (couponData.maxDiscount && discount > couponData.maxDiscount) {
+          discount = couponData.maxDiscount;
+        }
+      } else {
+        // 固定金额折扣 (fixed类型)
+        discount = Math.min(couponData.price, itemsTotal);
+      }
+      
+      if (discount > maxDiscount) {
+        maxDiscount = discount;
+        bestCoupon = {
+          id: couponData.id,
+          name: couponData.name,
+          type: couponType,
+          amount: couponData.price,
+          maxDiscount: couponData.maxDiscount,
+          condition: couponData.condition
+        };
+      }
+    });
+    
+    if (bestCoupon) {
+      this.setData({
+        selectedCoupon: bestCoupon
+      });
+      this.calculateTotalPrice();
+    }
+  },
+  
+  // 显示优惠券选择弹窗
+  showCouponModal: function() {
+    this.setData({
+      showCouponModal: true
+    });
+  },
+  
+  // 隐藏优惠券选择弹窗
+  hideCouponModal: function() {
+    this.setData({
+      showCouponModal: false
+    });
+  },
+  
+  // 选择优惠券
+  selectCoupon: function(e) {
+    const index = e.currentTarget.dataset.index;
+    const couponData = this.data.availableCoupons[index];
+    
+    // 检查最低消费条件
+    const itemsTotal = this.calculateItemsTotal();
+    if (couponData.condition && itemsTotal < couponData.condition) {
+      wx.showToast({
+        title: `订单金额不满足使用条件，最低消费${couponData.condition}元`,
+        icon: 'none'
+      });
+      return;
+    }
+    
+    const selectedCoupon = {
+      id: couponData.id,
+      name: couponData.name,
+      type: couponData.type || 'fixed',
+      amount: couponData.price,
+      maxDiscount: couponData.maxDiscount,
+      condition: couponData.condition
+    };
+    
+    this.setData({
+      selectedCoupon: selectedCoupon,
+      showCouponModal: false
+    });
+    
+    this.calculateTotalPrice();
+  },
+  
+  // 不使用优惠券
+  clearCoupon: function() {
+    this.setData({
+      selectedCoupon: null,
+      showCouponModal: false
+    });
+    this.calculateTotalPrice();
   }
 };
 
 // 使用createPage包装页面配置
-Page(createPage(pageConfig)); 
+Page(createPage(pageConfig));

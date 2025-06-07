@@ -146,6 +146,16 @@
   color: #333;
 }
 
+.price-section .price-item .value.coupon-name {
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.price-section .price-item .value.discount-amount {
+  color: #52c41a;
+  font-weight: 500;
+}
+
 .price-section .price-item.total .value {
   color: #ff4d4f;
 }
@@ -188,4 +198,4 @@
 .footer .btn-primary {
   background: #ff4d4f;
   color: #fff;
-} 
+}

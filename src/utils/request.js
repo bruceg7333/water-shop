@@ -159,6 +159,29 @@ const request = (options) => {
 
 // API方法
 const api = {
+  // 通用HTTP方法
+  get: (url, params) => request({
+    url,
+    method: 'GET',
+    data: params
+  }),
+  
+  post: (url, data) => request({
+    url,
+    method: 'POST',
+    data
+  }),
+  
+  put: (url, data) => request({
+    url,
+    method: 'PUT',
+    data
+  }),
+  
+  delete: (url) => request({
+    url,
+    method: 'DELETE'
+  }),
   // 用户相关
   user: {
     // 用户注册
@@ -409,6 +432,11 @@ const api = {
     // 获取优惠券列表
     getList: () => request({
       url: '/coupons/me'
+    }),
+    // 获取用户优惠券（带参数）
+    getUserCoupons: (params) => request({
+      url: '/coupons/me',
+      data: params
     }),
     // 领取优惠券
     claim: (id) => request({

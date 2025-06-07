@@ -1,5 +1,6 @@
 const { createPage } = require('../../utils/page-base');
 const i18n = require('../../utils/i18n/index');
+const api = require('../../utils/request').api;
 
 // 定义页面配置
 const pageConfig = {
@@ -94,6 +95,22 @@ const pageConfig = {
       this.setData({
         orderId: options.id
       });
+      
+      // 加载真实的订单数据
+      this.loadOrderData(options.id);
+    } else {
+      // 如果没有订单ID，设置默认信息
+      console.log('未传递订单ID，使用默认订单信息');
+      const defaultOrderInfo = {
+        orderNo: '未知订单',
+        createTime: this.formatDate(new Date()),
+        paymentMethod: this.t('order.payment.wechat'),
+        totalAmount: '0.00'
+      };
+      
+      this.setData({
+        orderInfo: defaultOrderInfo
+      });
     }
   },
   
@@ -120,6 +137,128 @@ const pageConfig = {
         break;
       default:
         break;
+    }
+  },
+
+  // 加载订单数据
+  loadOrderData: function(orderId) {
+    if (!orderId) {
+      console.log('订单ID为空，跳过数据加载');
+      return;
+    }
+
+    wx.showLoading({
+      title: this.t('common.loading'),
+      mask: true
+    });
+
+    api.order.getDetail(orderId)
+      .then(res => {
+        wx.hideLoading();
+        
+        if (res.success && res.data && res.data.order) {
+          const orderData = res.data.order;
+          console.log('获取到的订单数据:', orderData);
+          
+          // 格式化订单信息
+          const orderInfo = {
+            orderNo: orderData.orderNumber || orderId,
+            createTime: this.formatDate(orderData.createdAt || orderData.createTime),
+            paymentMethod: this.getPaymentMethodName(orderData.paymentMethod),
+            totalAmount: (orderData.totalPrice || orderData.totalAmount || 0).toFixed(2)
+          };
+
+          this.setData({
+            orderInfo: orderInfo
+          });
+
+          console.log('订单信息已更新:', orderInfo);
+        } else {
+          console.error('获取订单详情失败:', res);
+          // 如果获取失败，仍然显示基本信息，但提示用户
+          const fallbackOrderInfo = {
+            orderNo: orderId,
+            createTime: this.formatDate(new Date()),
+            paymentMethod: this.t('order.payment.wechat'), // 默认微信支付
+            totalAmount: '0.00'
+          };
+          
+          this.setData({
+            orderInfo: fallbackOrderInfo
+          });
+
+          wx.showToast({
+            title: res.message || '获取订单详情失败，显示基本信息',
+            icon: 'none',
+            duration: 2000
+          });
+        }
+      })
+      .catch(err => {
+        wx.hideLoading();
+        console.error('加载订单数据失败:', err);
+        
+        // 如果网络错误，也显示基本信息
+        const fallbackOrderInfo = {
+          orderNo: orderId,
+          createTime: this.formatDate(new Date()),
+          paymentMethod: this.t('order.payment.wechat'), // 默认微信支付
+          totalAmount: '0.00'
+        };
+        
+        this.setData({
+          orderInfo: fallbackOrderInfo
+        });
+
+        wx.showToast({
+          title: '网络错误，显示基本信息',
+          icon: 'none',
+          duration: 2000
+        });
+      });
+  },
+
+  // 格式化日期
+  formatDate: function(dateString) {
+    if (!dateString) return '';
+    
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }).replace(/\//g, '-');
+    } catch (e) {
+      console.error('日期格式化失败:', e);
+      return dateString;
+    }
+  },
+
+  // 获取支付方式名称
+  getPaymentMethodName: function(paymentMethod) {
+    if (!paymentMethod) return '';
+    
+    // 如果已经是中文名称，直接返回
+    if (paymentMethod === '微信支付' || paymentMethod === '支付宝' || paymentMethod === '银联支付') {
+      return paymentMethod;
+    }
+    
+    // 英文转中文
+    switch (paymentMethod.toLowerCase()) {
+      case 'wechat':
+      case 'wechat_pay':
+      case 'wxpay':
+        return this.t('order.payment.wechat');
+      case 'alipay':
+        return this.t('order.payment.alipay');
+      case 'unionpay':
+        return this.t('order.payment.unionpay');
+      default:
+        return paymentMethod;
     }
   },
   

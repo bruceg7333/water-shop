@@ -89,6 +89,7 @@ App({
       // 获取国际化文本
       const tabBarTexts = {
         home: i18n.t('tabbar.home') || '首页',
+        shop: i18n.t('tabbar.shop') || '商城',
         cart: i18n.t('tabbar.cart') || '购物车',
         order: i18n.t('tabbar.order') || '订单',
         profile: i18n.t('tabbar.profile') || '我的'
@@ -98,9 +99,10 @@ App({
       
       const tabBarItems = [
         { index: 0, text: tabBarTexts.home },
-        { index: 1, text: tabBarTexts.cart },
-        { index: 2, text: tabBarTexts.order },
-        { index: 3, text: tabBarTexts.profile }
+        { index: 1, text: tabBarTexts.shop },
+        { index: 2, text: tabBarTexts.cart },
+        { index: 3, text: tabBarTexts.order },
+        { index: 4, text: tabBarTexts.profile }
       ];
       
       // 使用延迟设置确保组件已渲染
@@ -162,14 +164,14 @@ App({
   updateTabBarBadge(count) {
     if (count > 0) {
       wx.setTabBarBadge({
-        index: 1, // 购物车的索引
+        index: 2, // 购物车的索引（首页、商城、购物车、订单、我的）
         text: count.toString()
       }).catch(err => {
         console.log('设置TabBar徽标失败：', err);
       });
     } else {
       wx.removeTabBarBadge({
-        index: 1
+        index: 2
       }).catch(err => {
         console.log('移除TabBar徽标失败：', err);
       });

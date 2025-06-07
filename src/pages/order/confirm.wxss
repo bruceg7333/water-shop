@@ -89,6 +89,10 @@
   font-size: 28rpx;
   color: #333;
   line-height: 1.4;
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  max-width: 100%;
 }
 
 .no-address {
@@ -249,6 +253,11 @@
 .footer .total {
   flex: 1;
   font-size: 28rpx;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .footer .total .price {
@@ -269,4 +278,258 @@
   font-size: 28rpx;
   white-space: normal;
   word-break: break-word;
-} 
+}
+
+.footer .submit:active {
+  background: #005a9e;
+}
+
+/* 优惠券选择样式 */
+.coupon-section {
+  background: #fff;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+}
+
+.coupon-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.coupon-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.coupon-name {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.coupon-discount {
+  font-size: 28rpx;
+  color: #ff6b35;
+  font-weight: bold;
+}
+
+.coupon-placeholder {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.coupon-count {
+  font-size: 24rpx;
+  color: #ff6b35;
+}
+
+.arrow {
+  font-size: 28rpx;
+  color: #ccc;
+  margin-left: 20rpx;
+}
+
+/* 底部价格详情样式 */
+
+.price-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 8rpx;
+  gap: 20rpx;
+}
+
+.original-price {
+  font-size: 24rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.discount-info {
+  font-size: 24rpx;
+  color: #ff6b35;
+}
+
+.final-price {
+  display: flex;
+  align-items: center;
+}
+
+/* 优惠券弹窗样式 */
+.coupon-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  max-height: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 40rpx;
+  color: #999;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 30rpx;
+}
+
+.coupon-list {
+  padding: 20rpx 0;
+}
+
+.coupon-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  margin-bottom: 20rpx;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  border-radius: 12rpx;
+  color: #fff;
+  position: relative;
+}
+
+.coupon-item::after {
+  content: '';
+  position: absolute;
+  right: 30rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30rpx;
+  height: 30rpx;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.coupon-item.selected {
+  border: 3rpx solid #0088cc;
+  box-shadow: 0 0 20rpx rgba(0, 136, 204, 0.3);
+}
+
+.coupon-item.selected::after {
+  content: '✓';
+  background: #0088cc;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  font-weight: bold;
+}
+
+.coupon-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 30rpx;
+  min-width: 120rpx;
+}
+
+.coupon-amount {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.coupon-condition {
+  font-size: 20rpx;
+  opacity: 0.8;
+}
+
+.coupon-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.coupon-right .coupon-name {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  color: #fff;
+}
+
+.coupon-desc {
+  font-size: 24rpx;
+  opacity: 0.8;
+  margin-bottom: 10rpx;
+}
+
+.coupon-expire {
+  font-size: 20rpx;
+  opacity: 0.6;
+}
+
+.no-coupon {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.modal-footer {
+  padding: 30rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+
+.modal-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #f5f5f5;
+  color: #666;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.modal-btn:active {
+  background: #e0e0e0;
+}

@@ -105,6 +105,7 @@ module.exports = {
   // 底部导航栏
   tabbar: {
     home: '首页',
+    shop: '商城',
     cart: '购物车',
     order: '订单',
     profile: '我的'
@@ -258,7 +259,8 @@ module.exports = {
       },
       soldCount: '已售{count}件',
       empty: '暂无相关商品',
-      addedToCart: '已加入购物车'
+      addedToCart: '已加入购物车',
+      buyNow: '立即购买'
     }
   },
   

@@ -78,9 +78,13 @@
       <text class="label">{{i18n.shippingFeeLabel}}</text>
       <text class="value">{{i18n.currencySymbol}}{{order.shippingFee}}</text>
     </view>
+    <view class="price-item" wx:if="{{order.usedCoupon}}">
+      <text class="label">{{i18n.couponLabel}}</text>
+      <text class="value coupon-name">{{order.usedCoupon.name}}</text>
+    </view>
     <view class="price-item" wx:if="{{order.discountAmount > 0}}">
       <text class="label">{{i18n.discountAmountLabel}}</text>
-      <text class="value">-{{i18n.currencySymbol}}{{order.discountAmount}}</text>
+      <text class="value discount-amount">-{{i18n.currencySymbol}}{{order.discountAmount}}</text>
     </view>
     <view class="price-item total">
       <text class="label">{{i18n.totalAmountLabel}}</text>
@@ -97,4 +101,4 @@
       <view class="btn btn-default" bindtap="contactService">{{i18n.contactService}}</view>
     </view>
   </view>
-</view> 
+</view>

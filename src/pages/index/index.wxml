@@ -141,7 +141,7 @@
           <view class="product-meta">
             <view class="product-price-row">
               <text class="product-price">¥{{item.price}}</text>
-              <text class="product-original-price" wx:if="{{item.tag === i18n.tagDiscount}}">¥{{item.price * 1.2}}</text>
+              <text class="product-original-price" wx:if="{{item.originalPrice && item.originalPrice > item.price}}">¥{{item.originalPrice}}</text>
             </view>
             <view class="product-sales-buy">
               <text class="product-sales">{{i18n.soldFormat ? i18n.soldFormat.replace('{count}', item.sales) : '已售' + item.sales + '件'}}</text>

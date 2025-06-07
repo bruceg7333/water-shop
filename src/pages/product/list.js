@@ -17,7 +17,9 @@ const pageConfig = {
     page: 1, // 当前页码
     limit: 10, // 每页数量
     hasMore: true, // 是否有更多数据
-    loadingMore: false // 是否正在加载更多
+    loadingMore: false, // 是否正在加载更多
+    cartItemCount: 0, // 购物车商品数量
+    viewMode: 'grid' // 视图模式：grid(网格) / list(列表)
   },
   
   /**
@@ -30,9 +32,10 @@ const pageConfig = {
       empty: this.t('product.list.empty'),
       addToCart: this.t('product.detail.addToCart'),
       addedToCart: this.t('product.list.addedToCart'),
+      buyNow: this.t('product.list.buyNow'),
       currencySymbol: this.t('common.unit.yuan'),
-      soldPrefix: this.t('product.list.soldCount').replace('{count}', ''),
-      soldSuffix: ' ' + this.t('common.unit.piece'),
+      soldPrefix: '已售',
+      soldSuffix: '件',
       loading: this.t('common.loading'),
       loadMore: this.t('common.loadMore'),
       noMoreData: this.t('common.noMoreData'),
@@ -72,6 +75,14 @@ const pageConfig = {
     // 初始化国际化文本
     this.updateI18nText();
     
+    // 从本地存储加载用户的视图模式偏好
+    const savedViewMode = wx.getStorageSync('productViewMode');
+    if (savedViewMode && (savedViewMode === 'grid' || savedViewMode === 'list')) {
+      this.setData({
+        viewMode: savedViewMode
+      });
+    }
+    
     // 如果有查询参数，可以处理
     if (options && options.category) {
       this.setData({
@@ -81,6 +92,11 @@ const pageConfig = {
     
     // 加载商品数据
     this.loadProducts();
+  },
+  
+  onShow: function() {
+    // 更新购物车数量
+    this.updateCartCount();
   },
   
   // 从API加载商品数据
@@ -399,6 +415,32 @@ const pageConfig = {
     });
   },
   
+  // 更新购物车数量
+  updateCartCount: function() {
+    api.getCartCount()
+      .then(res => {
+        if (res.success && typeof res.data === 'number') {
+          this.setData({
+            cartItemCount: res.data
+          });
+        }
+      })
+      .catch(err => {
+        console.error('获取购物车数量失败:', err);
+        // 设置默认值
+        this.setData({
+          cartItemCount: 0
+        });
+      });
+  },
+  
+  // 前往购物车
+  goToCart: function() {
+    wx.navigateTo({
+      url: '/pages/cart/index'
+    });
+  },
+  
   // 添加到购物车
   addToCart: function(e) {
     const id = e.currentTarget.dataset.id;
@@ -406,7 +448,7 @@ const pageConfig = {
     
     if (product) {
       // 添加到购物车API
-      api.cart.add({
+      api.addToCart({
         productId: id,
         quantity: 1
       }).then(res => {
@@ -415,6 +457,8 @@ const pageConfig = {
             title: this.data.i18n.addedToCart,
             icon: 'success'
           });
+          // 更新购物车数量
+          this.updateCartCount();
         } else {
           wx.showToast({
             title: res.message || this.t('common.error'),
@@ -428,10 +472,70 @@ const pageConfig = {
           title: this.data.i18n.addedToCart,
           icon: 'success'
         });
+        // 更新购物车数量
+        this.updateCartCount();
       });
     }
+  },
+
+  // 立即购买
+  buyNow: function(e) {
+    const id = e.currentTarget.dataset.id;
+    const product = this.data.filteredProducts.find(item => 
+      item.id && (item.id.toString() === id.toString() || 
+      (item._id && item._id.toString() === id.toString()))
+    );
+    
+    if (!product) {
+      wx.showToast({
+        title: this.t('common.error'),
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 设置结算商品信息到缓存，供订单确认页使用
+    const checkoutItem = {
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      count: 1,  // 注意这里是count而不是quantity
+      spec: product.spec || ''
+    };
+    
+    // 保存到checkoutItems缓存
+    wx.setStorageSync('checkoutItems', {
+      items: [checkoutItem],
+      totalPrice: product.price.toFixed(2),
+      fromDirect: true // 标记为直接购买，而非购物车结算
+    });
+    
+    // 直接跳转到结算页面
+    wx.navigateTo({
+      url: '/pages/order/confirm?direct=true'
+    });
+  },
+
+  // 切换视图模式
+  switchViewMode: function(e) {
+    const mode = e.currentTarget.dataset.mode;
+    this.setData({
+      viewMode: mode
+    });
+    
+    // 可以保存用户偏好到本地存储
+    wx.setStorageSync('productViewMode', mode);
+    
+    // 提示用户模式已切换
+    const modeText = mode === 'grid' ? '网格模式' : '列表模式';
+    wx.showToast({
+      title: `已切换到${modeText}`,
+      icon: 'none',
+      duration: 1000
+    });
   }
 };
 
 // 使用createPage包装页面配置
-Page(createPage(pageConfig)); 
+Page(createPage(pageConfig));

@@ -433,6 +433,7 @@ const pageConfig = {
               name: item.name,
               description: item.description,
               price: item.price,
+              originalPrice: item.originalPrice, // 添加真实原价
               imageUrl: item.imageUrl,
               sales: item.sales,
               stock: item.stock,

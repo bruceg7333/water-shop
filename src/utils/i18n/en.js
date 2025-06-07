@@ -106,6 +106,7 @@ module.exports = {
   // Bottom navigation bar
   tabbar: {
     home: 'Home',
+    shop: 'Shop',
     cart: 'Cart',
     order: 'Orders',
     profile: 'Me'
@@ -259,7 +260,8 @@ module.exports = {
       },
       soldCount: '{count} sold',
       empty: 'No products found',
-      addedToCart: 'Added to cart'
+      addedToCart: 'Added to cart',
+      buyNow: 'Buy Now'
     }
   },
   

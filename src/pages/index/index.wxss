@@ -322,6 +322,7 @@
   font-size: 24rpx;
   color: #999;
   text-decoration: line-through;
+  margin-left: 16rpx;
 }
 
 .product-sales-buy, .article-views {

@@ -1,18 +1,17 @@
 <view class="order-confirm">
   <!-- 收货地址 -->
   <view class="address-section">
-    <view class="address-left" bindtap="selectAddress">
+    <view class="address-left">
       <view class="address-info" wx:if="{{address}}">
         <view class="user-info">
           <text class="name">{{address.name}}</text>
           <text class="phone">{{address.phone}}</text>
         </view>
-        <view class="address">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</view>
+        <view class="address">{{address.province}} {{address.city}} {{address.district}} {{address.detail}}</view>
       </view>
       <view class="no-address" wx:else>
         <text>{{i18n.selectAddress}}</text>
       </view>
-      <text class="iconfont icon-right"></text>
     </view>
     <view class="address-right">
       <view class="change-address-btn" bindtap="selectAddress">
@@ -67,6 +66,22 @@
     </view>
   </view>
 
+  <!-- 优惠券选择 -->
+  <view class="coupon-section">
+    <view class="section-title">优惠券</view>
+    <view class="coupon-selector" bindtap="showCouponModal">
+      <view class="coupon-info" wx:if="{{selectedCoupon}}">
+        <text class="coupon-name">{{selectedCoupon.name}}</text>
+        <text class="coupon-discount">-¥{{discountAmount}}</text>
+      </view>
+      <view class="coupon-info" wx:else>
+        <text class="coupon-placeholder">选择优惠券</text>
+        <text class="coupon-count" wx:if="{{availableCoupons.length > 0}}">{{availableCoupons.length}}张可用</text>
+      </view>
+      <text class="arrow">></text>
+    </view>
+  </view>
+
   <!-- 备注 -->
   <view class="remark-section">
     <view class="section-title">{{i18n.remarkTitle}}</view>
@@ -81,9 +96,47 @@
   <!-- 底部结算栏 -->
   <view class="footer">
     <view class="total">
-      <text>{{i18n.total}}：</text>
-      <text class="price">{{i18n.currencySymbol}}{{totalPrice}}</text>
+      <view class="price-detail" wx:if="{{selectedCoupon}}">
+        <text class="original-price">原价：¥{{originalPrice}}</text>
+        <text class="discount-info">优惠：-¥{{discountAmount}}</text>
+      </view>
+      <view class="final-price">
+        <text>{{i18n.total}}：</text>
+        <text class="price">{{i18n.currencySymbol}}{{totalPrice}}</text>
+      </view>
     </view>
     <view class="submit" bindtap="submitOrder">{{i18n.submit}}</view>
   </view>
-</view> 
+
+  <!-- 优惠券选择弹窗 -->
+  <view class="coupon-modal" wx:if="{{showCouponModal}}">
+    <view class="modal-mask" bindtap="hideCouponModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">选择优惠券</text>
+        <text class="modal-close" bindtap="hideCouponModal">×</text>
+      </view>
+      <view class="modal-body">
+        <view class="coupon-list">
+          <view class="coupon-item {{selectedCoupon && selectedCoupon.id === item.id ? 'selected' : ''}}" wx:for="{{availableCoupons}}" wx:key="id" bindtap="selectCoupon" data-index="{{index}}">
+            <view class="coupon-left">
+              <view class="coupon-amount">¥{{item.price}}</view>
+              <view class="coupon-condition" wx:if="{{item.condition}}">满{{item.condition}}元可用</view>
+            </view>
+            <view class="coupon-right">
+              <view class="coupon-name">{{item.name}}</view>
+              <view class="coupon-desc">{{item.description || '全场商品可用'}}</view>
+              <view class="coupon-expire">有效期至：{{item.endDate}}</view>
+            </view>
+          </view>
+          <view class="no-coupon" wx:if="{{availableCoupons.length === 0}}">
+            <text>暂无可用优惠券</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="modal-btn" bindtap="clearCoupon">不使用优惠券</view>
+      </view>
+    </view>
+  </view>
+</view>
