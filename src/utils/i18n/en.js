@@ -336,6 +336,7 @@ module.exports = {
     infoTitle: 'Order Information',
     goodsInfoTitle: 'Product Information',
     goodsAmount: 'Product Amount',
+    couponLabel: 'Coupon Used',
     discountAmount: 'Discount Amount',
     deliveryTime: 'Shipping Time',
     completedTime: 'Completion Time',
@@ -369,6 +370,7 @@ module.exports = {
       orderInfo: 'Order Information',
       productAmount: 'Product Amount',
       discountAmount: 'Discount Amount',
+      shippingFee: 'Shipping Fee',
       payAmount: 'Payment Amount',
       confirm: 'Pay Now',
       processing: 'Processing Payment',
@@ -404,7 +406,10 @@ module.exports = {
       submitting: 'Submitting...',
       submitSuccess: 'Submission Successful',
       addressRequired: 'Please select a shipping address',
-      productLoadFailed: 'Failed to load product'
+      productLoadFailed: 'Failed to load product',
+      creatingOrder: 'Creating order...',
+      createOrderFailed: 'Failed to create order',
+      orderPlacedAwaitingPayment: 'Order placed, awaiting payment'
     },
     confirm: {
       cancel: 'Are you sure you want to cancel this order?',
@@ -813,4 +818,4 @@ module.exports = {
       default: 'Thank you for your inquiry. To better solve your problem, please provide more detailed information, or call our customer service hotline 400-888-8888 for immediate assistance.'
     }
   }
-}; 
+};

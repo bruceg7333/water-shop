@@ -35,11 +35,15 @@
       </view>
       <view class="info-item">
         <text class="label">{{i18n.productAmountLabel}}</text>
-        <text class="value">{{i18n.currencySymbol}}{{order.totalPrice}}</text>
+        <text class="value">{{i18n.currencySymbol}}{{order.originalPrice}}</text>
       </view>
       <view class="info-item">
         <text class="label">{{i18n.discountAmountLabel}}</text>
-        <text class="value">-{{i18n.currencySymbol}}0.00</text>
+        <text class="value discount">{{i18n.currencySymbol}}{{order.discountAmount}}</text>
+      </view>
+      <view class="info-item">
+        <text class="label">{{i18n.shippingFeeLabel}}</text>
+        <text class="value shipping">{{i18n.currencySymbol}}{{order.shippingFee}}</text>
       </view>
       <view class="info-item">
         <text class="label">{{i18n.payAmountLabel}}</text>
@@ -51,4 +55,4 @@
   <view class="footer">
     <view class="pay-btn" bindtap="confirmPayment">{{i18n.payNow}}</view>
   </view>
-</view> 
+</view>

@@ -7,18 +7,16 @@ const pageConfig = {
     orderId: null,
     order: {
       orderNo: 'SP202404280001',
-      totalPrice: 86.00
+      totalPrice: 86.00,
+      originalPrice: 86.00,
+      discountAmount: 0,
+      shippingFee: 0
     },
     paymentMethods: [
       {
         id: 'wechat',
         name: '',
         icon: '/assets/images/payment/wechat.png'
-      },
-      {
-        id: 'alipay',
-        name: '',
-        icon: '/assets/images/payment/alipay.png'
       }
     ],
     selectedMethod: 'wechat',
@@ -43,6 +41,7 @@ const pageConfig = {
         orderNoLabel: this.t('order.number'),
         productAmountLabel: this.t('order.payment.productAmount'),
         discountAmountLabel: this.t('order.payment.discountAmount'),
+        shippingFeeLabel: this.t('order.payment.shippingFee'),
         payAmountLabel: this.t('order.payment.payAmount'),
         
         // 按钮文本
@@ -121,10 +120,20 @@ const pageConfig = {
           const orderData = res.data.order;
           
           // 构建完整的订单对象
+          // 优先使用API返回的数据，finalTotalPrice是后端计算的最终价格
+          const finalPrice = orderData.finalTotalPrice || orderData.totalPrice || orderData.totalAmount || 0;
+          const discount = orderData.discountAmount || 0;
+          const shippingFee = orderData.shippingPrice || orderData.shippingFee || orderData.deliveryFee || 0;
+          const originalPrice = orderData.originalPrice || orderData.itemsPrice || (finalPrice + discount - shippingFee);
+          
           const formattedOrder = {
             orderNo: orderData.orderNumber || `未知订单号`,
             // 优先使用从URL获取的金额，其次使用API返回的不同可能的金额字段
-            totalPrice: preserveAmount || orderData.totalPrice || orderData.totalAmount || 0
+            totalPrice: finalPrice,
+            // 原价 = 最终价格 + 优惠金额 - 运费
+            originalPrice: originalPrice,
+            discountAmount: discount,
+            shippingFee: shippingFee
           };
           
           console.log('从API获取的订单数据:', orderData);
@@ -139,7 +148,10 @@ const pageConfig = {
           if (preserveAmount) {
             this.setData({
               'order.totalPrice': preserveAmount,
-              'order.orderNo': `订单${orderId}`
+              'order.orderNo': `订单${orderId}`,
+              'order.originalPrice': preserveAmount,
+              'order.discountAmount': 0,
+              'order.shippingFee': 0
             });
           } else {
             wx.showToast({
@@ -157,7 +169,10 @@ const pageConfig = {
         if (preserveAmount) {
           this.setData({
             'order.totalPrice': preserveAmount,
-            'order.orderNo': `订单${orderId}`
+            'order.orderNo': `订单${orderId}`,
+            'order.originalPrice': preserveAmount,
+            'order.discountAmount': 0,
+            'order.shippingFee': 0
           });
         } else {
           wx.showToast({
@@ -255,6 +270,15 @@ const pageConfig = {
   // 处理支付成功
   handlePaymentSuccess: function(result) {
     console.log('支付成功:', result);
+    
+    // 检查页面是否还存在，防止路由错误
+    const pages = getCurrentPages();
+    const currentPage = pages[pages.length - 1];
+    if (!currentPage || currentPage.route !== 'pages/order/payment') {
+      console.warn('页面已切换，取消跳转操作');
+      return;
+    }
+    
     // 3. 支付成功，调用后端确认接口
     const api = require('../../utils/request').api;
     
@@ -263,10 +287,25 @@ const pageConfig = {
       transactionId: result.transactionId || 'mock_' + Date.now() // 微信支付可能返回交易ID
     })
       .then(confirmRes => {
+        // 再次检查页面状态
+        const currentPages = getCurrentPages();
+        const currentPageCheck = currentPages[currentPages.length - 1];
+        if (!currentPageCheck || currentPageCheck.route !== 'pages/order/payment') {
+          console.warn('页面已切换，取消跳转操作');
+          return;
+        }
+        
         if (confirmRes.success) {
           // 4. 确认成功，跳转到结果页
           wx.redirectTo({
-            url: `/pages/order/result?type=payment&id=${this.data.orderId}`
+            url: `/pages/order/result?type=payment&id=${this.data.orderId}`,
+            fail: (err) => {
+              console.error('跳转到结果页失败:', err);
+              // 如果跳转失败，回到订单列表
+              wx.redirectTo({
+                url: '/pages/order/index?status=paid'
+              });
+            }
           });
         } else {
           // 支付成功但确认失败，提示用户
@@ -284,6 +323,15 @@ const pageConfig = {
       })
       .catch(err => {
         console.error('支付确认失败:', err);
+        
+        // 检查页面状态
+        const currentPages = getCurrentPages();
+        const currentPageCheck = currentPages[currentPages.length - 1];
+        if (!currentPageCheck || currentPageCheck.route !== 'pages/order/payment') {
+          console.warn('页面已切换，取消操作');
+          return;
+        }
+        
         wx.showModal({
           title: this.t('common.tip'),
           content: this.t('order.payment.confirmFailed'),
@@ -370,4 +418,4 @@ const pageConfig = {
 };
 
 // 创建页面
-Page(createPage(pageConfig)); 
+Page(createPage(pageConfig));

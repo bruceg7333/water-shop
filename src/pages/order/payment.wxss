@@ -109,6 +109,14 @@
   font-weight: bold;
 }
 
+.info-list .info-item .value.discount {
+  color: #52c41a;
+}
+
+.info-list .info-item .value.shipping {
+  color: #ff4d4f;
+}
+
 .footer {
   position: fixed;
   bottom: 0;

@@ -322,6 +322,7 @@ module.exports = {
     infoTitle: 'ข้อมูลคำสั่งซื้อ',
     goodsInfoTitle: 'ข้อมูลสินค้า',
     goodsAmount: 'ยอดสินค้า',
+    couponLabel: 'คูปองที่ใช้',
     discountAmount: 'ยอดส่วนลด',
     deliveryTime: 'เวลาจัดส่ง',
     completedTime: 'เวลาเสร็จสิ้น',
@@ -352,6 +353,7 @@ module.exports = {
       orderInfo: 'ข้อมูลคำสั่งซื้อ',
       productAmount: 'ยอดสินค้า',
       discountAmount: 'ยอดส่วนลด',
+      shippingFee: 'ค่าจัดส่ง',
       payAmount: 'ยอดชำระเงิน',
       confirm: 'ชำระเงินทันที',
       processing: 'กำลังประมวลผลการชำระเงิน',
@@ -387,7 +389,10 @@ module.exports = {
       submitting: 'กำลังส่ง...',
       submitSuccess: 'ส่งสำเร็จ',
       addressRequired: 'กรุณาเลือกที่อยู่จัดส่ง',
-      productLoadFailed: 'โหลดสินค้าล้มเหลว'
+      productLoadFailed: 'โหลดสินค้าล้มเหลว',
+      creatingOrder: 'กำลังสร้างคำสั่งซื้อ...',
+      createOrderFailed: 'สร้างคำสั่งซื้อล้มเหลว',
+      orderPlacedAwaitingPayment: 'คำสั่งซื้อถูกส่งแล้ว รอการชำระเงิน'
     }
   },
   
@@ -788,4 +793,4 @@ module.exports = {
       }
     }
   }
-}; 
+};

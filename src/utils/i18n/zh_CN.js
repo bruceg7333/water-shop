@@ -334,6 +334,7 @@ module.exports = {
     infoTitle: '订单信息',
     goodsInfoTitle: '商品信息',
     goodsAmount: '商品金额',
+    couponLabel: '使用优惠券',
     discountAmount: '优惠金额',
     deliveryTime: '发货时间',
     completedTime: '完成时间',
@@ -364,6 +365,7 @@ module.exports = {
       orderInfo: '订单信息',
       productAmount: '商品金额',
       discountAmount: '优惠金额',
+      shippingFee: '运费',
       payAmount: '实付金额',
       confirm: '立即支付',
       processing: '处理支付中',
@@ -399,7 +401,10 @@ module.exports = {
       submitting: '提交中...',
       submitSuccess: '提交成功',
       addressRequired: '请选择收货地址',
-      productLoadFailed: '商品加载失败'
+      productLoadFailed: '商品加载失败',
+      creatingOrder: '正在创建订单...',
+      createOrderFailed: '订单创建失败',
+      orderPlacedAwaitingPayment: '订单已提交，等待支付'
     }
   },
   
@@ -801,4 +806,4 @@ module.exports = {
       default: '感谢您的咨询，为了更好地解决您的问题，请您提供更多详细信息，或者拨打我们的客服热线400-888-8888获取即时帮助。'
     }
   }
-}; 
+};
