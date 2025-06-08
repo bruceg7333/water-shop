@@ -1,4 +1,5 @@
 const { api } = require('../../utils/request');
+const i18n = require('../../utils/i18n/index');
 
 Page({
   data: {
@@ -9,12 +10,78 @@ Page({
     isLoading: false,
     isWechatLoading: false,
     errorMsg: '',
-    agreePolicy: false
+    agreePolicy: false,
+    i18n: {
+      // 默认文本，确保即使国际化失败也能正常显示
+      title: '创建账号',
+      subtitle: '加入SPRINKLE水商城',
+      username: '请设置用户名 (至少4个字符)',
+      password: '请设置密码 (至少6位)',
+      confirmPassword: '请确认密码',
+      phone: '请输入手机号 (选填)',
+      wechatRegister: '微信一键注册',
+      registerButton: '注册',
+      agreePolicy: '我已阅读并同意',
+      userAgreement: '《用户协议》',
+      privacyPolicy: '《隐私政策》',
+      and: '和',
+      or: '或',
+      hasAccount: '已有账号？',
+      toLogin: '点击登录'
+    }
   },
 
   onLoad() {
+    // 初始化国际化文本
+    this.updateI18nText();
+    
     // 检查微信小程序环境
     this.checkWechatEnv();
+  },
+
+  onShow() {
+    // 每次显示页面时更新国际化文本，确保语言切换后文本更新
+    this.updateI18nText();
+  },
+
+  // 更新国际化文本
+  updateI18nText() {
+    try {
+      // 当前语言
+      const currentLang = i18n.getCurrentLang();
+      console.log('当前语言:', currentLang);
+
+      // 设置页面标题
+      wx.setNavigationBarTitle({
+        title: i18n.t('page.memberRegister') || '会员注册'
+      });
+
+      // 更新页面文本
+      this.setData({
+        i18n: {
+          title: i18n.t('register.title') || '创建账号',
+          subtitle: i18n.t('register.subtitle') || '加入SPRINKLE水商城',
+          username: i18n.t('register.username') || '请设置用户名 (至少4个字符)',
+          password: i18n.t('register.password') || '请设置密码 (至少6位)',
+          confirmPassword: i18n.t('register.confirmPassword') || '请确认密码',
+          phone: i18n.t('register.phone') || '请输入手机号 (选填)',
+          wechatRegister: i18n.t('register.wechatRegister') || '微信一键注册',
+          registerButton: i18n.t('register.registerButton') || '注册',
+          agreePolicy: i18n.t('register.agreePolicy') || '我已阅读并同意',
+          userAgreement: i18n.t('register.userAgreement') || '《用户协议》',
+          privacyPolicy: i18n.t('register.privacyPolicy') || '《隐私政策》',
+          and: i18n.t('register.and') || '和',
+          or: i18n.t('register.or') || '或',
+          hasAccount: i18n.t('register.hasAccount') || '已有账号？',
+          toLogin: i18n.t('register.toLogin') || '点击登录'
+        }
+      });
+
+      console.log('注册页国际化文本更新完成:', this.data.i18n);
+    } catch (error) {
+      console.error('初始化国际化文本出错:', error);
+      // 出错时保持默认文本
+    }
   },
 
   // 检查微信环境
@@ -35,7 +102,7 @@ Page({
     console.log('微信一键注册按钮被点击');
     
     if (!this.data.agreePolicy) {
-      this.setData({ errorMsg: '请阅读并同意用户协议和隐私政策' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.policyRequired') || '请阅读并同意用户协议和隐私政策' });
       return;
     }
 
@@ -48,10 +115,10 @@ Page({
         
         // 获取用户信息成功后，显示隐私政策提示
         wx.showModal({
-          title: '授权提示',
-          content: '注册即表示您同意《用户协议》和《隐私政策》。',
-          confirmText: '同意',
-          cancelText: '取消',
+          title: i18n.t('register.authTitle') || '授权提示',
+          content: i18n.t('register.authContent') || '注册即表示您同意《用户协议》和《隐私政策》。',
+          confirmText: i18n.t('register.authConfirm') || '同意',
+          cancelText: i18n.t('register.authCancel') || '取消',
           success: (res) => {
             if (res.confirm) {
               // 用户同意隐私政策，继续注册流程
@@ -68,7 +135,7 @@ Page({
                     this.wechatRegisterWithCode(loginRes.code, userInfo);
                   } else {
                     this.setData({
-                      errorMsg: '获取微信登录凭证失败',
+                      errorMsg: i18n.t('register.errorMessages.wechatLoginFailed') || '获取微信登录凭证失败',
                       isWechatLoading: false
                     });
                   }
@@ -76,7 +143,7 @@ Page({
                 fail: (error) => {
                   console.error('微信登录失败:', error);
                   this.setData({
-                    errorMsg: '微信登录失败，请重试',
+                    errorMsg: i18n.t('register.errorMessages.networkError') || '微信登录失败，请重试',
                     isWechatLoading: false
                   });
                 }
@@ -84,7 +151,7 @@ Page({
             } else {
               // 用户拒绝隐私政策
               this.setData({
-                errorMsg: '您需要同意隐私政策才能完成注册'
+                errorMsg: i18n.t('register.errorMessages.privacyPolicyRequired') || '您需要同意隐私政策才能完成注册'
               });
             }
           }
@@ -93,7 +160,7 @@ Page({
       fail: (err) => {
         console.error('获取用户信息失败:', err);
         this.setData({
-          errorMsg: '获取用户信息失败，请重试',
+          errorMsg: i18n.t('register.errorMessages.getUserInfoFailed') || '获取用户信息失败，请重试',
           isWechatLoading: false
         });
       }
@@ -131,7 +198,7 @@ Page({
         wx.setStorageSync('isLoggedIn', true);
 
         wx.showToast({
-          title: '注册成功',
+          title: i18n.t('register.successMessage') || '注册成功',
           icon: 'success',
           duration: 1500
         });
@@ -144,14 +211,14 @@ Page({
         }, 1500);
       } else {
         this.setData({
-          errorMsg: response.message || '微信注册失败，请重试',
+          errorMsg: response.message || i18n.t('register.errorMessages.registrationFailed') || '微信注册失败，请重试',
           isWechatLoading: false
         });
       }
     } catch (error) {
       console.error('微信注册请求失败:', error);
       this.setData({
-        errorMsg: '网络异常，请稍后重试',
+        errorMsg: i18n.t('register.errorMessages.networkError') || '网络异常，请稍后重试',
         isWechatLoading: false
       });
     }
@@ -202,37 +269,37 @@ Page({
     const { username, password, confirmPassword, phone, agreePolicy } = this.data;
     
     if (!username.trim()) {
-      this.setData({ errorMsg: '请输入用户名' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.usernameRequired') || '请输入用户名' });
       return false;
     }
     
     if (username.length < 4) {
-      this.setData({ errorMsg: '用户名至少需要4个字符' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.usernameTooShort') || '用户名至少需要4个字符' });
       return false;
     }
     
     if (!password.trim()) {
-      this.setData({ errorMsg: '请输入密码' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.passwordRequired') || '请输入密码' });
       return false;
     }
     
     if (password.length < 6) {
-      this.setData({ errorMsg: '密码长度不能少于6位' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.passwordTooShort') || '密码长度不能少于6位' });
       return false;
     }
     
     if (password !== confirmPassword) {
-      this.setData({ errorMsg: '两次输入的密码不一致' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.passwordMismatch') || '两次输入的密码不一致' });
       return false;
     }
     
     if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
-      this.setData({ errorMsg: '请输入有效的手机号码' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.phoneInvalid') || '请输入有效的手机号码' });
       return false;
     }
     
     if (!agreePolicy) {
-      this.setData({ errorMsg: '请阅读并同意用户协议和隐私政策' });
+      this.setData({ errorMsg: i18n.t('register.errorMessages.policyRequired') || '请阅读并同意用户协议和隐私政策' });
       return false;
     }
     
@@ -264,7 +331,7 @@ Page({
         wx.setStorageSync('isLoggedIn', true);
         
         wx.showToast({
-          title: '注册成功',
+          title: i18n.t('register.successMessage') || '注册成功',
           icon: 'success',
           duration: 1500
         });
@@ -277,14 +344,14 @@ Page({
         }, 1500);
       } else {
         this.setData({
-          errorMsg: response.message || '注册失败，请重试',
+          errorMsg: response.message || i18n.t('register.errorMessages.registrationFailed') || '注册失败，请重试',
           isLoading: false
         });
       }
     } catch (error) {
       console.error('注册失败:', error);
       this.setData({
-        errorMsg: '网络异常，请稍后重试',
+        errorMsg: i18n.t('register.errorMessages.networkError') || '网络异常，请稍后重试',
         isLoading: false
       });
     }

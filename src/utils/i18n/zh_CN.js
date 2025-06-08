@@ -57,6 +57,7 @@ module.exports = {
     authConfirm: '同意',
     authCancel: '取消',
     errorMessages: {
+      inputRequired: '请输入用户名和密码',
       usernameRequired: '请输入用户名',
       passwordRequired: '请输入密码',
       loginFailed: '登录失败，请重试',
@@ -64,6 +65,47 @@ module.exports = {
       privacyPolicyRequired: '您需要同意隐私政策才能完成登录'
     },
     successMessage: '登录成功'
+  },
+
+  // 注册页面文本
+  register: {
+    title: '创建账号',
+    subtitle: '加入SPRINKLE水商城',
+    username: '请设置用户名 (至少4个字符)',
+    password: '请设置密码 (至少6位)',
+    confirmPassword: '请确认密码',
+    phone: '请输入手机号 (选填)',
+    wechatRegister: '微信一键注册',
+    registerButton: '注册',
+    agreePolicy: '我已阅读并同意',
+    userAgreement: '《用户协议》',
+    privacyPolicy: '《隐私政策》',
+    and: '和',
+    or: '或',
+    hasAccount: '已有账号？',
+    toLogin: '点击登录',
+    authTitle: '授权提示',
+    authContent: '注册即表示您同意《用户协议》和《隐私政策》。',
+    authConfirm: '同意',
+    authCancel: '取消',
+    wechatDesc: '用于创建您的水商城账号',
+    errorMessages: {
+      usernameRequired: '请输入用户名',
+      usernameTooShort: '用户名至少需要4个字符',
+      passwordRequired: '请输入密码',
+      passwordTooShort: '密码至少需要6位',
+      confirmPasswordRequired: '请确认密码',
+      passwordMismatch: '两次输入的密码不一致',
+      phoneInvalid: '请输入正确的手机号',
+      policyRequired: '请阅读并同意用户协议和隐私政策',
+      networkError: '网络异常，请稍后重试',
+      registrationFailed: '注册失败，请重试',
+      usernameExists: '用户名已存在，请更换',
+      wechatLoginFailed: '获取微信登录凭证失败',
+      getUserInfoFailed: '获取用户信息失败，请重试',
+      privacyPolicyRequired: '您需要同意隐私政策才能完成注册'
+    },
+    successMessage: '注册成功'
   },
   
   // 通用文本

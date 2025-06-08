@@ -86,6 +86,7 @@ module.exports = {
     authConfirm: 'ยอมรับ',
     authCancel: 'ยกเลิก',
     errorMessages: {
+      inputRequired: 'กรุณาใส่ชื่อผู้ใช้และรหัสผ่าน',
       usernameRequired: 'กรุณาใส่ชื่อผู้ใช้',
       passwordRequired: 'กรุณาใส่รหัสผ่าน',
       loginFailed: 'เข้าสู่ระบบล้มเหลว โปรดลองอีกครั้ง',
@@ -93,6 +94,47 @@ module.exports = {
       privacyPolicyRequired: 'คุณต้องยอมรับนโยบายความเป็นส่วนตัวเพื่อเข้าสู่ระบบ'
     },
     successMessage: 'เข้าสู่ระบบสำเร็จ'
+  },
+
+  // ข้อความลงทะเบียน (注册页面文本)
+  register: {
+    title: 'สร้างบัญชี',
+    subtitle: 'เข้าร่วม SPRINKLE ร้านน้ำดื่ม',
+    username: 'กำหนดชื่อผู้ใช้ (อย่างน้อย 4 ตัวอักษร)',
+    password: 'กำหนดรหัสผ่าน (อย่างน้อย 6 หลัก)',
+    confirmPassword: 'ยืนยันรหัสผ่าน',
+    phone: 'ใส่หมายเลขโทรศัพท์ (ไม่จำเป็น)',
+    wechatRegister: 'ลงทะเบียนด้วย WeChat',
+    registerButton: 'ลงทะเบียน',
+    agreePolicy: 'ฉันได้อ่านและยอมรับ',
+    userAgreement: 'ข้อตกลงผู้ใช้',
+    privacyPolicy: 'นโยบายความเป็นส่วนตัว',
+    and: 'และ',
+    or: 'หรือ',
+    hasAccount: 'มีบัญชีแล้ว?',
+    toLogin: 'คลิกเพื่อเข้าสู่ระบบ',
+    authTitle: 'คำเตือนการอนุญาต',
+    authContent: 'การลงทะเบียนแสดงว่าคุณยอมรับข้อตกลงผู้ใช้และนโยบายความเป็นส่วนตัว',
+    authConfirm: 'ยอมรับ',
+    authCancel: 'ยกเลิก',
+    wechatDesc: 'ใช้สำหรับสร้างบัญชีร้านน้ำของคุณ',
+    errorMessages: {
+      usernameRequired: 'กรุณาใส่ชื่อผู้ใช้',
+      usernameTooShort: 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร',
+      passwordRequired: 'กรุณาใส่รหัสผ่าน',
+      passwordTooShort: 'รหัสผ่านต้องมีอย่างน้อย 6 หลัก',
+      confirmPasswordRequired: 'กรุณายืนยันรหัสผ่าน',
+      passwordMismatch: 'รหัสผ่านไม่ตรงกัน',
+      phoneInvalid: 'กรุณาใส่หมายเลขโทรศัพท์ที่ถูกต้อง',
+      policyRequired: 'กรุณาอ่านและยอมรับข้อตกลงผู้ใช้และนโยบายความเป็นส่วนตัว',
+      networkError: 'ข้อผิดพลาดเครือข่าย โปรดลองอีกครั้งในภายหลัง',
+      registrationFailed: 'การลงทะเบียนล้มเหลว โปรดลองอีกครั้ง',
+      usernameExists: 'ชื่อผู้ใช้นี้มีอยู่แล้ว กรุณาเลือกชื่อใหม่',
+      wechatLoginFailed: 'ไม่สามารถรับข้อมูลการเข้าสู่ระบบ WeChat ได้',
+      getUserInfoFailed: 'ไม่สามารถรับข้อมูลผู้ใช้ได้ โปรดลองอีกครั้ง',
+      privacyPolicyRequired: 'คุณต้องยอมรับนโยบายความเป็นส่วนตัวเพื่อสมัครสมาชิก'
+    },
+    successMessage: 'ลงทะเบียนสำเร็จ'
   },
   
   // แถบนำทางด้านล่าง (底部导航栏)

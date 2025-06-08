@@ -58,6 +58,7 @@ module.exports = {
     authConfirm: 'Agree',
     authCancel: 'Cancel',
     errorMessages: {
+      inputRequired: 'Please enter username and password',
       usernameRequired: 'Please enter username',
       passwordRequired: 'Please enter password',
       loginFailed: 'Login failed, please try again',
@@ -65,6 +66,47 @@ module.exports = {
       privacyPolicyRequired: 'You need to agree to the privacy policy to complete login'
     },
     successMessage: 'Login successful'
+  },
+
+  // Register page text
+  register: {
+    title: 'Create Account',
+    subtitle: 'Join SPRINKLE Water Shop',
+    username: 'Set username (at least 4 characters)',
+    password: 'Set password (at least 6 digits)',
+    confirmPassword: 'Confirm password',
+    phone: 'Enter phone number (optional)',
+    wechatRegister: 'WeChat Register',
+    registerButton: 'Register',
+    agreePolicy: 'I have read and agree to',
+    userAgreement: 'User Agreement',
+    privacyPolicy: 'Privacy Policy',
+    and: 'and',
+    or: 'or',
+    hasAccount: 'Already have an account?',
+    toLogin: 'Click to login',
+    authTitle: 'Authorization Notice',
+    authContent: 'Registration means you agree to User Agreement and Privacy Policy.',
+    authConfirm: 'Agree',
+    authCancel: 'Cancel',
+    wechatDesc: 'Used to create your water shop account',
+    errorMessages: {
+      usernameRequired: 'Please enter username',
+      usernameTooShort: 'Username must be at least 4 characters',
+      passwordRequired: 'Please enter password',
+      passwordTooShort: 'Password must be at least 6 digits',
+      confirmPasswordRequired: 'Please confirm password',
+      passwordMismatch: 'Password confirmation does not match',
+      phoneInvalid: 'Please enter a valid phone number',
+      policyRequired: 'Please read and agree to User Agreement and Privacy Policy',
+      networkError: 'Network error, please try again later',
+      registrationFailed: 'Registration failed, please try again',
+      usernameExists: 'Username already exists, please choose another',
+      wechatLoginFailed: 'Failed to get WeChat login credentials',
+      getUserInfoFailed: 'Failed to get user info, please try again',
+      privacyPolicyRequired: 'You need to agree to the privacy policy to complete registration'
+    },
+    successMessage: 'Registration successful'
   },
   
   // Common texts

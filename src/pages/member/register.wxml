@@ -1,7 +1,7 @@
 <view class="container">
   <view class="register-header">
-    <text class="title">创建账号</text>
-    <text class="subtitle">加入SPRINKLE水商城</text>
+    <text class="title">{{i18n.title}}</text>
+    <text class="subtitle">{{i18n.subtitle}}</text>
   </view>
 
   <!-- 微信一键注册按钮 -->
@@ -10,14 +10,11 @@
       class="wechat-button" 
       bindtap="handleWechatRegister"
     >
-      <view class="wechat-icon">
-        <image src="/static/images/wechat-icon.png" mode="aspectFit"></image>
-      </view>
-      <text>微信一键注册</text>
+      <text>{{i18n.wechatRegister}}</text>
     </button>
     <view class="divider">
       <view class="line"></view>
-      <text>或</text>
+      <text>{{i18n.or}}</text>
       <view class="line"></view>
     </view>
   </view>
@@ -27,7 +24,7 @@
       <view class="input-icon">👤</view>
       <input 
         class="input" 
-        placeholder="请设置用户名 (至少4个字符)" 
+        placeholder="{{i18n.username}}" 
         value="{{username}}" 
         bindinput="onUsernameInput"
       />
@@ -37,7 +34,7 @@
       <view class="input-icon">🔒</view>
       <input 
         class="input" 
-        placeholder="请设置密码 (至少6位)" 
+        placeholder="{{i18n.password}}" 
         password="true" 
         value="{{password}}" 
         bindinput="onPasswordInput"
@@ -48,7 +45,7 @@
       <view class="input-icon">🔐</view>
       <input 
         class="input" 
-        placeholder="请确认密码" 
+        placeholder="{{i18n.confirmPassword}}" 
         password="true" 
         value="{{confirmPassword}}" 
         bindinput="onConfirmPasswordInput"
@@ -59,7 +56,7 @@
       <view class="input-icon">📱</view>
       <input 
         class="input" 
-        placeholder="请输入手机号 (选填)" 
+        placeholder="{{i18n.phone}}" 
         type="number" 
         maxlength="11" 
         value="{{phone}}" 
@@ -76,10 +73,10 @@
         <text class="checkbox-icon">{{agreePolicy ? '✓' : ''}}</text>
       </view>
       <view class="policy-text">
-        <text>我已阅读并同意</text>
-        <text class="link" bindtap="showUserAgreement">《用户协议》</text>
-        <text>和</text>
-        <text class="link" bindtap="showPrivacyPolicy">《隐私政策》</text>
+        <text>{{i18n.agreePolicy}}</text>
+        <text class="link" bindtap="showUserAgreement">{{i18n.userAgreement}}</text>
+        <text>{{i18n.and}}</text>
+        <text class="link" bindtap="showPrivacyPolicy">{{i18n.privacyPolicy}}</text>
       </view>
     </view>
 
@@ -89,12 +86,12 @@
       loading="{{isLoading}}" 
       disabled="{{isLoading}}"
     >
-      注册
+      {{i18n.registerButton}}
     </button>
 
     <view class="login-option">
-      <text>已有账号？</text>
-      <text class="login-link" bindtap="navigateToLogin">点击登录</text>
+      <text>{{i18n.hasAccount}}</text>
+      <text class="login-link" bindtap="navigateToLogin">{{i18n.toLogin}}</text>
     </view>
   </view>
 </view> 

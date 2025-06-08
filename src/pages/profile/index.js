@@ -165,6 +165,11 @@ const pageConfig = {
       };
     });
     
+    // 更新页面标题
+    wx.setNavigationBarTitle({
+      title: this.t('page.profile')
+    });
+    
     this.setData({
       orderSummary,
       menuList,
@@ -264,6 +269,11 @@ const pageConfig = {
     }
     // 更新国际化文本（可能语言设置发生了变化）
     this.updateI18nText();
+    
+    // 更新页面标题（确保语言切换后标题也会更新）
+    wx.setNavigationBarTitle({
+      title: this.t('page.profile')
+    });
   },
 
   /**

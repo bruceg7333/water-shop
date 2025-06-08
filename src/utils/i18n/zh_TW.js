@@ -59,6 +59,79 @@ module.exports = {
     loginExpired: '登錄已過期',
     toLogin: '去登錄'
   },
+
+  // 登錄頁面文本
+  login: {
+    title: 'SPRINKLE水商城',
+    subtitle: '登錄賬號',
+    username: '請輸入用戶名',
+    password: '請輸入密碼',
+    loginButton: '登錄',
+    wechatLogin: '微信一鍵登錄',
+    forgotPassword: '忘記密碼',
+    forgotPasswordTip: '請聯繫客服重置密碼',
+    register: '註冊賬號',
+    agreement: '登錄即表示您同意',
+    userAgreement: '《用戶協議》',
+    userAgreementContent: '歡迎使用SPRINKLE水商城！本協議是您與SPRINKLE水商城之間關於用戶使用服務所訂立的協議。使用我們的服務即表示您已閱讀並同意本協議的所有條款。',
+    privacyPolicy: '《隱私政策》',
+    privacyPolicyContent: '我們非常重視您的個人信息和隱私保護。我們會收集您的登錄信息、購物信息等用於提供更好的服務。我們承諾對您的個人信息進行嚴格保密，不會向第三方洩露。',
+    and: '和',
+    iHaveRead: '我已閱讀',
+    authTitle: '授權提示',
+    authConfirm: '同意',
+    authCancel: '取消',
+    errorMessages: {
+      inputRequired: '請輸入用戶名和密碼',
+      usernameRequired: '請輸入用戶名',
+      passwordRequired: '請輸入密碼',
+      loginFailed: '登錄失敗，請重試',
+      networkError: '網絡異常，請稍後重試',
+      privacyPolicyRequired: '您需要同意隱私政策才能完成登錄'
+    },
+    successMessage: '登錄成功'
+  },
+
+  // 註冊頁面文本
+  register: {
+    title: '創建賬號',
+    subtitle: '加入SPRINKLE水商城',
+    username: '請設置用戶名 (至少4個字符)',
+    password: '請設置密碼 (至少6位)',
+    confirmPassword: '請確認密碼',
+    phone: '請輸入手機號 (選填)',
+    wechatRegister: '微信一鍵註冊',
+    registerButton: '註冊',
+    agreePolicy: '我已閱讀並同意',
+    userAgreement: '《用戶協議》',
+    privacyPolicy: '《隱私政策》',
+    and: '和',
+    or: '或',
+    hasAccount: '已有賬號？',
+    toLogin: '點擊登錄',
+    authTitle: '授權提示',
+    authContent: '註冊即表示您同意《用戶協議》和《隱私政策》。',
+    authConfirm: '同意',
+    authCancel: '取消',
+    wechatDesc: '用於創建您的水商城賬號',
+    errorMessages: {
+      usernameRequired: '請輸入用戶名',
+      usernameTooShort: '用戶名至少需要4個字符',
+      passwordRequired: '請輸入密碼',
+      passwordTooShort: '密碼至少需要6位',
+      confirmPasswordRequired: '請確認密碼',
+      passwordMismatch: '兩次輸入的密碼不一致',
+      phoneInvalid: '請輸入正確的手機號',
+      policyRequired: '請閱讀並同意用戶協議和隱私政策',
+      networkError: '網絡異常，請稍後重試',
+      registrationFailed: '註冊失敗，請重試',
+      usernameExists: '用戶名已存在，請更換',
+      wechatLoginFailed: '獲取微信登錄憑證失敗',
+      getUserInfoFailed: '獲取用戶信息失敗，請重試',
+      privacyPolicyRequired: '您需要同意隱私政策才能完成註冊'
+    },
+    successMessage: '註冊成功'
+  },
   
   // 底部導航欄
   tabbar: {
