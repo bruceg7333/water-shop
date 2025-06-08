@@ -308,32 +308,43 @@
   gap: 10rpx;
 }
 
-.product-price-row, .article-views {
+.product-price-row {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
+  margin-bottom: 6rpx;
 }
 
-.product-price, .article-views {
-  font-size: 24rpx;
-  color: #999;
+.product-price {
+  font-size: 32rpx;
+  color: #ff6b00;
+  font-weight: 600;
 }
 
-.product-original-price, .article-views {
-  font-size: 24rpx;
+.product-original-price {
+  font-size: 26rpx;
   color: #999;
   text-decoration: line-through;
   margin-left: 16rpx;
 }
 
-.product-sales-buy, .article-views {
+.product-sales-buy {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 4rpx;
 }
 
-.product-sales, .article-views {
+.product-sales {
   font-size: 24rpx;
   color: #999;
+}
+
+/* 文章区域样式修复 */
+.article-views {
+  font-size: 24rpx;
+  color: #999;
+  display: flex;
+  align-items: flex-end;
 }
 
 /* 商品标签 */
