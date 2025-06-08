@@ -108,7 +108,7 @@ Page({
     
     // 必须直接由用户点击触发getUserProfile
     wx.getUserProfile({
-      desc: '用于完善会员资料',
+      desc: i18n.t('login.wechatDesc') || '用于完善会员资料',
       success: (profileRes) => {
         console.log('获取用户信息成功:', profileRes);
         const userInfo = profileRes.userInfo;

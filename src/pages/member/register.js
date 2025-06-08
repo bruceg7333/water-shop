@@ -97,18 +97,13 @@ Page({
     });
   },
 
-  // 微信一键注册
+  // 微信一键注册/登录
   handleWechatRegister() {
     console.log('微信一键注册按钮被点击');
     
-    if (!this.data.agreePolicy) {
-      this.setData({ errorMsg: i18n.t('register.errorMessages.policyRequired') || '请阅读并同意用户协议和隐私政策' });
-      return;
-    }
-
     // 必须直接由用户点击触发getUserProfile
     wx.getUserProfile({
-      desc: '用于创建您的水商城账号',
+      desc: i18n.t('register.wechatDesc') || '用于创建您的水商城账号',
       success: (profileRes) => {
         console.log('获取用户信息成功:', profileRes);
         const userInfo = profileRes.userInfo;
@@ -121,18 +116,18 @@ Page({
           cancelText: i18n.t('register.authCancel') || '取消',
           success: (res) => {
             if (res.confirm) {
-              // 用户同意隐私政策，继续注册流程
+              // 用户同意隐私政策，继续登录/注册流程
               this.setData({ 
                 isWechatLoading: true,
                 errorMsg: ''
               });
               
-              // 获取微信code并完成注册
+              // 获取微信code并完成登录/注册
               wx.login({
                 success: (loginRes) => {
                   if (loginRes.code) {
-                    // 调用后端API，使用code注册
-                    this.wechatRegisterWithCode(loginRes.code, userInfo);
+                    // 调用后端API，使用code登录（如果用户不存在会自动注册）
+                    this.wechatLoginWithCode(loginRes.code, userInfo);
                   } else {
                     this.setData({
                       errorMsg: i18n.t('register.errorMessages.wechatLoginFailed') || '获取微信登录凭证失败',
@@ -167,8 +162,8 @@ Page({
     });
   },
 
-  // 使用微信code注册
-  async wechatRegisterWithCode(code, userInfo) {
+  // 使用微信code登录/注册
+  async wechatLoginWithCode(code, userInfo) {
     try {
       // 将微信性别数值转换为后端需要的字符串枚举值
       let genderValue = '未知';
@@ -178,45 +173,50 @@ Page({
         genderValue = '女';
       }
 
-      // 调用后端API进行微信注册
-      const response = await api.user.wechatRegister({
+      // 调用后端API进行微信登录（如果用户不存在会自动注册）
+      const response = await api.user.wechatLogin({
         code: code,
         userInfo: {
           nickName: userInfo.nickName,
           avatarUrl: userInfo.avatarUrl,
           gender: genderValue
         },
-        phone: this.data.phone, // 如果用户输入了手机号，一并提交
         // 添加默认密码
         password: 'wx' + new Date().getTime() // 使用微信前缀加时间戳作为随机密码
       });
 
       if (response.success) {
-        // 注册成功，保存用户信息
+        // 登录/注册成功，保存用户信息
         wx.setStorageSync('token', response.data.token);
         wx.setStorageSync('userInfo', response.data.user);
         wx.setStorageSync('isLoggedIn', true);
 
+        // 根据响应判断是登录还是注册
+        const isNewUser = response.data.isNewUser || false;
+        const successMessage = isNewUser ? 
+          (i18n.t('register.successMessage') || '注册成功') : 
+          (i18n.t('register.loginSuccessMessage') || '登录成功');
+
         wx.showToast({
-          title: i18n.t('register.successMessage') || '注册成功',
+          title: successMessage,
           icon: 'success',
           duration: 1500
         });
 
-        // 延迟跳转
+        // 延迟跳转到首页
         setTimeout(() => {
           wx.switchTab({
-            url: '/pages/profile/index'
+            url: '/pages/index/index'
           });
         }, 1500);
       } else {
         this.setData({
-          errorMsg: response.message || i18n.t('register.errorMessages.registrationFailed') || '微信注册失败，请重试',
+          errorMsg: response.message || i18n.t('register.errorMessages.registrationFailed') || '操作失败，请重试',
           isWechatLoading: false
         });
       }
     } catch (error) {
-      console.error('微信注册请求失败:', error);
+      console.error('微信登录/注册请求失败:', error);
       this.setData({
         errorMsg: i18n.t('register.errorMessages.networkError') || '网络异常，请稍后重试',
         isWechatLoading: false

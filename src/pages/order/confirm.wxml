@@ -68,15 +68,15 @@
 
   <!-- 优惠券选择 -->
   <view class="coupon-section">
-    <view class="section-title">优惠券</view>
+    <view class="section-title">{{i18n.couponTitle}}</view>
     <view class="coupon-selector" bindtap="showCouponModal">
       <view class="coupon-info" wx:if="{{selectedCoupon}}">
         <text class="coupon-name">{{selectedCoupon.name}}</text>
-        <text class="coupon-discount">-¥{{discountAmount}}</text>
+        <text class="coupon-discount">-{{i18n.currencySymbol}}{{discountAmount}}</text>
       </view>
       <view class="coupon-info" wx:else>
-        <text class="coupon-placeholder">选择优惠券</text>
-        <text class="coupon-count" wx:if="{{availableCoupons.length > 0}}">{{availableCoupons.length}}张可用</text>
+        <text class="coupon-placeholder">{{i18n.selectCoupon}}</text>
+        <text class="coupon-count" wx:if="{{availableCoupons.length > 0}}">{{availableCoupons.length}}{{i18n.couponAvailable}}</text>
       </view>
       <text class="arrow">></text>
     </view>
@@ -97,8 +97,8 @@
   <view class="footer">
     <view class="total">
       <view class="price-detail" wx:if="{{selectedCoupon}}">
-        <text class="original-price">原价：¥{{originalPrice}}</text>
-        <text class="discount-info">优惠：-¥{{discountAmount}}</text>
+        <text class="original-price">{{i18n.originalPrice}}：{{i18n.currencySymbol}}{{originalPrice}}</text>
+        <text class="discount-info">{{i18n.discount}}：-{{i18n.currencySymbol}}{{discountAmount}}</text>
       </view>
       <view class="final-price">
         <text>{{i18n.total}}：</text>
@@ -113,29 +113,29 @@
     <view class="modal-mask" bindtap="hideCouponModal"></view>
     <view class="modal-content">
       <view class="modal-header">
-        <text class="modal-title">选择优惠券</text>
+        <text class="modal-title">{{i18n.selectCoupon}}</text>
         <text class="modal-close" bindtap="hideCouponModal">×</text>
       </view>
       <view class="modal-body">
         <view class="coupon-list">
           <view class="coupon-item {{selectedCoupon && selectedCoupon.id === item.id ? 'selected' : ''}}" wx:for="{{availableCoupons}}" wx:key="id" bindtap="selectCoupon" data-index="{{index}}">
             <view class="coupon-left">
-              <view class="coupon-amount">¥{{item.price}}</view>
-              <view class="coupon-condition" wx:if="{{item.condition}}">满{{item.condition}}元可用</view>
+              <view class="coupon-amount">{{i18n.currencySymbol}}{{item.price}}</view>
+              <view class="coupon-condition" wx:if="{{item.condition}}">{{i18n.couponCondition}}{{item.condition}}{{i18n.couponConditionSuffix}}</view>
             </view>
             <view class="coupon-right">
               <view class="coupon-name">{{item.name}}</view>
-              <view class="coupon-desc">{{item.description || '全场商品可用'}}</view>
-              <view class="coupon-expire">有效期至：{{item.endDate}}</view>
+              <view class="coupon-desc">{{item.description || i18n.couponDefaultDesc}}</view>
+              <view class="coupon-expire">{{i18n.couponExpire}}：{{item.endDate}}</view>
             </view>
           </view>
           <view class="no-coupon" wx:if="{{availableCoupons.length === 0}}">
-            <text>暂无可用优惠券</text>
+            <text>{{i18n.noCoupon}}</text>
           </view>
         </view>
       </view>
       <view class="modal-footer">
-        <view class="modal-btn" bindtap="clearCoupon">不使用优惠券</view>
+        <view class="modal-btn" bindtap="clearCoupon">{{i18n.notUseCoupon}}</view>
       </view>
     </view>
   </view>

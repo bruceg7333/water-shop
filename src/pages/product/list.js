@@ -34,8 +34,8 @@ const pageConfig = {
       addedToCart: this.t('product.list.addedToCart'),
       buyNow: this.t('product.list.buyNow'),
       currencySymbol: this.t('common.unit.yuan'),
-      soldPrefix: '已售',
-      soldSuffix: '件',
+      soldPrefix: this.t('product.list.soldPrefix'),
+      soldSuffix: this.t('product.list.soldSuffix'),
       loading: this.t('common.loading'),
       loadMore: this.t('common.loadMore'),
       noMoreData: this.t('common.noMoreData'),
@@ -444,38 +444,96 @@ const pageConfig = {
   // 添加到购物车
   addToCart: function(e) {
     const id = e.currentTarget.dataset.id;
-    const product = this.data.productList.find(item => item.id.toString() === id.toString());
+    const product = this.data.filteredProducts.find(item => 
+      item.id && (item.id.toString() === id.toString() || 
+      (item._id && item._id.toString() === id.toString()))
+    );
     
-    if (product) {
-      // 添加到购物车API
-      api.addToCart({
-        productId: id,
-        quantity: 1
-      }).then(res => {
-        if (res.success) {
-          wx.showToast({
-            title: this.data.i18n.addedToCart,
-            icon: 'success'
-          });
-          // 更新购物车数量
-          this.updateCartCount();
-        } else {
-          wx.showToast({
-            title: res.message || this.t('common.error'),
-            icon: 'none'
-          });
+    if (!product) {
+      wx.showToast({
+        title: this.t('common.error') || '商品不存在',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 检查登录状态
+    const isLoggedIn = wx.getStorageSync('isLoggedIn');
+    
+    if (!isLoggedIn) {
+      
+      // 根据当前语言获取固定的短文本，确保符合微信4字符限制
+      const currentLang = wx.getStorageSync('language') || 'zh_CN';
+      let tipTitle, loginRequired, toLogin, cancel;
+      
+      if (currentLang === 'en') {
+        tipTitle = 'Tip';
+        loginRequired = 'You need to login first to use this feature';
+        toLogin = 'Go';
+        cancel = 'No';
+      } else if (currentLang === 'th') {
+        tipTitle = 'แจ้ง';
+        loginRequired = 'คุณต้องเข้าสู่ระบบก่อนใช้งานคุณสมบัตินี้';
+        toLogin = 'เข้า';
+        cancel = 'ไม่';
+      } else if (currentLang === 'zh_TW') {
+        tipTitle = '提示';
+        loginRequired = '您需要登錄後才能使用此功能';
+        toLogin = '登錄';
+        cancel = '取消';
+      } else {
+        // 默认中文简体
+        tipTitle = '提示';
+        loginRequired = '您需要登录后才能使用此功能';
+        toLogin = '登录';
+        cancel = '取消';
+      }
+      
+              wx.showModal({
+        title: tipTitle,
+        content: loginRequired,
+        confirmText: toLogin,
+        cancelText: cancel,
+        success: (res) => {
+          console.log('商品列表页模态框响应:', res);
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/member/login'
+            });
+          }
+        },
+        fail: (err) => {
+          console.error('商品列表页显示模态框失败:', err);
         }
-      }).catch(err => {
-        console.error('添加到购物车失败:', err);
-        // 模拟添加成功
+      });
+      return;
+    }
+    
+    console.log('商品列表页用户已登录，继续添加购物车流程');
+    
+    // 添加到购物车API
+    api.addToCart({
+      productId: product._id || product.id,
+      quantity: 1
+    }).then(res => {
+      if (res.success) {
         wx.showToast({
           title: this.data.i18n.addedToCart,
           icon: 'success'
         });
         // 更新购物车数量
         this.updateCartCount();
-      });
-    }
+      } else {
+        wx.showToast({
+          title: res.message || this.t('common.error'),
+          icon: 'none'
+        });
+      }
+    }).catch(err => {
+      console.error('添加到购物车失败:', err);
+      // 如果是认证错误，request.js会自动处理
+      // 这里不需要再次处理
+    });
   },
 
   // 立即购买
@@ -493,6 +551,60 @@ const pageConfig = {
       });
       return;
     }
+    
+    // 检查登录状态
+    const isLoggedIn = wx.getStorageSync('isLoggedIn');
+    
+    if (!isLoggedIn) {
+      
+      // 根据当前语言获取固定的短文本，确保符合微信4字符限制
+      const currentLang = wx.getStorageSync('language') || 'zh_CN';
+      let tipTitle, loginRequired, toLogin, cancel;
+      
+      if (currentLang === 'en') {
+        tipTitle = 'Tip';
+        loginRequired = 'You need to login first to buy products';
+        toLogin = 'Go';
+        cancel = 'No';
+      } else if (currentLang === 'th') {
+        tipTitle = 'แจ้ง';
+        loginRequired = 'คุณต้องเข้าสู่ระบบก่อนซื้อสินค้า';
+        toLogin = 'เข้า';
+        cancel = 'ไม่';
+      } else if (currentLang === 'zh_TW') {
+        tipTitle = '提示';
+        loginRequired = '您需要登錄後才能購買商品';
+        toLogin = '登錄';
+        cancel = '取消';
+      } else {
+        // 默认中文简体
+        tipTitle = '提示';
+        loginRequired = '您需要登录后才能购买商品';
+        toLogin = '登录';
+        cancel = '取消';
+      }
+      
+              wx.showModal({
+        title: tipTitle,
+        content: loginRequired,
+        confirmText: toLogin,
+        cancelText: cancel,
+        success: (res) => {
+          console.log('商品列表页buyNow模态框响应:', res);
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/member/login'
+            });
+          }
+        },
+        fail: (err) => {
+          console.error('商品列表页buyNow显示模态框失败:', err);
+        }
+      });
+      return;
+    }
+    
+    console.log('商品列表页buyNow用户已登录，继续购买流程');
     
     // 设置结算商品信息到缓存，供订单确认页使用
     const checkoutItem = {

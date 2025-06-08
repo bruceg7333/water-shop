@@ -81,6 +81,7 @@ module.exports = {
     authTitle: '授權提示',
     authConfirm: '同意',
     authCancel: '取消',
+    wechatDesc: '用於完善會員資料',
     errorMessages: {
       inputRequired: '請輸入用戶名和密碼',
       usernameRequired: '請輸入用戶名',
@@ -113,7 +114,7 @@ module.exports = {
     authContent: '註冊即表示您同意《用戶協議》和《隱私政策》。',
     authConfirm: '同意',
     authCancel: '取消',
-    wechatDesc: '用於創建您的水商城賬號',
+    wechatDesc: '用於完善會員資料',
     errorMessages: {
       usernameRequired: '請輸入用戶名',
       usernameTooShort: '用戶名至少需要4個字符',
@@ -130,7 +131,18 @@ module.exports = {
       getUserInfoFailed: '獲取用戶信息失敗，請重試',
       privacyPolicyRequired: '您需要同意隱私政策才能完成註冊'
     },
-    successMessage: '註冊成功'
+    successMessage: '註冊成功',
+    loginSuccessMessage: '登錄成功'
+  },
+  
+  // 通用文本
+  common: {
+    confirm: '確認',
+    cancel: '取消',
+    save: '保存',
+    year: '年',
+    month: '月',
+    day: '日'
   },
   
   // 底部導航欄
@@ -254,6 +266,8 @@ module.exports = {
         special: '特惠'
       },
       soldCount: '已售{count}件',
+      soldPrefix: '已售',
+      soldSuffix: '件',
       empty: '暫無相關商品',
       addedToCart: '已加入購物車',
       buyNow: '立即購買'
@@ -288,6 +302,38 @@ module.exports = {
       shipped: '待發貨',
       receipt: '待收貨',
       completed: '已完成'
+    },
+    confirmPage: {
+      productInfo: '商品信息',
+      delivery_title: '配送方式',
+      delivery_express: '快遞配送',
+      delivery_selfPickup: '自提',
+      payment_title: '支付方式',
+      payment_wechat: '微信支付',
+      payment_alipay: '支付寶',
+      remark: '備註',
+      remarkPlaceholder: '在此輸入備註信息',
+      submit: '提交訂單',
+      selectAddress: '選擇地址',
+      changeAddress: '更換地址',
+      submitting: '提交中...',
+      submitSuccess: '提交成功',
+      addressRequired: '請選擇收貨地址',
+      productLoadFailed: '商品加載失敗',
+      creatingOrder: '正在創建訂單...',
+      createOrderFailed: '訂單創建失敗',
+      orderPlacedAwaitingPayment: '訂單已提交，等待支付',
+      couponTitle: '優惠券',
+      selectCoupon: '選擇優惠券',
+      couponAvailable: '張可用',
+      originalPrice: '原價',
+      discount: '優惠',
+      couponCondition: '滿',
+      couponConditionSuffix: '元可用',
+      couponDefaultDesc: '全場商品可用',
+      couponExpire: '有效期至',
+      noCoupon: '暫無可用優惠券',
+      notUseCoupon: '不使用優惠券'
     }
   },
   
@@ -356,7 +402,8 @@ module.exports = {
       female: '女',
       unknown: '未知',
       nicknameRequired: '請輸入昵稱',
-      invalidEmail: '郵箱格式不正確'
+      invalidEmail: '郵箱格式不正確',
+      birthdaySelected: '生日已選擇'
     }   },
   
   // 文章列表頁

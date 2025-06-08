@@ -135,11 +135,11 @@ const pageConfig = {
 
   addToCart: function() {
     // 检查是否已登录
-    if (!checkLogin({ redirectOnFail: false, showToast: false })) {
-      wx.showToast({
-        title: this.t('common.loginFirst'),
-        icon: 'none'
-      });
+    if (!checkLogin({ 
+      redirectOnFail: true, 
+      showToast: true,
+      redirectUrl: `/pages/product/detail?id=${this.data.product.id}`
+    })) {
       return;
     }
     
@@ -196,9 +196,26 @@ const pageConfig = {
   },
 
   buyNow: function() {
+    // 检查是否已登录
+    if (!checkLogin({ 
+      redirectOnFail: true, 
+      showToast: true,
+      redirectUrl: `/pages/product/detail?id=${this.data.product.id}`
+    })) {
+      return;
+    }
+    
     // 立即购买逻辑
     // 直接跳转到确认订单页面，而不将商品加入购物车
     const product = this.data.product;
+    
+    if (!product || !product.id) {
+      wx.showToast({
+        title: this.t('common.error'),
+        icon: 'none'
+      });
+      return;
+    }
     
     // 构建结算商品
     const checkoutItem = {

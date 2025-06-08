@@ -57,7 +57,20 @@ const pageConfig = {
         // 订单创建流程相关键
         creatingOrder: this.t('order.confirmPage.creatingOrder'),
         createOrderFailed: this.t('order.confirmPage.createOrderFailed'),
-        orderPlacedAwaitingPayment: this.t('order.confirmPage.orderPlacedAwaitingPayment') // 新增键
+        orderPlacedAwaitingPayment: this.t('order.confirmPage.orderPlacedAwaitingPayment'), // 新增键
+        
+        // 优惠券相关
+        couponTitle: this.t('order.confirmPage.couponTitle'),
+        selectCoupon: this.t('order.confirmPage.selectCoupon'),
+        couponAvailable: this.t('order.confirmPage.couponAvailable'),
+        originalPrice: this.t('order.confirmPage.originalPrice'),
+        discount: this.t('order.confirmPage.discount'),
+        couponCondition: this.t('order.confirmPage.couponCondition'),
+        couponConditionSuffix: this.t('order.confirmPage.couponConditionSuffix'),
+        couponDefaultDesc: this.t('order.confirmPage.couponDefaultDesc'),
+        couponExpire: this.t('order.confirmPage.couponExpire'),
+        noCoupon: this.t('order.confirmPage.noCoupon'),
+        notUseCoupon: this.t('order.confirmPage.notUseCoupon')
     };
     this.setData({ i18n: newI18nData });
     

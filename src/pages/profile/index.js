@@ -711,8 +711,32 @@ const pageConfig = {
         this.t('profile.member.admin') : 
         this.getMemberLevelByPoints(points);
       
+      // 处理头像URL格式
+      const formatAvatarUrl = (avatar) => {
+        if (!avatar) return '/assets/images/profile/default-avatar.svg';
+        
+        // 如果已经是完整的HTTP/HTTPS URL，直接返回
+        if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+          return avatar;
+        }
+        
+        // 如果是本地资源路径，直接返回  
+        if (avatar.startsWith('/assets/') || avatar.startsWith('/static/')) {
+          return avatar;
+        }
+        
+        // 如果是服务器上传的文件（相对路径），拼接完整URL
+        const baseUrl = 'http://localhost:5001'; // 后端服务器地址
+        
+        if (avatar.startsWith('/')) {
+          return `${baseUrl}${avatar}`;
+        } else {
+          return `${baseUrl}/${avatar}`;
+        }
+      };
+
       this.setData({
-        'userInfo.avatarUrl': userInfo.avatar || '/assets/images/profile/default-avatar.svg',
+        'userInfo.avatarUrl': formatAvatarUrl(userInfo.avatar),
         'userInfo.nickName': userInfo.nickName || userInfo.username,
         'userInfo.isLogin': true,
         'userInfo.memberLevel': memberLevel,

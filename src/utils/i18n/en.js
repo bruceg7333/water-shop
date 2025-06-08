@@ -57,6 +57,7 @@ module.exports = {
     authTitle: 'Authorization Notice',
     authConfirm: 'Agree',
     authCancel: 'Cancel',
+    wechatDesc: 'To improve member profile',
     errorMessages: {
       inputRequired: 'Please enter username and password',
       usernameRequired: 'Please enter username',
@@ -84,12 +85,12 @@ module.exports = {
     and: 'and',
     or: 'or',
     hasAccount: 'Already have an account?',
-    toLogin: 'Click to login',
+    toLogin: 'Login',
     authTitle: 'Authorization Notice',
     authContent: 'Registration means you agree to User Agreement and Privacy Policy.',
     authConfirm: 'Agree',
     authCancel: 'Cancel',
-    wechatDesc: 'Used to create your water shop account',
+    wechatDesc: 'To improve member profile',
     errorMessages: {
       usernameRequired: 'Please enter username',
       usernameTooShort: 'Username must be at least 4 characters',
@@ -106,7 +107,8 @@ module.exports = {
       getUserInfoFailed: 'Failed to get user info, please try again',
       privacyPolicyRequired: 'You need to agree to the privacy policy to complete registration'
     },
-    successMessage: 'Registration successful'
+    successMessage: 'Registration successful',
+    loginSuccessMessage: 'Login successful'
   },
   
   // Common texts
@@ -129,7 +131,7 @@ module.exports = {
     save: 'Save',
     loginFirst: 'Please login first',
     loginRequired: 'You need to login first to use this feature',
-    toLogin: 'Go to Login',
+    toLogin: 'Login',
     requestFailed: 'Request failed',
     networkError: 'Network error, please try again later',
     operationFailed: 'Operation failed, please try again later',
@@ -142,7 +144,10 @@ module.exports = {
     uploadFailed: 'Upload failed',
     saveSuccess: 'Save successful',
     saveFailed: 'Save failed',
-    loginExpired: 'Login expired'
+    loginExpired: 'Login expired',
+    year: 'A.D.',
+    month: 'M',
+    day: 'DT'
   },
   
   // Bottom navigation bar
@@ -160,10 +165,10 @@ module.exports = {
       placeholder: 'Search water products'
     },
     nav: {
-      allProducts: 'All Products',
-      waterKnowledge: 'Water Knowledge',
+      allProducts: 'Products',
+      waterKnowledge: 'Knowledge',
       promotions: 'Promotions',
-      newUserGift: 'New User Gift'
+      newUserGift: 'Gift'
     },
     section: {
       hotProducts: 'Hot Products',
@@ -301,6 +306,8 @@ module.exports = {
         special: 'Special'
       },
       soldCount: '{count} sold',
+      soldPrefix: '',
+      soldSuffix: 'sold',
       empty: 'No products found',
       addedToCart: 'Added to cart',
       buyNow: 'Buy Now'
@@ -453,7 +460,18 @@ module.exports = {
       productLoadFailed: 'Failed to load product',
       creatingOrder: 'Creating order...',
       createOrderFailed: 'Failed to create order',
-      orderPlacedAwaitingPayment: 'Order placed, awaiting payment'
+      orderPlacedAwaitingPayment: 'Order placed, awaiting payment',
+      couponTitle: 'Coupons',
+      selectCoupon: 'Select Coupon',
+      couponAvailable: ' available',
+      originalPrice: 'Original Price',
+      discount: 'Discount',
+      couponCondition: 'Min. $',
+      couponConditionSuffix: ' required',
+      couponDefaultDesc: 'Valid for all products',
+      couponExpire: 'Valid until',
+      noCoupon: 'No coupons available',
+      notUseCoupon: 'Don\'t use coupon'
     },
     confirm: {
       cancel: 'Are you sure you want to cancel this order?',
@@ -533,7 +551,8 @@ module.exports = {
       female: 'Female',
       unknown: 'Unknown',
       nicknameRequired: 'Please enter nickname',
-      invalidEmail: 'Invalid email format'
+      invalidEmail: 'Invalid email format',
+      birthdaySelected: 'Birthday selected'
     }
   },
   

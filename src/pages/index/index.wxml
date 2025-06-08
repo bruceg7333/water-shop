@@ -81,6 +81,7 @@
   </view>
 
   <!-- 限时优惠横幅 -->
+  <!-- 
   <view class="promo-banner" style="background-image: {{promotions.color}}" bindtap="onPromotionTap">
     <view class="promo-content">
       <view class="promo-title">{{promotions.title}}</view>
@@ -88,6 +89,7 @@
     </view>
     <view class="promo-btn">{{i18n.viewNow || '立即查看'}}</view>
   </view>
+  -->
 
   <!-- 品牌故事 -->
   <view class="brand-story">
@@ -140,8 +142,8 @@
           <text class="product-desc">{{item.description}}</text>
           <view class="product-meta">
             <view class="product-price-row">
-              <text class="product-price">¥{{item.price}}</text>
-              <text class="product-original-price" wx:if="{{item.originalPrice && item.originalPrice > item.price}}">¥{{item.originalPrice}}</text>
+              <text class="product-price">{{i18n.currencySymbol}}{{item.price}}</text>
+              <text class="product-original-price" wx:if="{{item.originalPrice && item.originalPrice > item.price}}">{{i18n.currencySymbol}}{{item.originalPrice}}</text>
             </view>
             <view class="product-sales-buy">
               <text class="product-sales">{{i18n.soldFormat ? i18n.soldFormat.replace('{count}', item.sales) : '已售' + item.sales + '件'}}</text>

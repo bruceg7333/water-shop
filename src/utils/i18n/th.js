@@ -56,14 +56,17 @@ module.exports = {
     loginFirst: 'กรุณาเข้าสู่ระบบก่อน',
     loginRequired: 'คุณต้องเข้าสู่ระบบก่อนใช้งานคุณสมบัตินี้',
     loginExpired: 'การเข้าสู่ระบบหมดอายุแล้ว',
-    toLogin: 'ไปเข้าสู่ระบบ',
+    toLogin: 'เข้าสู่ระบบ',
     requestFailed: 'การร้องขอล้มเหลว',
     networkError: 'ข้อผิดพลาดเครือข่าย โปรดลองอีกครั้งในภายหลัง',
     operationFailed: 'การดำเนินการล้มเหลว โปรดลองอีกครั้งในภายหลัง',
     openParenthesis: '(',
     closeParenthesis: ')',
     loadMore: 'โหลดเพิ่มเติม...',
-    noMoreData: 'ไม่มีข้อมูลเพิ่มเติม'
+    noMoreData: 'ไม่มีข้อมูลเพิ่มเติม',
+    year: 'ปี',
+    month: 'เดือน',
+    day: 'วัน'
   },
   
   // ข้อความเข้าสู่ระบบ (登录页面文本)
@@ -85,6 +88,7 @@ module.exports = {
     authTitle: 'คำเตือนการอนุญาต',
     authConfirm: 'ยอมรับ',
     authCancel: 'ยกเลิก',
+    wechatDesc: 'สำหรับสมาชิก',
     errorMessages: {
       inputRequired: 'กรุณาใส่ชื่อผู้ใช้และรหัสผ่าน',
       usernameRequired: 'กรุณาใส่ชื่อผู้ใช้',
@@ -112,12 +116,12 @@ module.exports = {
     and: 'และ',
     or: 'หรือ',
     hasAccount: 'มีบัญชีแล้ว?',
-    toLogin: 'คลิกเพื่อเข้าสู่ระบบ',
+    toLogin: 'เข้าสู่ระบบ',
     authTitle: 'คำเตือนการอนุญาต',
     authContent: 'การลงทะเบียนแสดงว่าคุณยอมรับข้อตกลงผู้ใช้และนโยบายความเป็นส่วนตัว',
     authConfirm: 'ยอมรับ',
     authCancel: 'ยกเลิก',
-    wechatDesc: 'ใช้สำหรับสร้างบัญชีร้านน้ำของคุณ',
+    wechatDesc: 'สำหรับสมาชิก',
     errorMessages: {
       usernameRequired: 'กรุณาใส่ชื่อผู้ใช้',
       usernameTooShort: 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร',
@@ -134,7 +138,8 @@ module.exports = {
       getUserInfoFailed: 'ไม่สามารถรับข้อมูลผู้ใช้ได้ โปรดลองอีกครั้ง',
       privacyPolicyRequired: 'คุณต้องยอมรับนโยบายความเป็นส่วนตัวเพื่อสมัครสมาชิก'
     },
-    successMessage: 'ลงทะเบียนสำเร็จ'
+    successMessage: 'ลงทะเบียนสำเร็จ',
+    loginSuccessMessage: 'เข้าสู่ระบบสำเร็จ'
   },
   
   // แถบนำทางด้านล่าง (底部导航栏)
@@ -152,10 +157,10 @@ module.exports = {
       placeholder: 'ค้นหาผลิตภัณฑ์น้ำดื่ม'
     },
     nav: {
-      allProducts: 'สินค้าทั้งหมด',
-      waterKnowledge: 'ความรู้เรื่องน้ำ',
+      allProducts: 'สินค้า',
+      waterKnowledge: 'ความรู้',
       promotions: 'โปรโมชั่น',
-      newUserGift: 'ของขวัญสำหรับผู้ใช้ใหม่'
+      newUserGift: 'ของขวัญ'
     },
     section: {
       hotProducts: 'สินค้าขายดี',
@@ -288,6 +293,8 @@ module.exports = {
         special: 'พิเศษ'
       },
       soldCount: 'ขายแล้ว {count} ชิ้น',
+      soldPrefix: 'ขายแล้ว',
+      soldSuffix: 'ชิ้น',
       empty: 'ไม่พบสินค้าที่เกี่ยวข้อง',
       addedToCart: 'เพิ่มลงตะกร้าแล้ว',
       buyNow: 'ซื้อเลย'
@@ -436,7 +443,18 @@ module.exports = {
       productLoadFailed: 'โหลดสินค้าล้มเหลว',
       creatingOrder: 'กำลังสร้างคำสั่งซื้อ...',
       createOrderFailed: 'สร้างคำสั่งซื้อล้มเหลว',
-      orderPlacedAwaitingPayment: 'คำสั่งซื้อถูกส่งแล้ว รอการชำระเงิน'
+      orderPlacedAwaitingPayment: 'คำสั่งซื้อถูกส่งแล้ว รอการชำระเงิน',
+      couponTitle: 'คูปอง',
+      selectCoupon: 'เลือกคูปอง',
+      couponAvailable: 'ใช้ได้',
+      originalPrice: 'ราคาเดิม',
+      discount: 'ส่วนลด',
+      couponCondition: 'ขั้นต่ำ ',
+      couponConditionSuffix: ' บาท',
+      couponDefaultDesc: 'ใช้ได้กับสินค้าทั้งหมด',
+      couponExpire: 'ใช้ได้ถึง',
+      noCoupon: 'ไม่มีคูปองที่ใช้ได้',
+      notUseCoupon: 'ไม่ใช้คูปอง'
     }
   },
   
@@ -494,7 +512,8 @@ module.exports = {
       female: 'หญิง',
       unknown: 'ไม่ทราบ',
       nicknameRequired: 'กรุณาใส่ชื่อเล่น',
-      invalidEmail: 'รูปแบบอีเมลไม่ถูกต้อง'
+      invalidEmail: 'รูปแบบอีเมลไม่ถูกต้อง',
+      birthdaySelected: 'เลือกวันเกิดแล้ว'
     },
     points: {
       title: 'คะแนนสะสมของฉัน',

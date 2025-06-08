@@ -94,11 +94,24 @@ const pageConfig = {
           // 获取积分数据
           const points = userData.points || storedUser.points || 0;
           
+          // 处理头像URL格式
+          const formatAvatarUrl = (avatar) => {
+            if (!avatar) return '/assets/images/profile/default-avatar.svg';
+            if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+              return avatar;
+            }
+            if (avatar.startsWith('/assets/') || avatar.startsWith('/static/')) {
+              return avatar;
+            }
+            const baseUrl = 'http://localhost:5001';
+            return avatar.startsWith('/') ? `${baseUrl}${avatar}` : `${baseUrl}/${avatar}`;
+          };
+
           // 设置用户数据
           this.setData({
             pointsBalance: points,
             userInfo: {
-              avatarUrl: userData.avatar || storedUser.avatar || '/assets/images/profile/user-avatar.svg',
+              avatarUrl: formatAvatarUrl(userData.avatar || storedUser.avatar),
               nickName: userData.nickName || userData.username || storedUser.nickName || this.t('product.reviews.anonymous'),
               // 会员等级由积分决定，不再使用角色字段
               memberLevel: this.getMemberLevelByPoints(points)

@@ -220,17 +220,106 @@
   background: #f5f5f5;
 }
 
-/* 生日选择器 */
-.birthday-picker {
-  flex: 1;
+/* 自定义生日选择器样式 */
+.birthday-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
-.birthday-picker .value {
+.birthday-picker-content {
   width: 100%;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  max-height: 80vh;
+}
+
+.picker-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.picker-cancel {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.picker-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.picker-confirm {
+  font-size: 32rpx;
+  color: #007aff;
+  font-weight: 500;
+}
+
+.picker-view {
+  height: 500rpx;
+  width: 100%;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100rpx;
+  font-size: 32rpx;
+  color: #333;
+}
+
+/* 性别选择器样式 */
+.gender-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.gender-picker-content {
+  width: 100%;
+  background: #fff;
+  border-radius: 20rpx 20rpx 0 0;
+  max-height: 60vh;
+}
+
+.gender-options {
+  padding: 20rpx 0;
+}
+
+.gender-option {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 32rpx;
+  color: #333;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.gender-option:last-child {
+  border-bottom: none;
+}
+
+.gender-option.selected {
+  color: #007aff;
+  background: #f0f8ff;
+}
+
+.gender-option:active {
+  background: #f5f5f5;
 } 

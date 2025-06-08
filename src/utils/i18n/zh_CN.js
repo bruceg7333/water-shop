@@ -56,6 +56,7 @@ module.exports = {
     authTitle: '授权提示',
     authConfirm: '同意',
     authCancel: '取消',
+    wechatDesc: '用于完善会员资料',
     errorMessages: {
       inputRequired: '请输入用户名和密码',
       usernameRequired: '请输入用户名',
@@ -88,7 +89,7 @@ module.exports = {
     authContent: '注册即表示您同意《用户协议》和《隐私政策》。',
     authConfirm: '同意',
     authCancel: '取消',
-    wechatDesc: '用于创建您的水商城账号',
+    wechatDesc: '用于完善会员资料',
     errorMessages: {
       usernameRequired: '请输入用户名',
       usernameTooShort: '用户名至少需要4个字符',
@@ -105,7 +106,8 @@ module.exports = {
       getUserInfoFailed: '获取用户信息失败，请重试',
       privacyPolicyRequired: '您需要同意隐私政策才能完成注册'
     },
-    successMessage: '注册成功'
+    successMessage: '注册成功',
+    loginSuccessMessage: '登录成功'
   },
   
   // 通用文本
@@ -141,7 +143,10 @@ module.exports = {
     uploading: '上传中...',
     uploadFailed: '上传失败',
     saveSuccess: '保存成功',
-    saveFailed: '保存失败'
+    saveFailed: '保存失败',
+    year: '年',
+    month: '月',
+    day: '日'
   },
   
   // 底部导航栏
@@ -300,6 +305,8 @@ module.exports = {
         special: '特惠'
       },
       soldCount: '已售{count}件',
+      soldPrefix: '已售',
+      soldSuffix: '件',
       empty: '暂无相关商品',
       addedToCart: '已加入购物车',
       buyNow: '立即购买'
@@ -448,7 +455,18 @@ module.exports = {
       productLoadFailed: '商品加载失败',
       creatingOrder: '正在创建订单...',
       createOrderFailed: '订单创建失败',
-      orderPlacedAwaitingPayment: '订单已提交，等待支付'
+      orderPlacedAwaitingPayment: '订单已提交，等待支付',
+      couponTitle: '优惠券',
+      selectCoupon: '选择优惠券',
+      couponAvailable: '张可用',
+      originalPrice: '原价',
+      discount: '优惠',
+      couponCondition: '满',
+      couponConditionSuffix: '元可用',
+      couponDefaultDesc: '全场商品可用',
+      couponExpire: '有效期至',
+      noCoupon: '暂无可用优惠券',
+      notUseCoupon: '不使用优惠券'
     }
   },
   
@@ -517,7 +535,8 @@ module.exports = {
       female: '女',
       unknown: '未知',
       nicknameRequired: '请输入昵称',
-      invalidEmail: '邮箱格式不正确'
+      invalidEmail: '邮箱格式不正确',
+      birthdaySelected: '生日已选择'
     }
   },
   

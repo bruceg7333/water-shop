@@ -231,7 +231,10 @@ const pageConfig = {
         currentLang: this.t('home.language.current'),
         
         // 促销相关
-        viewNow: this.t('home.promotion.action')
+        viewNow: this.t('home.promotion.action'),
+        
+        // 货币符号
+        currencySymbol: this.t('common.unit.yuan')
       }
     });
     
@@ -544,6 +547,58 @@ const pageConfig = {
       return;
     }
     
+    // 检查登录状态
+    const isLoggedIn = wx.getStorageSync('isLoggedIn');
+    
+    if (!isLoggedIn) {
+      
+      // 根据当前语言获取固定的短文本，确保符合微信4字符限制
+      const currentLang = wx.getStorageSync('language') || 'zh_CN';
+      let tipTitle, loginRequired, toLogin, cancel;
+      
+      if (currentLang === 'en') {
+        tipTitle = 'Tip';
+        loginRequired = 'You need to login first to use this feature';
+        toLogin = 'Go';
+        cancel = 'No';
+      } else if (currentLang === 'th') {
+        tipTitle = 'แจ้ง';
+        loginRequired = 'คุณต้องเข้าสู่ระบบก่อนใช้งานคุณสมบัตินี้';
+        toLogin = 'เข้า';
+        cancel = 'ไม่';
+      } else if (currentLang === 'zh_TW') {
+        tipTitle = '提示';
+        loginRequired = '您需要登錄後才能購買商品';
+        toLogin = '登錄';
+        cancel = '取消';
+      } else {
+        // 默认中文简体
+        tipTitle = '提示';
+        loginRequired = '您需要登录后才能购买商品';
+        toLogin = '登录';
+        cancel = '取消';
+      }
+      
+              wx.showModal({
+        title: tipTitle,
+        content: loginRequired,
+        confirmText: toLogin,
+        cancelText: cancel,
+        success: (res) => {
+          console.log('模态框响应:', res);
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/member/login'
+            });
+          }
+        },
+        fail: (err) => {
+          console.error('显示模态框失败:', err);
+        }
+      });
+      return;
+    }
+    
     // 设置结算商品信息到缓存，供订单确认页使用
     const checkoutItem = {
       id: product.id,
@@ -577,7 +632,7 @@ const pageConfig = {
 
   // 查看全部商品
   viewAllProducts() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/product/list'
     });
   },

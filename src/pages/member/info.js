@@ -279,9 +279,22 @@ const pageConfig = {
       
       console.log('从存储加载用户积分:', points);
       
+      // 处理头像URL格式
+      const formatAvatarUrl = (avatar) => {
+        if (!avatar) return '/assets/images/profile/default-avatar.svg';
+        if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+          return avatar;
+        }
+        if (avatar.startsWith('/assets/') || avatar.startsWith('/static/')) {
+          return avatar;
+        }
+        const baseUrl = 'http://localhost:5001';
+        return avatar.startsWith('/') ? `${baseUrl}${avatar}` : `${baseUrl}/${avatar}`;
+      };
+
       this.setData({
         userInfo: {
-          avatarUrl: storedUser.avatar || '/assets/images/profile/default-avatar.svg',
+          avatarUrl: formatAvatarUrl(storedUser.avatar),
           nickName: storedUser.nickName || storedUser.username || this.t('product.reviews.anonymous'),
           points: points,
           memberLevel: this.getMemberLevelByPoints(points)

@@ -5,7 +5,7 @@
       <view class="edit-item avatar-item" bindtap="chooseAvatar">
         <text class="label">{{i18n.avatar || '头像'}}</text>
         <view class="value">
-          <image class="avatar" src="{{avatarUrl || '/assets/images/profile/user-avatar.svg'}}" mode="aspectFill"></image>
+          <image class="avatar" src="{{avatarUrl || '/assets/images/profile/default-avatar.svg'}}" mode="aspectFill"></image>
           <text class="arrow">›</text>
         </view>
       </view>
@@ -51,7 +51,7 @@
         </view>
       </view>
 
-      <view class="edit-item" bindtap="selectGender">
+      <view class="edit-item" bindtap="showGenderPicker">
         <text class="label">{{i18n.gender || '性别'}}</text>
         <view class="value">
           <text class="{{gender ? '' : 'placeholder'}}">{{genderText || i18n.selectGender || '请选择'}}</text>
@@ -59,21 +59,12 @@
         </view>
       </view>
 
-      <view class="edit-item">
+      <view class="edit-item" bindtap="showBirthdayPicker">
         <text class="label">{{i18n.birthday || '生日'}}</text>
-        <picker
-          mode="date"
-          value="{{birthday || '2000-01-01'}}"
-          start="1924-01-01"
-          end="{{currentDate}}"
-          bindchange="onBirthdayChange"
-          class="birthday-picker"
-        >
-          <view class="value">
-            <text class="{{birthday ? '' : 'placeholder'}}">{{birthday || i18n.selectBirthday || '请选择'}}</text>
-            <text class="arrow">›</text>
-          </view>
-        </picker>
+        <view class="value">
+          <text class="{{birthday ? '' : 'placeholder'}}">{{birthdayDisplay || i18n.selectBirthday || '请选择'}}</text>
+          <text class="arrow">›</text>
+        </view>
       </view>
     </view>
 
@@ -101,6 +92,56 @@
       >
         {{i18n.save || '保存'}}
       </button>
+    </view>
+  </view>
+
+  <!-- 自定义生日选择器 -->
+  <view class="birthday-picker-overlay" wx:if="{{showBirthdayPicker}}" bindtap="hideBirthdayPicker">
+    <view class="birthday-picker-content" catchtap>
+      <view class="picker-header">
+        <text class="picker-cancel" bindtap="hideBirthdayPicker">{{i18n.cancel || '取消'}}</text>
+        <text class="picker-title">{{i18n.selectBirthday || '请选择生日'}}</text>
+        <text class="picker-confirm" bindtap="confirmBirthday">{{i18n.confirm || '确定'}}</text>
+      </view>
+      <picker-view class="picker-view" value="{{pickerValue}}" bindchange="onPickerChange">
+        <picker-view-column>
+          <view wx:for="{{years}}" wx:key="*this" class="picker-item">
+            {{item}}
+          </view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{months}}" wx:key="*this" class="picker-item">
+            {{item}}
+          </view>
+        </picker-view-column>
+        <picker-view-column>
+          <view wx:for="{{days}}" wx:key="*this" class="picker-item">
+            {{item}}
+          </view>
+        </picker-view-column>
+      </picker-view>
+    </view>
+  </view>
+
+  <!-- 自定义性别选择器 -->
+  <view class="gender-picker-overlay" wx:if="{{showGenderPicker}}" bindtap="hideGenderPicker">
+    <view class="gender-picker-content" catchtap>
+      <view class="picker-header">
+        <text class="picker-cancel" bindtap="hideGenderPicker">{{i18n.cancel || '取消'}}</text>
+        <text class="picker-title">{{i18n.selectGender || '请选择性别'}}</text>
+        <text class="picker-confirm" bindtap="confirmGender">{{i18n.confirm || '确定'}}</text>
+      </view>
+      <view class="gender-options">
+        <view 
+          wx:for="{{genderOptions}}" 
+          wx:key="value" 
+          class="gender-option {{selectedGenderIndex === index ? 'selected' : ''}}"
+          bindtap="selectGenderOption"
+          data-index="{{index}}"
+        >
+          {{item.text}}
+        </view>
+      </view>
     </view>
   </view>
 </view> 
