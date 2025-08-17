@@ -637,7 +637,7 @@ const pageConfig = {
             }
             
             // 如果是服务器上传的文件（相对路径），拼接完整URL
-            const baseUrl = 'http://localhost:5001'; // 后端服务器地址
+            const baseUrl = HOST; // 后端服务器地址
             
             if (avatar.startsWith('/')) {
               return `${baseUrl}${avatar}`;
@@ -726,7 +726,7 @@ const pageConfig = {
         }
         
         // 如果是服务器上传的文件（相对路径），拼接完整URL
-        const baseUrl = 'http://localhost:5001'; // 后端服务器地址
+        const baseUrl = HOST; // 后端服务器地址
         
         if (avatar.startsWith('/')) {
           return `${baseUrl}${avatar}`;

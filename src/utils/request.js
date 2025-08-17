@@ -4,7 +4,8 @@
 const i18n = require('./i18n/index');
 
 // API基础URL - 确认这是正确的基础URL
-const BASE_URL = 'http://localhost:5001/api';
+const constants = require("./constants");
+const BASE_URL = constants.BASE_URL
 // 如果后端API需要使用其他前缀或格式，请修改上面的值
 
 /**

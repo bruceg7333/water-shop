@@ -5,9 +5,9 @@
 
 // 导入新API实现
 const { api: newApi, request: newRequest } = require('./request');
-
+const constants = require("./constants");
+const BASE_URL = constants.BASE_URL
 // API基础URL
-const BASE_URL = 'http://localhost:5001/api';
 
 /* global wx */
 

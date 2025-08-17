@@ -103,7 +103,7 @@ const pageConfig = {
             if (avatar.startsWith('/assets/') || avatar.startsWith('/static/')) {
               return avatar;
             }
-            const baseUrl = 'http://localhost:5001';
+            const baseUrl = HOST;
             return avatar.startsWith('/') ? `${baseUrl}${avatar}` : `${baseUrl}/${avatar}`;
           };
 

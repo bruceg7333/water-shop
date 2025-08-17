@@ -5,29 +5,7 @@ const { createPage } = require('../../utils/page-base');
 // 定义页面配置
 const pageConfig = {
   data: {
-    bannerList: [
-      {
-        id: 1,
-        imageUrl: '/assets/images/banner/banner1.jpg',
-        title: 'SPRINKLE 纯净水',
-        subtitle: '来自大自然的纯净馈赠',
-        linkUrl: 'pages/product/detail?id=1'
-      },
-      {
-        id: 2,
-        imageUrl: '/assets/images/banner/banner2.jpg',
-        title: 'SPRINKLE 纯净水',
-        subtitle: '富含天然矿物质',
-        linkUrl: 'pages/product/detail?id=2'
-      },
-      {
-        id: 3,
-        imageUrl: '/assets/images/banner/banner3.jpg',
-        title: '健康饮水',
-        subtitle: '每日8杯水，健康每一天',
-        linkUrl: '/pages/article/detail?id=1'
-      }
-    ],
+    bannerList: [],
     productList: [], // 改为空数组，通过API获取
     brandInfo: {
       title: '品牌故事',
@@ -263,59 +241,59 @@ const pageConfig = {
     }
 
     // 更新文章列表中的标签为国际化文本
-    if (this.data.articles && this.data.articles.length > 0) {
-      const articles = this.data.articles.map(article => {
-        // 创建一个新的文章对象
-        const newArticle = { ...article };
+    // if (this.data.articles && this.data.articles.length > 0) {
+    //   const articles = this.data.articles.map(article => {
+    //     // 创建一个新的文章对象
+    //     const newArticle = { ...article };
         
-        // 处理标签数据，最多保留1个标签
-        let tags = [];
-        if (article.tags && Array.isArray(article.tags) && article.tags.length > 0) {
-          tags = article.tags.slice(0, 1); // 最多取1个标签
-        } else if (article.tag) {
-          tags = [article.tag]; // 如果只有单个tag字段，也转为数组
-        }
+    //     // 处理标签数据，最多保留1个标签
+    //     let tags = [];
+    //     if (article.tags && Array.isArray(article.tags) && article.tags.length > 0) {
+    //       tags = article.tags.slice(0, 1); // 最多取1个标签
+    //     } else if (article.tag) {
+    //       tags = [article.tag]; // 如果只有单个tag字段，也转为数组
+    //     }
         
-        // 为每个标签应用国际化
-        const translatedTags = tags.map(tag => {
-          if (tag === '饮水健康' || tag === 'Water Health') {
-            return this.t('home.article.tag.health');
-          } else if (tag === '水质知识' || tag === 'Water Quality') {
-            return this.t('home.article.tag.knowledge');
-          } else if (tag === '健康提示' || tag === 'Health Tips') {
-            return this.t('home.article.tag.tips');
-          } else if (tag === '科普' || tag === 'Science') {
-            return this.t('home.article.tag.science');
-          } else if (tag === '研究' || tag === 'Research') {
-            return this.t('home.article.tag.research');
-          } else if (tag === '生活方式' || tag === 'Lifestyle') {
-            return this.t('home.article.tag.lifestyle');
-          }
-          return tag;
-        });
+    //     // 为每个标签应用国际化
+    //     const translatedTags = tags.map(tag => {
+    //       if (tag === '饮水健康' || tag === 'Water Health') {
+    //         return this.t('home.article.tag.health');
+    //       } else if (tag === '水质知识' || tag === 'Water Quality') {
+    //         return this.t('home.article.tag.knowledge');
+    //       } else if (tag === '健康提示' || tag === 'Health Tips') {
+    //         return this.t('home.article.tag.tips');
+    //       } else if (tag === '科普' || tag === 'Science') {
+    //         return this.t('home.article.tag.science');
+    //       } else if (tag === '研究' || tag === 'Research') {
+    //         return this.t('home.article.tag.research');
+    //       } else if (tag === '生活方式' || tag === 'Lifestyle') {
+    //         return this.t('home.article.tag.lifestyle');
+    //       }
+    //       return tag;
+    //     });
         
-        return {
-          id: article.id,
-          title: article.title,
-          imageUrl: article.imageUrl,
-          views: article.views || 0,
-          publishDate: this.formatDate(new Date(article.publishDate)),
-          summary: article.summary || article.content?.substring(0, 50) || '',
-          tags: translatedTags
-        };
-      });
+    //     return {
+    //       id: article.id,
+    //       title: article.title,
+    //       imageUrl: article.imageUrl,
+    //       views: article.views || 0,
+    //       publishDate: this.formatDate(new Date(article.publishDate)),
+    //       summary: article.summary || article.content?.substring(0, 50) || '',
+    //       tags: translatedTags
+    //     };
+    //   });
       
-      this.setData({ articles });
-    }
+    //   this.setData({ articles });
+    // }
   },
 
   onLoad() {
     // 初始化品牌信息
     this.setData({
       brandInfo: {
-        title: '品牌故事',
-        content: 'SPRINKLE 的水源来自海拔3800米的高山冰川，经过18层过滤和严格的质量控制，为您提供最纯净、健康的饮用水。20年专注饮用水研发，只为您的健康饮水体验。',
-        tags: ['0添加', '18层过滤', '天然矿物质', '低钠', '适合婴幼儿']
+        title: '品牌故事111222',
+        content: '99999',
+        tags: ['01添加', '18层过滤', '天然矿物质', '低钠', '适合婴幼儿']
       }
     });
     
