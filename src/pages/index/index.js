@@ -6,6 +6,7 @@ const { createPage } = require('../../utils/page-base');
 const pageConfig = {
   data: {
     bannerList: [],
+    starIps: [],
     productList: [], // 改为空数组，通过API获取
     brandInfo: {
       title: '品牌故事',
@@ -73,27 +74,6 @@ const pageConfig = {
   updateI18nText() {
     // 更新首页上的所有国际化文本
     const bannerList = [
-      {
-        id: 1,
-        imageUrl: '/assets/images/banner/banner1.jpg',
-        title: this.t('home.banner.title1'),
-        subtitle: this.t('home.banner.subtitle1'),
-        linkUrl: 'pages/product/detail?id=1'
-      },
-      {
-        id: 2,
-        imageUrl: '/assets/images/banner/banner2.jpg',
-        title: this.t('home.banner.title2'),
-        subtitle: this.t('home.banner.subtitle2'),
-        linkUrl: 'pages/product/detail?id=2'
-      },
-      {
-        id: 3,
-        imageUrl: '/assets/images/banner/banner3.jpg',
-        title: this.t('home.banner.title3'),
-        subtitle: this.t('home.banner.subtitle3'),
-        linkUrl: '/pages/article/detail?id=1'
-      }
     ];
     
     // 确保brandInfo.tags是数组
@@ -302,6 +282,8 @@ const pageConfig = {
     
     // 获取轮播图数据
     this.fetchBanners();
+
+    this.fetchStarIps();
     
     // 获取商品列表
     this.fetchProducts();
@@ -329,6 +311,29 @@ const pageConfig = {
             bannerList
           });
           console.log('轮播图数据设置完成:', bannerList);
+        } else {
+          console.log('API未返回轮播图数据，使用默认数据');
+          // API失败时保持使用静态数据
+        }
+      })
+      .catch(err => {
+        console.error('获取轮播图失败:', err);
+        // 加载失败时使用静态数据
+      });
+  },
+
+   // 获取明星ip
+   fetchStarIps() {
+    api.starIps.getStarIps()
+      .then(res => {
+        console.log('starIps API响应:', res);
+        if (res.success && res.data && res.data.starIps && res.data.starIps.length > 0) {
+          // 转换API数据为前端需要的格式
+          const starIps = res.data.starIps
+          this.setData({
+            starIps
+          });
+          console.log('starIps:', bannerList);
         } else {
           console.log('API未返回轮播图数据，使用默认数据');
           // API失败时保持使用静态数据

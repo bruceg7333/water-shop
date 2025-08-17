@@ -508,6 +508,13 @@ const api = {
       method: 'POST',
       showLoading: false
     })
+  },
+  // starIps
+  starIps: {
+    getStarIps: ()=>request({
+      url: '/starIps/active',
+      showLoading: false
+    })
   }
 };
 

@@ -5,7 +5,7 @@
     <view class="search-input-wrap">
       <input 
         class="search-input" 
-        placeholder="{{i18n.searchPlaceholder || '搜索饮用水产品'}}" 
+        placeholder="{{i18n.searchPlaceholder || '搜索'}}" 
         value="{{searchValue}}"
         bindinput="onSearchInput"
         bindconfirm="onSearchConfirm"
@@ -13,14 +13,14 @@
       <icon class="search-icon" type="search" size="18" color="#999" />
     </view>
     <!-- 语言切换按钮 -->
-    <view class="lang-switch" bindtap="showLanguageMenu">
+    <!-- <view class="lang-switch" bindtap="showLanguageMenu">
       <text class="lang-code">{{currentLanguageName || '简体中文'}}</text>
       <view class="lang-arrow"></view>
-    </view>
+    </view> -->
   </view>
   
   <!-- 语言选择下拉菜单 -->
-  <view class="language-menu {{showLanguageSelector ? 'show' : ''}}" wx:if="{{showLanguageSelector}}">
+  <!-- <view class="language-menu {{showLanguageSelector ? 'show' : ''}}" wx:if="{{showLanguageSelector}}">
     <view class="language-menu-mask" bindtap="hideLanguageMenu"></view>
     <view class="language-menu-content">
       <view class="language-menu-title">{{i18n.langSwitch || '切换语言'}}</view>
@@ -37,7 +37,7 @@
         </view>
       </view>
     </view>
-  </view>
+  </view> -->
 
   <!-- 轮播图 -->
   <swiper class="banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#0088cc">
@@ -52,33 +52,23 @@
     </block>
   </swiper>
 
-  <!-- 导航区域 -->
-  <view class="nav-section">
-    <view class="nav-item" bindtap="viewAllProducts">
-      <view class="nav-icon" style="background-image: linear-gradient(135deg, #1a78c2, #56CCF2);">
-        <image src="/assets/images/icons/all.png" class="nav-item-icon" />
+  <!-- 导航区域 明星ip-->
+
+    <view class="nav-section flex flex-col">
+      <view class="nav-sec-title">
+        <text>明星IP</text>
+        <text>全部 > </text>
       </view>
-      <text class="nav-text">{{i18n.navAllProducts || '全部商品'}}</text>
-    </view>
-    <view class="nav-item" bindtap="viewAllArticles">
-      <view class="nav-icon" style="background-image: linear-gradient(135deg, #00bcd4, #80deea);">
-        <image src="/assets/images/icons/knowledge.png" class="nav-item-icon" />
+      <view class="nav__list">
+        <view class="nav-item" bindtap="viewAllProducts" wx:for="{{starIps}}" wx:key="id">
+        <view class="nav-icon">
+          <image src="{{item.image}}" class="nav-item-icon" />
+        </view>
+        <text class="nav-text">{{item.title}} {{itme.image}}</text>
       </view>
-      <text class="nav-text">{{i18n.navWaterKnowledge || '饮水知识'}}</text>
-    </view>
-    <view class="nav-item" bindtap="onPromotionTap">
-      <view class="nav-icon" style="background-image: linear-gradient(135deg, #009688, #4db6ac);">
-        <image src="/assets/images/icons/discount.png" class="nav-item-icon" />
       </view>
-      <text class="nav-text">{{i18n.navPromotions || '优惠活动'}}</text>
+      
     </view>
-    <view class="nav-item" bindtap="onNewUserGiftTap">
-      <view class="nav-icon" style="background-image: linear-gradient(135deg, #4facfe, #00f2fe);">
-        <image src="/assets/images/icons/gift.png" class="nav-item-icon" />
-      </view>
-      <text class="nav-text">{{i18n.navNewUserGift || '新人礼包'}}</text>
-    </view>
-  </view>
 
   <!-- 限时优惠横幅 -->
   <!-- 
