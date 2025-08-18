@@ -8,6 +8,7 @@ const pageConfig = {
     bannerList: [],
     starIps: [],
     productList: [], // 改为空数组，通过API获取
+    currentTab: 0,
     brandInfo: {
       title: '品牌故事',
       content: 'SPRINKLE 的水源来自海拔3800米的高山冰川，经过18层过滤和严格的质量控制，为您提供最纯净、健康的饮用水。20年专注饮用水研发，只为您的健康饮水体验。',
@@ -66,6 +67,13 @@ const pageConfig = {
     languages: i18n.getSupportedLanguages(), // 支持的语言列表
     currentLanguage: i18n.getCurrentLang(), // 当前语言
     currentLanguageName: '' // 当前语言名称
+  },
+
+
+  switchTab(e) {
+    this.setData({
+      currentTab: e.currentTarget.dataset.index
+    });
   },
 
   /**

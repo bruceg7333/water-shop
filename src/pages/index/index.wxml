@@ -82,7 +82,7 @@
   -->
 
   <!-- 品牌故事 -->
-  <view class="brand-story">
+  <!-- <view class="brand-story">
     <view class="section-title brand-title">{{i18n.brandTitle || brandInfo.title}}</view>
     <view class="brand-content">
       <text class="brand-desc">{{i18n.brandContent || brandInfo.content}}</text>
@@ -94,12 +94,64 @@
         <view class="brand-tag">{{i18n.tag5 || '适合婴幼儿'}}</view>
       </view>
     </view>
+  </view> -->
+
+  <!-- Main container -->
+<view class="home__collection__container">
+  <!-- Tab menu -->
+  <view class="home__collection__tab-bar">
+    <view 
+      class="home__collection__tab-item {{currentTab == 0 ? 'home__collection__tab-active' : ''}}"
+      bindtap="switchTab" data-index="0"
+    >
+      花间旋律
+    </view>
+    <view 
+      class="home__collection__tab-item {{currentTab == 1 ? 'home__collection__tab-active' : ''}}"
+      bindtap="switchTab" data-index="1"
+    >
+      绝密档案
+    </view>
+    <view 
+      class="home__collection__tab-item {{currentTab == 2 ? 'home__collection__tab-active' : ''}}"
+      bindtap="switchTab" data-index="2"
+    >
+      音汇时空
+    </view>
   </view>
+
+  <!-- Product display area -->
+  <view class="home__collection__product-area">
+    <!-- Featured product -->
+    <view class="home__collection__featured-product">
+      <image 
+        src="/images/miku_plush.png" 
+        mode="aspectFit" 
+        class="home__collection__product-image"
+      ></image>
+      
+      <view class="home__collection__product-info">
+        <text class="home__collection__product-title">初音未来-花间旋律系列周边</text>
+        <text class="home__collection__product-price">¥10</text>
+      </view>
+    </view>
+
+    <!-- Product decorations -->
+    <image 
+      src="/images/miku_standee.png" 
+      mode="aspectFit" 
+      class="home__collection__standee"
+    ></image>
+    <view class="home__collection__badge">
+      <image src="/images/miku_badge.png" mode="aspectFit"></image>
+    </view>
+  </view>
+</view>
 
   <!-- 热门产品 -->
   <view class="product-section">
     <view class="section-header">
-      <view class="section-title">{{i18n.hotProducts || '热门产品'}}</view>
+      <view class="section-title">{{ '人氣爆款'}}</view>
       <view class="section-more" bindtap="viewAllProducts">{{i18n.viewAll || '查看全部'}}</view>
     </view>
     
@@ -145,8 +197,27 @@
     </view>
   </view>
 
+
+    <!-- 人氣爆款 -->
+
+<view class="normal-title">
+  <text>人氣爆款</text>
+</view>
+
+<swiper class="hot-product-banner-swiper" indicator-dots="true" autoplay="true" interval="3000" duration="500" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#0088cc">
+    <block wx:for="{{productList}}" wx:key="id">
+      <swiper-item bindtap="onBannerTap" data-id="{{item.id}}" class="banner-item">
+        <image src="{{item.imageUrl}}" mode="aspectFill" class="banner-image" />
+        <view class="banner-text">
+          <view class="banner-title">{{item.name}}</view>
+          <view class="banner-subtitle">￥ {{item.price}}</view>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+
   <!-- 科普文章 -->
-  <view class="article-section">
+  <!-- <view class="article-section">
     <view class="section-header">
       <view class="section-title">{{i18n.waterScience || '饮水科普'}}</view>
       <view class="section-more" bindtap="viewAllArticles">{{i18n.viewAll || '更多文章'}}</view>
@@ -166,5 +237,5 @@
         </view>
       </view>
     </view>
-  </view>
+  </view> -->
 </view> 
