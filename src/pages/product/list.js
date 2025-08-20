@@ -46,11 +46,43 @@ const pageConfig = {
     
     // 分类和排序选项
     const categories = [
-      { id: 'all', name: this.t('product.list.category.all') },
-      { id: 'pure', name: this.t('product.list.category.pure') },
-      { id: 'mineral', name: this.t('product.list.category.mineral') },
-      { id: 'soda', name: this.t('product.list.category.soda') }
-    ];
+      {
+        "id": "初音未来",
+        "name": "初音未来"
+      },
+      {
+        "id": "第五人格",
+        "name": "第五人格"
+      },
+      {
+        "id": "进击的巨人",
+        "name": "进击的巨人"
+      },
+      {
+        "id": "蓝色监狱",
+        "name": "蓝色监狱"
+      },
+      {
+        "id": "名侦探柯南",
+        "name": "名侦探柯南"
+      },
+      {
+        "id": "排球少年",
+        "name": "排球少年"
+      },
+      {
+        "id": "新世纪福音战士",
+        "name": "新世纪福音战士"
+      },
+      {
+        "id": "喜羊羊与灰太狼",
+        "name": "喜羊羊与灰太狼"
+      },
+      {
+        "id": "阴阳师×初音未来",
+        "name": "阴阳师×初音未来"
+      }
+    ]
     
     const sortOptions = [
       { id: 'default', name: this.t('product.list.sort.default') },

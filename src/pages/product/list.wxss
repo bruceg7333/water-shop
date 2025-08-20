@@ -1,33 +1,40 @@
 .product-list-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding-bottom: 20rpx;
+  display: flex;
+  overflow: hidden;
+}
+
+.main-content-wrapper {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+.filter-section-left {
+  display: flex;
+  flex-direction: column; 
 }
 
 /* 分类和排序导航样式 */
-.filter-section {
-  background-color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
 
 .category-scroll {
-  white-space: nowrap;
-  border-bottom: 1rpx solid #eee;
+  height: 100%;
+  /* border-bottom: 1rpx solid #eee; */
 }
 
 .category-list {
-  display: inline-block;
-  padding: 0 20rpx;
+  padding: 0;
 }
 
 .category-item {
-  display: inline-block;
   padding: 24rpx 30rpx;
   font-size: 28rpx;
   color: #666;
   position: relative;
+  width: 160rpx;
 }
 
 .category-item.active {
@@ -35,24 +42,13 @@
   font-weight: 500;
 }
 
-.category-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40rpx;
-  height: 4rpx;
-  background-color: #0088cc;
-  border-radius: 2rpx;
-}
 
 .sort-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 20rpx;
-  border-bottom: 1rpx solid #eee;
+  /* border-bottom: 1rpx solid #eee; */
 }
 
 .sort-item {
@@ -107,10 +103,17 @@
   flex-wrap: wrap;
   padding: 20rpx;
   justify-content: space-between;
+  background: linear-gradient(90deg, 
+    #e5e7eb 0%,       /* 起始颜色 */
+    #e8ecf0 50%,      /* 中间过渡色 */
+    #f4f6f8 100%      /* 结束颜色 */
+  )
 }
 
 .product-item {
-  width: 345rpx;
+  /* width: 345rpx; */
+  width: 48%;
+  max-height: 280px;
   margin-bottom: 20rpx;
   background-color: #fff;
   border-radius: 10rpx;
