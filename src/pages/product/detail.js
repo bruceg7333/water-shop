@@ -7,28 +7,8 @@ const { checkLogin } = require('../../utils/auth');
 const pageConfig = {
   data: {
     product: {
-      id: 1,
-      name: 'SPRINKLE 纯净水',
-      price: 2.00,
-      originalPrice: 2.50,
-      description: 'SPRINKLE 纯净水，源自优质水源，经过多重净化工艺，确保水质纯净。',
-      images: [
-        '../../../assets/images/products/water1.jpg',
-        '../../../assets/images/products/water2.jpg',
-        '../../../assets/images/products/water3.jpg'
-      ],
-      specifications: ['550ml', '1L', '2L'],
-      detailContent: `
-        <div class="detail-content">
-          <p>产品特点：</p>
-          <p>1. 源自海拔3800米高山冰川</p>
-          <p>2. 18层过滤工艺</p>
-          <p>3. 0添加，天然矿物质</p>
-          <p>4. 适合婴幼儿饮用</p>
-        </div>
-      `
     },
-    selectedSpec: '550ml',
+    selectedSpec: '',
     currentTab: 0,
     tabs: [],
     reviews: [], // 评论列表
@@ -296,6 +276,7 @@ const pageConfig = {
             originalPrice: parseFloat(product.originalPrice) || null,
             description: product.description || '暂无描述',
             images: images,
+            mainContentImage: product.mainContentImage,
             specifications: specifications,
             sales: product.sales || 0,
             stock: product.stock || 0,

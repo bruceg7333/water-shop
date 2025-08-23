@@ -14,7 +14,7 @@
   </swiper>
 
   <!-- 标签页切换 -->
-  <view class="tab-header">
+  <!-- <view class="tab-header">
     <view 
       wx:for="{{tabs}}" 
       wx:key="index" 
@@ -24,10 +24,10 @@
     >
       {{item}}{{index === 1 ? ' (' + reviewTotal + ')' : ''}}
     </view>
-  </view>
+  </view> -->
 
   <!-- 商品信息标签页 -->
-  <view class="tab-content" wx:if="{{currentTab === 0}}">
+  <view class="tab-content" >
     <!-- 商品信息 -->
     <view class="product-info">
       <view class="name-row">
@@ -49,7 +49,7 @@
     </view>
 
     <!-- 商品规格 -->
-    <view class="specifications" wx:if="{{product.specifications && product.specifications.length > 0}}">
+    <!-- <view class="specifications" wx:if="{{product.specifications && product.specifications.length > 0}}">
       <view class="title">{{i18n.spec}}</view>
       <view class="spec-list">
         <view 
@@ -62,11 +62,11 @@
           {{item}}
         </view>
       </view>
-    </view>
+    </view> -->
   </view>
 
   <!-- 评论标签页 -->
-  <view class="tab-content" wx:if="{{currentTab === 1}}">
+  <view class="tab-content" wx:if="{{false}}">
     <view class="reviews-header">
       <view class="reviews-title">{{i18n.reviewsTitle}}</view>
       <view class="write-review" bindtap="writeReview">{{i18n.writeReview}}</view>
@@ -113,9 +113,11 @@
   </view>
 
   <!-- 详情标签页 -->
-  <view class="tab-content" wx:if="{{currentTab === 2}}">
+  <view class="tab-content">
+    <view class="title-middle">商品详情</view>
     <view class="detail-content">
-      <rich-text nodes="{{product.detailContent}}"></rich-text>
+      <!-- <rich-text nodes="{{product.detailContent}}"></rich-text> -->
+      <image src="{{product.mainContentImage}}" mode="aspectFill" style="width: 100%"/>
     </view>
   </view>
 

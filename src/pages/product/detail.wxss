@@ -8,6 +8,10 @@
   width: 100%;
   height: 750rpx;
 }
+.title-middle {
+  width: 100%;
+  text-align: center;
+}
 
 .product-swiper image {
   width: 100%;
